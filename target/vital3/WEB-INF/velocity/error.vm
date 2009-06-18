@@ -1,0 +1,8 @@
+#set($title = "Error")
+#parse("header.vm")
+<div class="documentContentMain">
+    <h1>Error</h1>
+    <!-- this is the error.vm template -->
+    <p>${message}
+</div>
+#parse("footer.vm")

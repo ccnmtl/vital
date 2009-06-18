@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="Unit" table="UNITS">
+        
+        <meta attribute="class-description">
+			A subset of a Vital Worksite that contains zero or more Vital Assignments. It typically refers to a portion of the course's syllabus.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UNIT_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="worksite" lazy="false" class="VitalWorksite" column="WORKSITE_ID">
+            <meta attribute="field-description">The Worksite this Unit is part of.</meta>
+        </many-to-one>
+        
+        <property name="title" type="string">
+            <meta attribute="field-description">The title of the unit.</meta>
+		</property>
+
+        <property name="description" type="text">
+            <meta attribute="field-description">A description of the unit.</meta>
+		</property>
+
+        <property name="startDate" type="timestamp" column="START_DATE">
+            <meta attribute="field-description">The start date for this Unit.</meta>
+		</property>
+
+        <property name="endDate" type="timestamp" column="END_DATE">
+            <meta attribute="field-description">The end date for this Unit.</meta>
+		</property>
+
+
+        <property name="visibility" type="integer" column="VISIBILITY">
+            <meta attribute="field-description"><!-- ?  --></meta>
+		</property>
+
+        <set name="assignments" lazy="true" inverse="true" order-by="ORDINAL_VALUE" cascade="delete" batch-size="3">
+            <meta attribute="field-description">Assigments that form the unit.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UNIT_ID"/>
+            <one-to-many class="Assignment"/>
+        </set>
+
+        <set name="materialAssociations" lazy="true" inverse="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">Materials associated with this unit. They're not specifically tied to any one assignment.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UNIT_ID"/>
+            <one-to-many class="UnitMaterialAssoc"/>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,64 @@
+#set($section = "materials")
+#set($title = "Administration: Category Management for Course Library")
+
+#parse("header.vm")
+
+	<!-- For sorting the table -->
+	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+<h1>Category Management for Course Library</h1>
+    #if ($message)
+    <p><font color="#FF0000">${message}</font>
+    #end
+    <br />
+    <p>Manage your own category columns for classifying videos.</p>
+    
+    
+    
+    <form name="displayForm" action="basicAdmin.smvc" method="POST">
+        
+<input type="button" name="addButton" value="Add a New Category Column" onclick="location.href='basicAdmin.smvc?action=new&entity=customField&worksiteId=${worksite.id}'" class="regButton" />
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:400px;" onclick="sortColumn(event)">
+	<thead>
+		<tr>
+			<th class="navOut DefaultSort" style="width: 220px;">Category name</th>
+			<th class="navOut" style="width: 140px;">Ordering position</th>
+			<th style="width: 40px;">&#160;</th>
+		</tr>
+	</thead>
+
+ 	<tbody>
+       #foreach ($customField in $customFields)    
+        <tr>
+            <td>$!{customField.name}</td>
+            <td align="right">$!{customField.ordinalValue}</td>
+            <td align="center"><input type="button" name="addButton" value="Edit" onclick="location.href='basicAdmin.smvc?action=display&entity=customField&worksiteId=${worksite.id}&id=${customField.id}'" class="regButton" id="$!{customField.name}" /></td>
+        </tr> 
+        #end
+	<tbody>
+        
+        
+        </table>
+        
+                
+        <input type="hidden" name="entity" value="customField">
+        <input type="hidden" name="action" value="display">
+    </form>
+  #if($customFields.size() == 0)
+    
+    <p class="blanknote" style="padding: 10px; background-color: #fff; border-bottom: 1px solid #999; width: 380px;">There are no videos categories for this library.</p>
+    
+    #end
+
+</div>
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

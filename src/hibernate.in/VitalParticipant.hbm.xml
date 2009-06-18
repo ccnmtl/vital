@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="VitalParticipant" table="PARTICIPANTS">
+        
+        <meta attribute="class-description">
+            This class represents the relationship between a VitalUser and a VitalWorksite. It is tied to all classes
+            which represent something belonging to a user in a worksite, and it stores the user's access level for that worksite.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="PARTICIPANT_ID">
+            <generator class="native"/>
+        </id>
+        
+        <property name="participantIdString" type="string" column="PARTICIPANT_ID_STRING">
+            <meta attribute="field-description">A string uniquely identifying this participant, for use outside of the database. This will be a concatenation of the userIdString, the pipe character "|", and the courseIdString.</meta>
+		</property>
+        
+        <property name="accessLevel" type="integer" column="ACCESS_LEVEL">
+            <meta attribute="field-description">An integer representing a level or type of access granted to this user on this worksite.</meta>
+		</property>
+        
+        <set name="annotations" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">the annotations belonging to this user in this worksite.</meta>
+            <key column="PARTICIPANT_ID"/>
+            <one-to-many class="Annotation"/>
+        </set>
+        <set name="assignmentResponses" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">the assignment responses belonging to this user in this worksite.</meta>
+            <key column="PARTICIPANT_ID"/>
+            <one-to-many class="AssignmentResponse"/>
+        </set>
+        <set name="comments" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">the comments belonging to this user in this worksite.</meta>
+            <key column="PARTICIPANT_ID"/>
+            <one-to-many class="Comment"/>
+        </set>
+        
+        
+    </class>
+
+</hibernate-mapping>

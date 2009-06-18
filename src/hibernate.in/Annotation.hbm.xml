@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="Annotation" table="ANNOTATIONS">
+        
+        <meta attribute="class-description">
+			An annotation to a Material made by a Participant in a vital Worksite.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ANNOTATION_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="material" lazy="false" class="Material" column="MATERIAL_ID">
+            <meta attribute="field-description">The material that was annotated.</meta>
+        </many-to-one>
+
+        <many-to-one name="participant" lazy="false" class="VitalParticipant" column="PARTICIPANT_ID">
+            <meta attribute="field-description">The participant who made the annotation.</meta>
+        </many-to-one>
+
+        <property name="clipBegin" type="string" column="CLIP_BEGIN">
+            <meta attribute="field-description">The offset of the start of the clip.</meta>
+		</property>
+		
+        <property name="clipEnd" type="string" column="CLIP_END">
+            <meta attribute="field-description">The offset of the end of the clip.</meta>
+		</property>
+
+        <property name="dateModified" type="timestamp" column="DATE_MODIFIED">
+            <meta attribute="field-description">When this annotation was last updated.</meta>
+		</property>
+        
+        <property name="text" type="text">
+            <meta attribute="field-description">The text of the annotation.</meta>
+        </property>
+
+        <property name="title" type="string">
+            <meta attribute="field-description">The title of the annotation.</meta>
+        </property>
+
+        <property name="type" type="string">
+            <meta attribute="field-description">The type of annotation.</meta>
+        </property>
+        
+    </class>
+
+</hibernate-mapping>

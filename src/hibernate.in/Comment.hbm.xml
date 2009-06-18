@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="Comment" table="COMMENTS">
+        
+        <meta attribute="class-description">
+			A comment on a student's response to an assignment. For now, only instructors are allowed to make comments.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="COMMENT_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="answer" lazy="false" class="Answer" column="ANSWER_ID">
+            <meta attribute="field-description">The guided lesson answer this comment is about.</meta>
+        </many-to-one>
+
+        <many-to-one name="assignmentResponse" lazy="false" class="AssignmentResponse" column="ASSIGNMENT_RESPONSE_ID">
+            <meta attribute="field-description">The essay this comment is about.</meta>
+        </many-to-one>
+		
+		<many-to-one name="participant" lazy="false" class="VitalParticipant" column="PARTICIPANT_ID">
+            <meta attribute="field-description">The response this comment is about.</meta>
+        </many-to-one>
+
+        <property name="dateModified" type="timestamp" column="DATE_MODIFIED">
+            <meta attribute="field-description">When this comment was last updated.</meta>
+		</property>
+
+        <property name="status" type="integer" column="STATUS">
+            <meta attribute="field-description">Not currently in use.</meta>
+		</property>
+	
+        <property name="text" type="text">
+            <meta attribute="field-description">The text of the comment.</meta>
+		</property>
+
+        <property name="type" type="string">
+            <meta attribute="field-description">The type of the comment (for now, always set to "feedback"- could change in future.)</meta>
+		</property>
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,158 @@
+#set($title = "Log in")
+#set($authenticated = "false")
+#parse("header.vm")
+
+
+<script type="text/javascript" language="javascript" src="scripts/ac_quicktime.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/browsersniff.js"></script>
+
+<!-- 
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+ -->
+
+	<!-- BEGIN QUICKTIME CHECKING CODE -->
+
+<script language="Javascript" type="text/javascript"><!--
+var haveqt = false;
+// -->
+</script>
+<script language="VBScript" type="text/vbscript"><!--
+ On Error  Resume Next
+   Set theObject = CreateObject("QuickTimeCheckObject.QuickTimeCheck.1")
+ On Error  goto 0
+
+ If IsObject(theObject) Then
+   If theObject.IsQuickTimeAvailable(0) Then   'Just check for file
+	 haveqt = true
+   End If
+ End If
+// -->
+</script>
+<script language="Javascript" type="text/javascript"><!--
+if (navigator.plugins) {
+ for (i=0; i < navigator.plugins.length; i++ ) {
+   if (navigator.plugins[i].name.indexOf("QuickTime") >= 0)
+	 { haveqt = true; }
+   }
+ }
+// -->
+</script>
+<script language="Javascript" type="text/javascript"><!-- 
+	var bVersion = navigator.appVersion.indexOf("MSIE 4.5",0) + 1;
+  	if (bVersion >= 1) haveqt = true;
+// -->
+</script>
+
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+<!-- 
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!~~ Don't delete this!!! ~~>
+ -->
+
+<div class="loginbox">
+<div class="boxtop"></div>
+<div>
+        <p class="message" style="width: 100%; margin: 0 0 15px 0;">Scheduled Downtime</p>
+    
+<h2>Vital is temporarily unavailable while new features are added.</h2>
+
+
+</div>
+
+<div class="boxbottom"></div>
+</div>
+
+
+<h2>Welcome to Video Interactions for Teaching and Learning (VITAL)</h2>
+
+<br />
+    
+
+
+
+<p>
+Video Interactions for Teaching and Learning (VITAL) is a Web-based learning environment that enables students to view, analyze, and communicate ideas with video. VITAL was originally created to help students practice their observation and interpretation skills in developmental psychology courses at Teachers College, Columbia University. Currently, VITAL is deployed in a wide range of courses and disciplines across Columbia University, from the School of Social Work to the School of the Arts.
+</p>
+
+<p>
+VITAL is administered by the Columbia Center for New Media Teaching and Learning (CCNMTL) for courses at Columbia University and select partners outside the university. VITAL is accessible only by students and instructors registered for courses that use VITAL. If you are a member of a VITAL course and have trouble logging in, please contact CCNMTL at <span style="white-space: nowrap;"><a href="mailto:ccnmtl-vital@columbia.edu">ccnmtl-vital@columbia.edu</a></span>.
+</p>
+
+<p>
+If this is your first time using VITAL on this computer, please check your computer for  <a href="javascript:openPopWin('static.smvc?path=help.html#sysrec','800','700','yes','yes','help')">the system requirements of this application</a>.
+</p>
+
+<br />
+
+<script type="text/javascript" language="javascript">
+if (nosupport == 1) {
+	document.write('<p class="nosupport">You are using an unsupported browser.\</p>');
+	document.write('<p style="padding: 0 0 0 35px; color: #900;">VITAL <b>will not work\</b> properly in this browser. ');
+	document.write('Please refer to <a href="javascript:openPopWin(\'static.smvc?path=help.html#sysrec\',\'800\',\'700\',\'yes\',\'yes\',\'help\')">the system requirements\</a> for a list of supported browsers.\</p><br />');
+}
+</script>
+
+
+
+<table border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td style="padding-right: 10px;"><script language="Javascript" name="QUICKTIME OR NOT">
+		<!--
+		if (nosupport != 1) {
+			if (haveqt) {
+			
+				QT_WriteOBJECT_XHTML('images/QTChecker.mov',
+				  '122', '42', '',
+				  'name','movie1',
+				  'target','myself',
+				  'type','image/x-quicktime',
+				  'bgcolor','#999999',
+				  'enablejavascript','true',
+				  'controller','false',
+				  'autoplay','true',
+				  'kioskmode','false',
+				  'pluginspage','http://www.apple.com/quicktime/download/',
+				  'classid','clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B',
+				  'codebase','http://www.apple.com/qtactivex/qtplugin.cab');
+			
+				//document.write('<OBJECT CLASSID="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" width="122" height="42" CODEBASE="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"><param name="src" value="images/QTChecker.mov"><param name="loop" value="false"><param name="controller" value="false"><param name="autoplay" value="true"><embed src="images/QTChecker.mov" width="122" height="42" align="center" loop="false" controller="false" autoplay="true" bgcolor="#999999" pluginspage="http://www.apple.com/quicktime/download/">\</embed>\</object>');
+			
+			} else {
+				document.write('<a href="http://www.apple.com/quicktime/download/"><img src="images/downloadQT.gif" width="122" height="42" hspace="0" border="0">\</a>');
+			}
+		}
+		// -->
+		</script>
+</td>
+		<td>
+		<script language="Javascript" name="QUICKTIME OR NOT">
+		<!--
+		if (nosupport != 1) {
+			if (haveqt)
+			{
+				document.write('<b>This site uses QuickTime Video<\/b><br />');
+				document.write('QuickTime is installed on your computer.');
+				document.write('To assure proper video playback, please review the <a href="javascript:openPopWin(\'static.smvc?path=help.html#qtvideo\',\'800\',\'700\',\'yes\',\'yes\',\'help\')">QuickTime Video requirements<\/a> before logging in.');
+			}
+			else
+			{
+				document.write('<b>This site uses QuickTime Video<\/b><br />');
+				document.write('QuickTime is not installed on your computer. Please download a free version of QuickTime from <a href="http://www.apple.com/quicktime/download/">Apple\'s QuickTime Web site\</a>.');
+				document.write('To assure proper video playback, please review the <a href="javascript:openPopWin(\'static.smvc?path=help.html#qtvideo\',\'800\',\'700\',\'yes\',\'yes\',\'help\')">QuickTime Video requirements<\/a> before logging in.');
+			}
+		}
+		// -->
+		</script>
+
+		</td>
+	</tr>
+</table>
+
+
+
+</div><!-- End content area, class="documentContentMain" -->
+<div id="tapemeasure" style="padding-bottom: 20px;"></div>
+
+#parse("footer.vm")

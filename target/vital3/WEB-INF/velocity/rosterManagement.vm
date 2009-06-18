@@ -1,0 +1,78 @@
+#set($section = "roster")
+#set($title = "Administration: Course Roster Management")
+
+#parse("header.vm")
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+	<!-- For sorting the table -->
+	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+<h1>Course Roster Management</h1>
+
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+<p>
+#*if($globalAdmin)
+    A user must be in the system before they may be added to this course roster.<br> 
+    <a href="listing.smvc?mode=user">Global User Management</a><br>
+#end *#
+</p>
+
+<input type="button" name="addButton" value="Add a New User to the Roster" onclick="document.location.href='basicAdmin.smvc?action=new&entity=participant&worksiteId=${worksite.id}'" class="regButton" />
+
+
+
+<form name="deleteForm" action="basicAdmin.smvc" method="POST">
+
+
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:790px;" onclick="sortColumn(event)">
+	<thead>
+		<tr>
+			<th style="width: 40px;">&#160;</th>
+			<th class="navOut DefaultSort" style="width: 180px;">Last Name</th>
+			<th class="navOut" style="width: 180px;">First Name</th>
+			<th class="navOut" style="width: 130px;">Username / UNI</th>
+			<th class="navOut" style="width: 180px;">Access Level</th>
+			<th style="width: 80px;">&#160;</th>
+		</tr>
+	</thead>
+        
+	<tbody>
+#foreach ($participant in $participants)
+        <tr>
+        	<td><input type="checkbox" name="ids" value="$!{participant.id}"></td>
+            <td>$!{participant.lastName} &#160;</td>
+            <td>$!{participant.firstName} &#160;</td>
+            <td>$!{participant.userIdString} &#160;</td>
+            <td>$!{participant.labelForAccessLevel} &#160; </td>
+            <td><input type=button name="edit" value="Change access level" onclick="document.location.href='basicAdmin.smvc?action=display&entity=participant&id=${participant.id}'" class="regButton" /></td>
+        </tr>
+        #end
+	</tbody>
+    </table>
+
+<div style="border: 1px solid #999; border-top: 0;width: 784px; padding: 2px;">
+<input type="submit" name="delete" value="Remove Checked Users" onclick="return confirmDelete()" class="regButton" />
+</div>
+
+<!-- 
+# if ($ worksite. courseIdString)
+    <p>This course is also open to anyone logging in with an affiliation to course "$!{worksite.courseIdString}". They will be added to the roster after they log in.
+# else
+    <p>This course is open only to those currently on this roster.
+# end
+To allow entry to registered course members, <a href="basicAdmin.smvc?action=display&entity=worksite&id=${worksite.id}">edit the course properties</a>.</p>
+ -->
+
+<input type="hidden" name="entity" value="participant">
+<input type="hidden" name="action" value="delete">
+</form>
+
+</div><!-- documentContentMain -->
+
+#parse("footer.vm")

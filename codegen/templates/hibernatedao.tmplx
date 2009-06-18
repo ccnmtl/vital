@@ -1,0 +1,62 @@
+package ccnmtl.vital3.dao;
+
+import java.lang.NullPointerException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import org.springframework.orm.hibernate.support.HibernateDaoSupport;
+//import org.springframework.dao.DataAccessException;
+//import org.springframework.dao.DataRetrievalFailureException;
+
+import ccnmtl.vital3.<TMPL_VAR class>;
+import ccnmtl.vital3.dao.<TMPL_VAR class>DAO;
+
+public class Hibernate<TMPL_VAR class>DAO extends HibernateDaoSupport implements <TMPL_VAR class>DAO {
+    
+	public void save(<TMPL_VAR class> <TMPL_VAR lcclass>) {
+        if (<TMPL_VAR lcclass> == null){
+            throw new NullPointerException("tried to save null object");
+        }
+		getHibernateTemplate().saveOrUpdate(<TMPL_VAR lcclass>);
+	}
+    
+    public void delete(<TMPL_VAR class> <TMPL_VAR lcclass>){
+        if (<TMPL_VAR lcclass> == null){
+            throw new NullPointerException("tried to delete null object");
+        }
+        logger.info("<TMPL_VAR class>DAO.delete: deleting <TMPL_VAR lcclass> id " + <TMPL_VAR lcclass>.getId());
+        getHibernateTemplate().delete(<TMPL_VAR lcclass>);
+    }
+    
+    public <TMPL_VAR class> findById(Long id) {
+	<TMPL_VAR class> <TMPL_VAR lcclass> = null;
+	List list = getHibernateTemplate().find("from <TMPL_VAR class> a where a.id = ?", new Object[] { id } );
+	
+	if(list.size() > 0){
+            <TMPL_VAR lcclass> = (<TMPL_VAR class>)list.get(0);
+	}
+	return <TMPL_VAR lcclass>;
+    }
+
+<TMPL_LOOP props>
+
+    public List findBy<TMPL_VAR ucprop>(<TMPL_VAR type> <TMPL_VAR prop>) {
+        List list = getHibernateTemplate().find("from <TMPL_VAR class> a where a.<TMPL_VAR prop> = ?", new Object[] { <TMPL_VAR prop> } );
+        return list;
+    }
+</TMPL_LOOP>
+
+    public List findAll() {
+	List list = null;
+        
+        try {
+            list = getHibernateTemplate().find("from <TMPL_VAR class>");
+            logger.info("<TMPL_VAR class>DAO.findAll: list contains " + list.size() + " elements.");
+        } catch(Exception e){
+            logger.error("ERROR: " + e.getMessage());
+        }
+	return list;
+    }
+    
+}

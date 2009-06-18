@@ -1,0 +1,75 @@
+<html>
+<head><title>Welcome to Vital 3.</title>
+</head>
+<body>
+<h1>My Worksites</h1>
+<h3> ${first_name} ${last_name} (${uni}) belongs to the following worksites:</h3>
+#foreach ($worksite in $worksites)
+<table border="2" cellpadding="5" >
+	<tr>
+		<td>Worksite Title</td>
+		<td>Announcement</td>
+		<td>ID string</td>
+		<td>Your Access Level for This Worksite:</td>
+	</tr>
+	<tr>
+		<td><b>${worksite.title}</b></td>
+		<td>${worksite.announcement}</td>
+		<td>${worksite.worksiteidstring}</td>
+		<td>${worksite.accesslevel}</td>
+	</tr>
+	<tr><td colspan = 4>
+		<b>${worksite.title}</b> contains the following units:
+		#foreach ($unit in  $worksite.units)
+		<table border="2"  cellpadding="5">
+			<tr>
+				<td>Unit Title</td>
+			</tr>
+			<tr>
+				<td>${unit.title}</td>
+			</tr>
+			<tr><td>
+				<b>${unit.title}</b> has the following unit materials:
+				#foreach ($material in $unit.materials)
+				<table border="2"  cellpadding="5">
+					<tr>
+						<td>Material Title</td>
+					</tr>
+					<tr>
+						<td>${material.title}</td>
+					</tr>
+				</table>
+				#end
+				<b>${unit.title}</b> has the following assignments:
+				#foreach ($assignment in $unit.assignments)
+				<table border="2"  cellpadding="5">
+					<tr>
+						<td>Assignment Title</td>
+					</tr>
+					<tr>
+						<td>${assignment.title}</td>
+					</tr>
+					<tr><td>
+						<b>${assignment.title}</b> has the following materials:
+						#foreach ($assignmentmaterial in $assignment.materials)
+						<table border="2"  cellpadding="5">
+							<tr>
+								<td>Material Title</td>
+							</tr>
+							<tr>
+								<td>${assignmentmaterial.title}</td>
+							</tr>
+						</table>
+						#end
+					</td></tr>
+				</table>
+				#end
+			</td></tr>
+		</table>
+		#end
+	</td></tr>
+</table>
+#end
+<a href="../materialsLib.smvc?worksiteId=${worksite.id}">Go back to the Main admin area</a>
+</body>
+</html>

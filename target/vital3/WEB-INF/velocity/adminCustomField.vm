@@ -1,0 +1,196 @@
+#set($section = "materials")
+
+#if($action == "display")
+#set($title = "Administration: Edit Video Category")
+#else
+#set($title = "Administration: Add New Video Category")
+#end
+
+#parse("header.vm")
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+<h1>
+#if($action == "display")
+Edit Video Category: 
+#springBind("basicAdminCommand.name")
+$!{status.value}
+#else
+Add New Video Category
+#end
+</h1>
+
+
+#macro(fieldError)
+    #if(${status.errorMessage}  != "") <p class="error">${status.errorMessage}</p> #end
+#end
+
+#springBind("basicAdminCommand.*")
+#foreach($error in $status.errorMessages)
+    #set($hasErrors = "1")
+#end
+  
+<div id="admincontent" style="width: 560px;">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div>
+		</div>
+
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
+
+#if ($action == "display")
+    ## display "delete" form
+    <tr><td colspan="2" align="center">
+    <form action="basicAdmin.smvc" method="POST" style="padding: 0 5px 5px 0; margin: 0; float: right;">
+        #springBind("basicAdminCommand.id")
+        <input type="hidden" name="id" value="$!{status.value}">
+        <input type="hidden" name="entity" value="customField">
+        <input type="hidden" name="action" value="delete">
+        <input type="submit" value="Delete this category" class="regButton" />
+    </form>
+    </td></tr>
+#end
+
+
+<form action="basicAdmin.smvc" method="POST">
+<input type="hidden" name="entity" value="customField">
+
+#if($action == "display")
+    ## id-related stuff
+    #springBind("basicAdminCommand.id")
+    <input type="hidden" name="id" value="$!{status.value}">
+#end
+
+
+######## Begin properties #########
+
+
+#springBind("basicAdminCommand.worksiteId")
+<tr><td align="right"><b>Course name:</b></td><td><input type="hidden" name="worksiteId" value="$!{status.value}">
+#springBind("basicAdminCommand.worksite.title")
+<b>$!{status.value}</b></td></tr>
+
+#springBind("basicAdminCommand.name")
+<tr><td align="right" nowrap="nowrap"><b>Video category name:</b></td><td><input type="text" name="name" value="$!{status.value}" size="40"></td></tr>
+
+#springBind("basicAdminCommand.ordinalValue")
+<tr><td align="right" style="vertical-align: top;"><b>Ordinal value<br />(relative to other custom fields):</b>
+#fieldError()
+</td><td>
+
+<!-- The following is the text for ordinal values -->
+#if ($ordinalValues.size() > 1)
+	There are ${ordinalValues.size()} categories for this video, occupying the following<br />positions:
+#elseif  ($ordinalValues.size() == 0)
+	There are no categories for this video.<br />This will be the first category.
+#else 
+	There is one category for this video, occupying the following<br />position:
+#end
+
+
+#foreach($value in $ordinalValues)
+	<b>
+	${value}
+	#if ($ordinalValues.size() > 1)
+		#if ($ordinalValues.size() != $velocityCount)
+			</b>,
+		#end
+		#if (($ordinalValues.size() - 1) == $velocityCount)
+			 and 
+		#end
+		#if ($ordinalValues.size() == $velocityCount)
+			</b>.
+		#end
+	#else
+		</b>.
+	#end
+#end
+
+
+
+
+<br />
+The ordinal slot for this category is
+
+#if ($ordinalValues.size() == 0)
+	<input type="text" name="ordinalValue" value="1" size="3">.
+	&#160; This is its default position.
+#else
+	#if ($action == "display")
+		<input type="text" name="ordinalValue" value="$!{status.value}" size="3">.
+		&#160; You may enter a new value to change its order.
+	#elseif ($action == "new")
+		not yet defined.<br />
+		Please enter the value for its position: <input type="text" name="ordinalValue" value="$!{status.value}" size="3">.
+	#end
+#end
+
+
+
+
+
+
+
+<br />
+
+<br />
+
+</td></tr>
+
+
+<!--
+#springBind("basicAdminCommand.visibility")
+<tr><td align="right">Visibility:
+#fieldError()
+</td><td>
+<select name="visibility">
+#if($action == "new")
+    <option value="1" selected="true">Visible</option>
+#else
+    <option value="1" #if($status.value == 1) selected="true" #end >Visible</option>
+#end
+</select>
+</td></tr>
+-->
+<input type="hidden" name="visibility" value="1" />
+
+######### End Properties #########
+
+
+<tr><td colspan="2" align="center">
+#if($action == "display")
+    ## display "update" stuff
+    <input type="hidden" name="action" value="update">
+    <input type="submit" value="Update" class="regButton" />
+#else
+    <input type="hidden" name="action" value="insert">
+    <input type="submit" value="Create" class="regButton" />
+#end
+</td></tr>
+
+</form>
+
+
+</table>
+
+
+##springBind("basicAdminCommand.*")
+##springShowErrors("<br>" "")
+
+
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")

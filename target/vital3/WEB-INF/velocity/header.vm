@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+  
+  ###########
+  ## vars of interest:
+  ## title, worksite, currentUser, section, helptopic
+  ###########
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <!-- Disable IE6 image toolbar -->
+    <meta http-equiv="imagetoolbar" content="no" />    
+
+    <title>
+        VITAL #if($title) &mdash; ${title} #end
+    </title>
+
+
+	<style type="text/css" media="all"><!-- @import url('style/tacky_portlet.css'); --></style>
+
+	<style type="text/css" media="all"><!-- @import url('style/general.css'); --></style>
+	
+	<!-- Below is IE css adjustments, don't delete! --> 
+	<!--[if IE]><style type="text/css" title="text/css">@import url('style/IEfixes.css');</style><![endif]-->
+	
+
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Base.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Iter.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/DOM.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Logging.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Async.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Style.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/assetwindow.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/hs.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/hs_vital.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/manage_notes.js"></script> 
+	<script type="text/javascript" language="javascript" src="scripts/stx_toolbar.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/sendit.js"></script> 
+	<script type="text/javascript" language="javascript" src="scripts/dom-drag.js"></script>
+           
+
+
+  </head>
+  <body>
+
+
+<div class="visual-portal-wrapper"><!-- Page wrapper -->
+
+
+<div class="portal-top"><!-- Begin div for top navigation -->
+
+	<div class="portal-top-shadeL"><!-- Begin div for logo and personal tools  class="portal-header-caseleft" -->
+	<div class="portal-top-shadeR"><!-- Begin div for logo and personal tools  class="portal-header-caseright" -->
+	
+		<h4 class="hiddenStructure">Personal tools:</h4>
+	
+		<div class="portal-siteactions"><!-- Navigation for site, independent of login status -->
+			<ul>
+				<li><a href="static.smvc?path=about.html">About VITAL</a></li>
+				#if ($helptopic)
+				<li><a href="javascript:openPopWin('static.smvc?path=help.html#$helptopic','800','700','yes','yes','help')">Help</a></li>
+				#else
+				<li><a href="javascript:openPopWin('static.smvc?path=help.html','800','700','yes','yes','help')">Help</a></li>
+				#end
+		#if($currentUser)
+				<li><a href="javascript:openPopWin('reportError.smvc','510','600','no','yes','help')">Report Problems</a></li>
+		#end
+			</ul>
+		</div>
+		
+		#if($currentUser)
+		<div class="portal-personaltools"><!-- Navigation for user, depends on login status -->
+			<ul>
+				<li class="li_username">${currentUser.fullName}
+				(<a href="userProfile.smvc?action=show">Profile</a>)
+				</li> <!-- (${currentUser.userIdString}) -->
+				<li class="li_logaction"><a href="loginProcessing.smvc?logout=true">Log out</a></li>
+				<li><a href="myCourses.smvc">My VITAL Courses</a></li>
+			</ul>
+		</div>
+		#else
+		<div class="portal-personaltools"><!-- Navigation for user, depends on login status -->
+			<ul>
+				<li class="li_logaction"><a href="login.smvc"><b>Log in</b></a></li>
+			</ul>
+		</div>
+		#end
+
+ 		<hr class="hiddenStructure" />
+	
+		<h1 class="portal-logo">#if($currentUser)<a href="myCourses.smvc" accesskey="1"> #else <a href="login.smvc" accesskey="1">#end VITAL </a></h1>
+		<h1 class="print_only">VITAL: Video Interactions for Teaching and Learning</h1>
+		<hr class="print_only" />
+	
+		
+		 #if($worksite)
+		<div class="portal-coursename-view">
+			<h2 class="portal-coursename">${worksite.title} (${worksite.term.name})</h2><!-- Course name -->
+			<hr class="print_only" />
+		</div>
+		#end
+	
+	</div><!-- End div for logo and personal tools  class="portal-header-caseright" -->
+	</div><!-- End div for logo and personal tools  class="portal-header-caseleft" -->
+	
+</div><!-- End div for top navigation, class="portal-top" -->
+	
+
+#if($currentUser)
+
+    ## get velocity to quit complaining about null value comparison:
+    #if(!$section)
+        #set($section = "none")
+    #end
+    
+#if ($section != "none")
+    <div class="portal-globalnav-search"><!-- Begin global sections and search area wrapper -->
+	<!-- Search is disabled for Fall 2006
+	<div class="portal-searchbox">
+		<form>
+			<label for="searchGadget" class="hiddenStructure">Search Site:</label>
+			<input class="searchbox" type="text" maxlength="100" />
+			<input class="searchButton" type="submit" value="Search" />
+		</form>
+	</div>
+	-->
+	<h4 class="hiddenStructure">Sections:</h4>
+	<ul class="portal-globalnav"><!-- Tabs for the different sections in VITAL -->
+	#if($worksite)
+	
+		<li id="portaltab-courseHome" class= #if($section == "courseHome") "selected" #else "plain" #end >
+			<div><a href="courseHome.smvc?worksiteId=${worksite.id}" title="">Course Home</a></div>
+		</li>
+		<li id="portaltab-library" class= #if($section == "materials") "selected" #else "plain" #end >
+			<div><a href="materialsLib.smvc?worksiteId=${worksite.id}" title="Course Library">Course Library</a></div>
+		</li>
+		<li id="portaltab-my_notes" class= #if($section == "myNotes") "selected" #else "plain" #end >
+			<div><a href="myNotes.smvc?worksiteId=${worksite.id}" title="Manage My Notes">Manage My Clips</a></div>
+		</li>
+		#if($admin)
+		<li id="portaltab-roster-management" class= #if($section == "roster") "selected" #else "plain" #end >
+			<div><a href="listing.smvc?mode=roster&id=${worksite.id}">Roster Management</a></div>
+		</li>
+		#end
+		
+
+	#else
+	
+		<li id="portaltab-my_courses" #if($section == "myCourses") class="selected" #end >
+			<div><a href="myCourses.smvc" title="My Courses">My Courses</a></div>
+		</li>
+		<li id="portaltab-my_profile" #if($section == "userProfile") class="selected" #end >
+			<div><a href="userProfile.smvc?action=show" title="My Profile">My Profile</a></div>
+		</li>
+		
+	#end
+	</ul><!-- End Tabs for the different sections in VITAL -->
+</div><!-- End global sections and search area wrapper -->
+#end
+
+#end
+
+
+
+

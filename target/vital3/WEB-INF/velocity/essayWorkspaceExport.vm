@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <!-- Disable IE6 image toolbar -->
+    <meta http-equiv="imagetoolbar" content="no" />    
+
+    <title>
+        VITAL &mdash; ${title}
+    </title>
+
+	<style type="text/css" media="all"><!-- @import url('style/general.css'); --></style>
+	<style type="text/css" media="print"><!-- @import url('style/print.css'); --></style>
+	
+	<!-- Below is IE css adjustments, don't delete! --> 
+	<!--[if IE]><style type="text/css" title="text/css">@import url('style/IEfixes.css');</style><![endif]-->
+	         
+<script type="text/javascript" language="javascript">
+            baseUrl = "${baseUrl}";
+</script>
+
+    
+    
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Base.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Iter.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/DOM.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Logging.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Async.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/Style.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/assetwindow.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/hs.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/hs_vital.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/manage_notes.js"></script> 
+	<script type="text/javascript" language="javascript" src="scripts/stx_toolbar.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/sendit.js"></script> 
+	<script type="text/javascript" language="javascript" src="scripts/dom-drag.js"></script>
+           
+
+
+  </head>
+  <body class="printmode">
+    
+
+<div class="visual-portal-wrapper"><!-- Page wrapper -->
+
+
+<h1 class="vitallogo">
+V<span style="color: #2876b0;">I</span>TAL
+</h1>
+	
+		
+	 #if($worksite)
+	<div class="portal-coursename-view">
+		<h2 class="portal-coursename">${worksite.title}</h2><!-- Course name -->
+		<hr class="print_only" />
+	</div>
+	#end
+	
+
+
+
+
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+    <div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+<form class="returnview">
+<input class="regButton" type="button" onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=$!{responseCommand.id}'" value="Return to Assigment View" />
+</form>
+
+<br />
+<p>
+<b>TOPIC:</b> ${assignment.unit.title} 
+#if ($assignment.unit.startDate && $assignment.unit.endDate)
+(  ${textFormatter.dateToDateOnlyString($assignment.unit.startDate)} - ${textFormatter.dateToDateOnlyString($assignment.unit.endDate)} )
+#end
+<br />
+<b>ASSIGNMENT:</b> ${assignment.title}
+#if($assignment.dateDue)
+	(Due: $!{textFormatter.dateToDateOnlyString($assignment.dateDue)})
+#else
+	<span style="color: #666; font-style: italic;">(No due date)</span>
+#end
+</p>
+
+
+#if ($assignment.instructions)
+<p>
+<b>INSTRUCTIONS:</b> $!{assignment.instructions}
+<br clear="all" />
+<br clear="all" />
+</p>
+#end
+
+#if ($assignment.materials)
+<div class="assignment-materials"> <!-- Begin assignment materials -->
+<b>Assignment Videos:</b>
+<div class="materials_area"> <!-- Begin assignment materials list area -->
+<ul type="disc"> <!-- Begin assignment materials list  -->
+    #foreach($assignmentmaterial in $assignment.materials)
+<li><a class="thumbnail" title="Edit clips for this asset." 
+        style="background-image:url(#if(${assignmentmaterial.thumbUrl}) '$!{assignmentmaterial.thumbUrl}'  
+                                                               #else 'images/thumbnail.gif' 
+                                                               #end)"
+href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&amp;id=${assignmentmaterial.id}','1000','700','no','no','videoviewer')"></a>
+
+<a title="Edit clips for this asset."
+href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&amp;id=${assignmentmaterial.id}','1000','700','no','no','videoviewer')">$!{assignmentmaterial.title}</a></li>
+    #end
+</ul> <!-- End assignment materials list  -->
+</div> <!-- End assignment materials list area -->
+</div> <!-- End assignment materials -->
+<br clear="all" />
+<br clear="all" />
+<br clear="all" />
+#end
+
+
+
+
+
+#springBind("responseCommand.status")
+#if ($action == "display" && $status.value == 1)
+    #if ($thisAssignmentResponse.participant.id == $participant.id)
+    	<div class="dotteddivider" style="margin-bottom: 10px;"></div>
+    	<h2>${currentUser.fullName}'s Submitted Assignment</h2>
+    #else
+    	<div class="dotteddivider" style="margin-bottom: 10px;"></div>
+    	<h2>$!{thisAssignmentResponse.participant.user.fullName}'s Assignment</h2>
+    #end
+
+#else
+<div class="dotteddivider" style="margin-bottom: 10px;"></div>
+<h2>${currentUser.fullName}'s Assignment</h2>
+#end
+
+<div style="padding: 10px 0; border-bottom: 1px solid #999;">
+${thisAssignmentResponse.text}
+</div>
+
+<!-- Feedback display  - for the student to view feedback. -->
+#if( $thisAssignmentResponse && $thisAssignmentResponse.status == 1 && $thisAssignmentResponse.participant.id == $participant.id && $thisAssignmentResponse.comments.size() > 0)
+    <h2>Faculty Feedback:</h2>
+        #foreach ($comment in $thisAssignmentResponse.comments)
+            #if ($comment.getStatus() == 1)
+                <b>From  $!{comment.participant.user.fullName}:</b><br />
+                 $!{comment.text}<br /><br />
+            #end
+        #end
+ #end     
+<form style="margin-top: 5px;" class="returnview">
+<input class="regButton" type="button" onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=$!{responseCommand.id}'" value="Return to Assigment View" />
+</form>
+
+
+</div><!-- End content area, class="documentContentMain" -->

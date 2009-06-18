@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3.ucm">
+
+    <class name="RawUCMParticipant" table="UCM_PARTICIPANTS">
+        
+        <meta attribute="class-description">
+            This class represents the relationship between a RawUCMUser and a RawUCMWorksite, outside of any specific context of use.
+            It is used exclusively within the UCM package.
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UCM_PARTICIPANT_ID">
+            <generator class="native"/>
+        </id>
+		
+        <many-to-one name="user" lazy="false" class="RawUCMUser" column="UCM_USER_ID">
+            <meta attribute="field-description">The user associated with this participant record.</meta>
+        </many-to-one>
+
+        <many-to-one name="worksite" lazy="false" class="RawUCMWorksite" column="UCM_WORKSITE_ID">
+            <meta attribute="field-description">The worksite associated with this participant record.</meta>
+        </many-to-one>
+        
+        <property name="participantIdString" type="string" column="PARTICIPANT_ID_STRING">
+            <meta attribute="field-description">Uniquely identifies this participant record, and provides a link from Vital's internal participant record.</meta>
+		</property>
+
+    </class>
+</hibernate-mapping>

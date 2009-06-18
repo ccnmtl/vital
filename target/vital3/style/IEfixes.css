@@ -1,0 +1,164 @@
+/* special fixes */
+.li_username
+{
+	border-right: 1px solid #369 !important;
+	padding-right: 4px !important;
+}
+
+.li_logaction { padding-left: 8px !important; }
+
+.portal-globalnav-search { height: 31px !important; }
+
+.portal-globalnav li { width: 120px !important; height: 32px !important; }
+
+.portal-globalnav li a { padding: 0 !important; height: 32px !important; line-height: 32px !important; }
+
+.portal-searchbox { margin-right: 5px !important; }
+
+.portal-environ-view { margin: 3px 5px 0 0 !important; }
+
+input.searchbox { vertical-align: inherit !important; }
+
+input.searchButton { padding: 0 !important; }
+
+.portal-copyright { margin-top: -18px !important; }
+
+h1.assignspace { margin: 0 !important; }
+
+.vital-unit { padding: 5px 0 !important; }
+
+.divbox-1 div.divboxcontent,
+.divbox-2 div.divboxcontent,
+.divbox-3 div.divboxcontent
+{
+	overflow-x: auto !important;
+}
+
+.notesInGroup,
+.noteclip
+{
+	overflow-x: auto !important;
+}
+
+.divbox-1 div.divboxcontent,
+.divbox-2 div.divboxcontent,
+.divbox-2 div.divboxcontent
+{
+	overflow-x: auto !important;
+}
+
+.notesInGroup,
+.noteclip
+{
+	overflow-x: auto !important;
+}
+
+.divbox-1 div.divboxcontent,
+.divbox-2 div.divboxcontent
+{
+	height: 323px !important;
+	
+}
+
+.divbox-3 div.divboxcontent
+{
+	height: 292px !important;
+	
+}
+
+div#pullmenu
+{
+	height: 32px !important;
+}
+
+div#pullmenu form
+{
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+div#pullmenu table
+{
+	margin: 2px 0 0 0 !important;
+}
+
+.txtboxarea form
+{
+	margin-top: 0 !important;
+}
+
+form
+{
+	margin-top: 0 !important;
+}
+
+select.generic
+{
+	width: auto !important;
+	padding: 0;
+	margin: 0;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+}
+
+.tags_box
+{
+	height: 270px;
+}
+
+.assign_the_tag,
+.remove_the_tag
+{
+	margin: 0px 10px 0 15px !important;
+}
+
+select.existingTagsList,
+select.assignedTagsList
+{
+	height: 80px;
+}
+
+.tags_box .close_x
+{
+	margin-top: 0 !important;
+}
+
+
+div.tags_box_divider
+{
+	height: 1px !important;
+	margin-bottom: 0 !important;
+	padding: 0 !important;
+}
+
+.tags_box_content
+{
+	height: 228px;
+}
+
+.tags_box .close_x a
+{
+	border-top: 2px solid #fff !important;
+	border-left: 2px solid #fff !important;
+	border-right: 2px solid #666 !important;
+	border-bottom: 2px solid #666 !important;
+}
+
+.tags_box .close_x a:active
+{
+	border-top: 2px solid #666 !important;
+	border-left: 2px solid #666 !important;
+	border-right: 2px solid #fff !important;
+	border-bottom: 2px solid #fff !important;
+}
+
+.tags_box .close_x
+{
+	text-align: left;
+}
+
+.tags_box .close_x a
+{
+	text-align: center;
+	margin: 0 0 0 140px;
+}
+

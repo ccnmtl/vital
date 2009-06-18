@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="VitalUser" table="USERS">
+        
+        <meta attribute="class-description">
+            This class represents a person who uses Vital.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="USER_ID">
+            <generator class="native"/>
+        </id>
+        
+        <property name="userIdString" type="string" column="USER_ID_STRING">
+            <meta attribute="field-description">A string uniquely identifying this user at the institution or within vital. At columbia, it would be the uni.</meta>
+		</property>
+        
+        <property name="authMethod" type="string" column="AUTH_METHOD">
+            <meta attribute="field-description">How do we authenticate this user? "vital" for built-in method, and any other string for a different method.</meta>
+		</property>
+        
+        <property name="accessLevel" type="integer" column="ACCESS_LEVEL">
+            <meta attribute="field-description">The global access level. Null for regular users, higher for admins and some test users.</meta>
+		</property>
+        
+        <property name="password" type="string">
+            <meta attribute="field-description">The vital password for this non-institutional user. This is for people without unis.</meta>
+		</property>
+                   
+        
+    </class>
+
+</hibernate-mapping>

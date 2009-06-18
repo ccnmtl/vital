@@ -1,0 +1,173 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <!-- ALL BEANS BELOW CORRESPOND TO ONES IN THE APPLICATIONCONTEXT.XML FILE -->
+    
+    <!-- Allows placeholders (e.g. ${context.name} ) to be used in bean definitions. -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:spring.properties" />
+    </bean>
+    
+    <!-- this baseUrl bean allows the value to be accessible from within the application -->
+    <bean id="baseUrl" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="${app.base.url}" />
+    </bean>
+
+    <!-- TastyClient bean for the Tasty Client -->
+    <bean id="tastyClient" class="ccnmtl.utils.TastyClient">
+        <constructor-arg index="0" type="java.lang.String" value="" />
+        <constructor-arg index="1" type="java.lang.String" value="vital3_test" />
+    </bean>
+    
+
+    <!-- ALL BEANS BELOW CORRESPOND TO ONES IN THE VITAL3-SERVLET.XML FILE -->
+
+
+    <!-- Command Validators -->
+    
+    <bean id="parentValidator" abstract="true">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+    </bean>
+    
+    <bean id="specialActionsValidator" class="ccnmtl.vital3.commands.SpecialActionsValidator" parent="parentValidator" />
+    
+        <bean id="discussionEntryValidator" class="ccnmtl.vital3.commands.DiscussionEntryValidator" parent="parentValidator" />
+    
+    
+    
+    <bean id="annotationValidator" class="ccnmtl.vital3.commands.AnnotationValidator" parent="parentValidator" />
+    
+    <bean id="assocValidator" class="ccnmtl.vital3.commands.AssocValidator" parent="parentValidator" />
+        
+    <bean id="basicAdminValidator" class="ccnmtl.vital3.commands.BasicAdminValidator" parent="parentValidator" />
+    
+    <bean id="responseValidator" class="ccnmtl.vital3.commands.ResponseValidator" parent="parentValidator" />
+    
+    <bean id="guidedLessonValidator" class="ccnmtl.vital3.commands.GuidedLessonValidator" parent="parentValidator" />
+    
+    <bean id="listingValidator" class="ccnmtl.vital3.commands.ListingValidator" parent="parentValidator" />
+    
+    <bean id="viewMaterialValidator" class="ccnmtl.vital3.commands.ViewMaterialValidator" parent="parentValidator" />
+ 		     
+ 	<bean id="worksiteIdValidator" class="ccnmtl.vital3.commands.WorksiteIdValidator" parent="parentValidator" />
+    
+    <!-- MVC Controllers -->
+    
+    <!-- all beans with parent="parentController" inherit these property values -->
+    	
+    	
+    	
+    <bean id="parentController" abstract="true">
+        <property name="textFormatter"><ref bean="textFormatter"/></property>
+        <property name="messageSource"><ref bean="messageSource"/></property>
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+    </bean>
+<!--    
+   	<bean id="indexing" class="ccnmtl.vital3.utils.Indexing">
+		<property name="indexPath" value="target/vital3/WEB-INF/lucene/index/" />
+	</bean>
+-->
+   <!--
+    <bean id="searchController" class="ccnmtl.vital3.controllers.SearchController" parent="parentController">
+    	<property name="indexing"><ref bean="indexing"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+	</bean>
+	-->
+	<bean id="annotationController" class="ccnmtl.vital3.controllers.AnnotationController" parent="parentController">
+        <property name="commandName" value="annotationCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.AnnotationCommand" />
+        <property name="validator"><ref bean="annotationValidator"/></property>
+        <property name="tastyClient"><ref bean="tastyClient"/></property>
+    </bean>
+    
+    <bean id="assocController" class="ccnmtl.vital3.controllers.AssocController" parent="parentController">
+        <property name="commandName" value="basicAdminCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="assocValidator"/></property>
+	</bean>
+    
+    <bean id="basicAdminController" class="ccnmtl.vital3.controllers.BasicAdminController" parent="parentController">
+        <property name="commandName" value="basicAdminCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="basicAdminValidator"/></property>
+    </bean>
+    
+    <bean id="courseHomeController" class="ccnmtl.vital3.controllers.CourseHomeController" parent="parentController">
+        <property name="commandName" value="vital3Command" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" />
+        <property name="validator"><ref bean="worksiteIdValidator"/></property>
+    </bean>
+    
+    <bean id="materialsLibController" class="ccnmtl.vital3.controllers.MaterialsLibController" parent="parentController">
+        <property name="commandName" value="vital3Command" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" />
+        <property name="validator"><ref bean="worksiteIdValidator"/></property>
+    </bean>
+    
+    <bean id="errorController" class="ccnmtl.vital3.controllers.ErrorController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+    </bean>
+    
+    <bean id="listingController" class="ccnmtl.vital3.controllers.ListingController" parent="parentController">
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="listingValidator"/></property>
+    </bean>
+    
+    <bean id="loginProcessingController" class="ccnmtl.vital3.controllers.LoginProcessingController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+    </bean>
+    
+    <bean id="myCoursesController" class="ccnmtl.vital3.controllers.MyCoursesController" parent="parentController">
+	</bean>
+    
+    <bean id="responseController" class="ccnmtl.vital3.controllers.ResponseController" parent="parentController">
+        <property name="commandName" value="responseCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.ResponseCommand" />
+        <property name="validator"><ref bean="responseValidator"/></property>
+        <property name="annotationController"><ref bean="annotationController"/></property>
+    </bean>
+    
+    <bean id="reviewResponsesController" class="ccnmtl.vital3.controllers.ReviewResponsesController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+	</bean>
+	
+    <bean id="reviewAllResponsesController" class="ccnmtl.vital3.controllers.ReviewAllResponsesController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+    </bean>	
+	
+	<bean id="specialActionsController" class="ccnmtl.vital3.controllers.SpecialActionsController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+		<property name="validator"><ref bean="specialActionsValidator"/></property>
+       </bean>
+       
+     <bean id="discussionEntryController" class="ccnmtl.vital3.controllers.DiscussionEntryController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="discussionEntryValidator"/></property>
+    </bean>
+
+    <!-- The UserCourseManager implementation -->
+	<bean id="ucm" class="ccnmtl.vital3.ucm.ColumbiaUCM">
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+	</bean>
+    
+    <!-- The Vital Data Access Object -->
+    <bean id="vital3DAO" class="ccnmtl.vital3.test.Vital3MockDAO"></bean>
+    
+    <!-- textFormatter bean for date parsing and formatting -->
+    <bean id="textFormatter" class="ccnmtl.vital3.utils.SimpleTextFormatter"/>
+    
+    <!-- MessageSource bean -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list><value>classpath:errors</value></list>
+        </property>
+    </bean>
+    
+</beans>

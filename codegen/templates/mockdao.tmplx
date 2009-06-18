@@ -1,0 +1,52 @@
+package ccnmtl.vital3.test;
+
+import java.lang.NullPointerException;
+import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+//import org.springframework.dao.DataAccessException;
+
+import ccnmtl.vital3.<TMPL_VAR class>;
+import ccnmtl.vital3.test.MockDAO;
+import ccnmtl.vital3.dao.<TMPL_VAR class>DAO;
+
+public class Mock<TMPL_VAR class>DAO extends MockDAO implements <TMPL_VAR class>DAO {
+    
+    public Mock<TMPL_VAR class>DAO() {
+        super(<TMPL_VAR class>.class);
+    }
+    
+    public void save(<TMPL_VAR class> <TMPL_VAR lcclass>) {
+        if (<TMPL_VAR lcclass> == null){
+            throw new NullPointerException("tried to save null object");
+        }
+        mockSaveOrUpdate(<TMPL_VAR lcclass>);
+    }
+    
+    public void delete(<TMPL_VAR class> <TMPL_VAR lcclass>){
+        if (<TMPL_VAR lcclass> == null){
+            throw new NullPointerException("tried to delete null object");
+        }
+        logger.info("<TMPL_VAR class>DAO.delete: deleting <TMPL_VAR lcclass> id " + <TMPL_VAR lcclass>.getId());
+        mockDelete(<TMPL_VAR lcclass>);
+    }
+
+    public <TMPL_VAR class> findById(Long id) {
+    	
+        return (<TMPL_VAR class>)mockSelectById(id);
+    }
+
+<TMPL_LOOP props>
+
+    public List findBy<TMPL_VAR ucprop>(<TMPL_VAR type> <TMPL_VAR prop>) {
+        List list = mockSelectByProp("get<TMPL_VAR ucprop>", <TMPL_VAR prop>);
+        return list;
+    }
+</TMPL_LOOP>
+	
+    public List findAll() {
+		
+        return mockSelectAll();
+    }
+
+}

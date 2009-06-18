@@ -1,0 +1,163 @@
+#set($section = "courseHome")
+#if($action == "display")
+#set($title = "Administration: Edit Guided Lesson Question")
+#else
+#set($title = "Administration: Add New Question")
+#end
+
+
+#parse("header.vm")
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+<h1>
+Edit Guided Lesson Question for ${assignment.title}
+</h1>
+
+#macro(fieldError)
+    #if(${status.errorMessage}!= "") <div class="error">${status.errorMessage}</div> #end
+#end
+
+#springBind("basicAdminCommand.*")
+#foreach($error in $status.errorMessages)
+    #set($hasErrors = "1")
+#end
+
+<p>
+<a href="listing.smvc?mode=qmAssoc&id=${questionId}" class="regButton" style="margin: 0 10px 0 0;"> Associated videos </a>
+<a href="listing.smvc?mode=glQuestions&id=${assignment.id}" class="regButton">Return to question list</a>
+</p>
+
+<div id="admincontent">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div><!-- id="admincontent-top-inner -->
+		</div><!-- id="admincontent-top -->
+
+
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
+
+
+#if ($action == "display")
+    ## display "delete" form
+    <tr><td colspan="2" align="center">
+    <form action="basicAdmin.smvc" method="POST" style="padding: 0 5px 5px 0; margin: 0; float: right;">
+        #springBind("basicAdminCommand.id")
+         <input type="hidden" name="id" value="$questionId">
+        <input type="hidden" name="entity" value="question">
+        <input type="hidden" name="action" value="delete">
+        <input type="submit" value="Delete this question" class="regButton" />
+    </form>
+    </td></tr>
+#end
+
+<form action="basicAdmin.smvc" method="post">
+<input type="hidden" name="entity" value="question">
+
+<input type="hidden" name="assignmentId" value="$!{assignment.id}">
+
+
+######## Begin properties #########
+#springBind("basicAdminCommand.text")
+<tr><th align="right">Question:</th><td><textarea name="text" rows="5" cols="60" wrap="virtual">$!{status.value}</textarea></td></tr>
+
+#springBind("basicAdminCommand.ordinalValue")
+<tr><th align="right">Question number:
+#fieldError()
+</th><td>
+
+Gaps in the sequence of the questions are allowed.<br />
+
+<!-- The following is the text for ordinal values -->
+#if ($ordinalValues.size() > 1)
+	There are ${ordinalValues.size()} assigments under this topic, occupying the following positions:
+#elseif  ($ordinalValues.size() == 0)
+	There are no assignments under this topic.<br />This will be the first assignment.
+#else 
+	There is one assignment under this topic, occupying the following position:
+#end
+
+
+#foreach($value in $ordinalValues)
+	<b>
+	${value}
+	#if ($ordinalValues.size() > 1)
+		#if ($ordinalValues.size() != $velocityCount)
+			</b>,
+		#end
+		#if (($ordinalValues.size() - 1) == $velocityCount)
+			 and 
+		#end
+		#if ($ordinalValues.size() == $velocityCount)
+			</b>.
+		#end
+	#else
+		</b>.
+	#end
+#end
+
+
+
+
+<br />
+The ordinal slot for this assignment is
+
+#if ($ordinalValues.size() == 0)
+	<input type="text" name="ordinalValue" value="1" size="3">.
+	&#160; This is its default position.
+#else
+	#if ($action == "display")
+		<input type="text" name="ordinalValue" value="$!{status.value}" size="3">.
+		&#160; You may enter a new value to change its order.
+	#elseif ($action == "new")
+		not yet defined.<br />
+		Please enter the value for its position: <input type="text" name="ordinalValue" value="$!{status.value}" size="3">.
+	#end
+#end
+
+
+
+</td></tr>
+
+
+
+######### End Properties #########
+
+
+<tr><td colspan="2" align="center">
+#if($action == "display")
+    ## display "update" stuff
+    <input type="hidden" name="id" value="$questionId">
+    <input type="hidden" name="action" value="update">
+    <input type="submit" value="Save changes" class="regButton">
+#else
+    <input type="hidden" name="action" value="insert">
+    <input type="submit" value="Add a new question">
+#end
+</td></tr>
+
+</form>
+
+
+</table>
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+
+
+
+##springBind("basicAdminCommand.*")
+##springShowErrors("<br>" "")
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

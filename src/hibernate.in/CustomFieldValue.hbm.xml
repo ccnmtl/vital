@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="CustomFieldValue" table="CUSTOM_FIELD_VALUES">
+        
+        <meta attribute="class-description">
+            Custom fields are connected to Materials through CustomFieldValues, which hold the value of each field for each corresponding
+            Material. The CustomField itself does not contain the field value, that is what a CustomFieldValue is for.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="CUSTOM_FIELD_VALUE_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="customField" lazy="false" class="CustomField" column="CUSTOM_FIELD_ID">
+            <meta attribute="field-description">The CustomField to which this value belongs.</meta>
+        </many-to-one>
+        
+        <many-to-one name="material" lazy="false" class="Material" column="MATERIAL_ID">
+            <meta attribute="field-description">The Material to which this value corresponds.</meta>
+        </many-to-one>
+        
+        <property name="ordinalValue" type="integer" column="ORDINAL_VALUE">
+            <meta attribute="field-description">The order of the custom field for this value.</meta>
+		</property>
+        
+        <property name="value" type="string">
+            <meta attribute="field-description">The value of this custom field for the corresponding Material.</meta>
+		</property>
+        
+    </class>
+
+</hibernate-mapping>

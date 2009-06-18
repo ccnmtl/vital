@@ -1,0 +1,417 @@
+#set($section = "courseHome")
+#set($helptopic = "guidedlesson")
+#set ($assignment = ${assignmentResponse.assignment})
+#set($title = "$worksite.title : $assignment.title")
+
+#parse("header.vm")
+
+#set ($responder = $assignmentResponse.participant)
+
+<!-- styles and javascript exclusively for this page: -->
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/resizeIE.js"></script>
+
+<script  type="text/javascript" language="javascript" type="text/javascript">
+
+var locked = 0; // buttons only function when this is zero.
+
+function checkLock () {
+    if (locked == 1) return false;
+    else {
+        //locks the page for 20 seconds -- prevents repeated clicks from resulting in more than one submission.
+        locked = 1;
+        window.setTimeout(unlock,20000);
+        return true;
+    }
+}
+
+function unlock() {
+    locked = 0;
+}
+    
+    
+function confirmSubmit() {
+    if (checkLock()) {
+        var agree=confirm("Do you really want to submit this feedback to the student ?");
+        if (agree) {
+            document.feedbackForm.status.value = 1;
+            return true;
+        } else {
+            return false;
+        }
+    } else return false;
+}
+
+</script>
+
+#parse("assignmentSubheader.vm")
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+#if ($responder.id == $participant.id)
+<h1>My Submitted Answers</h1>
+#else
+<h1>Submitted Answers</h1>
+#end
+
+
+<br />
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+
+#if ($assignment.instructions)
+<div id="assign_instr" class="a_instructions"><!-- Begin assignment instructions -->
+<a href="#assign_instr" class="ex_show" onclick="excerpt(this);return false;" id="ainstr"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+<b>Introduction:</b> <div class="ellips" id="ellipsisassign_instr">...</div><br />
+$!{assignment.instructions}
+</div><!-- End assignment instructions -->
+#end
+
+#set($totalQuestions = $assignment.NumberOfQuestions)
+
+
+<div id="binderbox"><!-- Begin binderbox -->
+#if ($assignmentResponse.status == 1 )
+    #if ($responder.id != $participant.id)
+         <br />
+         <h2>Assignment submitted by $!{responder.user.fullName}</h2>
+    #else
+        <br />
+        <h2>My assignment</h2>
+    #end
+
+    #if ( $assignment.SubmittedResponseCount > 1)
+<form id="goform">
+    <select class="generic" name="other_student_select" onchange="if (options[selectedIndex].value) { document.location.href = options[selectedIndex].value;reset() }" size="1">
+                <option value="0" >View another student's assignment:                
+                #foreach ($otherAssignmentResponse in  $assignment.getSortedResponses())
+                    #if ( $otherAssignmentResponse.status == 1 && $otherAssignmentResponse.id != $assignmentResponse.id)
+                    <option value="reviewGuidedLesson.smvc?id=${otherAssignmentResponse.id}"> 
+                        #if ( $otherAssignmentResponse.participant.id == $participant.id)
+                            Back to my assignment
+                        #else
+                            $!{otherAssignmentResponse.participant.user.fullNameReversed}
+                        #end ## if 
+                    </option>
+                    #end ## if 
+                #end ##foreach
+        </select>
+</form>
+    #else
+    	#if ($responder.id != $participant.id)
+			(This is the only response to this assignment so far.)
+		#end
+    #end
+
+#else
+
+
+
+<table border="0" cellspacing="0" cellpadding="0" class="glprog"><!-- Begin Guided Lesson progress -->
+    
+    
+        
+    #if ((!$thisAssignmentResponse) || ($thisAssignmentResponse && $thisAssignmentResponse.status != 1))
+        #set($totalQuestionsWidth = 600)
+        #set($oneQuestionWidth = $totalQuestionsWidth / $totalQuestions)
+        #set($currentQuestion = $nextQuestion)
+        #set($completedQuestions = $nextQuestion - 1)
+        #set($completedQuestionsWidth = $oneQuestionWidth * $completedQuestions)
+        #set($incompleteQuestions = $totalQuestions - $completedQuestions)
+        #set($incompleteQuestionsWidth = $oneQuestionWidth * $incompleteQuestions)
+        
+        
+    <tr valign="middle">
+        <td colspan="2"><b>Guided Lesson Progress:</b></td>
+    </tr>
+
+    <tr valign="middle">
+        <td>You've completed $completedQuestions out of $totalQuestions questions</td>
+
+        
+        <td>
+            <div class="glprogbar" style="${totalQuestionsWidth}px">
+
+            #if ($completedQuestionsWidth > 0)
+            <div class="glprogbar_complete" style="width:${completedQuestionsWidth}px;"></div>
+            #end
+
+            
+            #if ($incompleteQuestionsWidth > 0)
+            <div class="glprogbar_incomplete" style="width:${incompleteQuestionsWidth}px;"></div>
+            #end
+            
+            </div>
+        </td>
+    #end
+
+    </tr>
+</table><!-- End Guided Lesson progress -->
+
+
+
+<form style="text-align:right; padding: 10px 0 0 0; margin: 0;">
+<input type="button" class="regButton" value="Continue Assignment" onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=${assignmentResponse.id}'">
+<!--
+    <input type="button" class="regButton" value="Export / Print" onclick="document.location.href='http://ccnmtl.columbia.edu'">
+-->
+</form>
+    
+#end
+
+#if ($admin)
+<div class="pageaction" style="margin: 20px 0 0 0; height: auto; padding: 4px 3px">
+    <form action="specialActions.smvc">
+    <input type="hidden" name="action" value="resetGuidedLessonResponse" />
+    <input type="hidden" name="assignmentResponseId" value="${assignmentResponse.id}" />
+    <input type="hidden" name="assignmentId" value="${assignment.id}" />
+    <input type="hidden" name="participantId" value="${participant.id}" />
+    
+    Reset $!{responder.user.fullName}'s answers for: 
+    <select name="firstAnswerToDelete" class="generic" style="width: auto;">
+        
+    #set($questionNumber = 1)
+    #foreach ($question in $assignment.questions) 
+        #if ( $question.getAnswer($responder))
+        	#set ($questiondiff =  $assignment.questions.size() - $questionNumber)
+        	#if ($questiondiff == 0)
+            <option value="${questionNumber}">the last question</option>
+        	#elseif ($questionNumber == 1)
+            <option value="${questionNumber}">all questions</option>
+        	#else
+            <option value="${questionNumber}">questions ${questionNumber} to $assignment.questions.size()</option>
+        	#end
+        #end
+        #set($questionNumber = $questionNumber +1)
+    #end
+    
+    </select>
+    &nbsp;
+    <input  onclick="confirm('Do you really want to reset this assignment ?')"  class="regButton" type="submit" value="Reset" />
+<!-- 
+    <br />Note that this will DELETE answers to all questions including and after the question number you choose.
+ -->
+    </form>
+</div>
+#end
+
+<br /><hr>
+<form style="margin-top: 5px;" class="returnview">
+    <input class="regButton" type="button" onclick="window.location.href='guidedLessonExport.smvc?id=${assignmentResponse.id}'" value="Show all the Questions & Answers" />
+</form>
+
+    <form name="feedbackForm" method="post" action="specialActions.smvc" padding: 10px 0 0 0; margin: 0;>
+        
+        #if($commentsExist)
+            <input type="hidden" name="action" value="updateComments" />
+        #else
+            <input type="hidden" name="action" value="insertComments" />
+        #end
+        
+        <input type="hidden" name="status"
+            #if  ($commentsSubmitted)
+                value="1"
+            #else
+                value="0"
+            #end
+        id="status">
+        
+        <input type="hidden" name="worksiteId" value="$participant.worksite.id" />
+        <input type="hidden" name="assignmentResponseId" value="$assignmentResponse.id" />
+        <input type="hidden" name="participantId" value="$participant.id" />
+        <input type="hidden" name="assignmentId" value="$!{assignment.id}" />
+        #set($questionNumber=1)
+        #foreach ($question in $assignment.questions) 
+            #if ( $question.getAnswer($responder))
+            <!-- FOR EACH QUESTION -->
+                
+                <!-- START QUESTION: --->
+                <div class="dotteddivider" style="padding-top: 10px; margin-bottom:10px; clear:both;"></div>
+
+                    <div class="glq_instructions"><!-- Begin GL assignment instructions -->
+                        <b>Question ${questionNumber} Instructions:</b><br />
+                        $!{question.text}
+                        <br /><br />
+                    </div><!-- End GLassignment instructions -->
+                        
+                <!-- END QUESTION: --->
+                <!-- START MATERIALS: --->
+
+<div class="glv_material_answer_box"><!-- Begin div class="glv_material_answer_box" -->
+
+<div class="glv_material_box"><!-- Begin div class="glv_material_box" -->
+
+    <div class="glv_notesidetables"><!-- Begin notes and materials tables, id="notesidetables" -->
+        <div class="notetabscontainer"><!--  Begin class="notetabscontainer" -->
+        <ul class="notesidetabs"><!-- Begin the tab -->
+            <li class="tab-1 active"><div style="font-weight: bold; color: #fff;">Question ${questionNumber} Videos</div></li>
+        </ul><!-- End the tab -->
+        </div><!--  End class="notetabscontainer" -->
+        
+        
+        <div class="divbox-1 divbox-glv"><!-- Begin area for ASSIGNMENT MATERIALS TAB -->
+            <div class="divboxcontent">
+                <table border="0" cellspacing="0" cellpadding="0">                    
+                    #if ($question.sortedMaterials && $question.sortedMaterials.size() > 0)
+                    
+                    
+                    <tr>
+                        <td class="col1">Thumbnail</td>
+                        <td class="col2 col2gl">Title</td>
+                    </tr>
+                        #foreach ($material in $question.sortedMaterials)
+                        <tr valign="top">
+                            <td class="col_thumbnail">
+                            <a title="Edit notes for this asset." class="thumbnail" 
+                            style="float:none; margin: auto; background-image:url(#if(${material.thumbUrl}) '$!{material.thumbUrl}'  
+                                                                                   #else 'images/thumbnail.gif' 
+                                                                                   #end)"
+                                    href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=viewonly&amp;id=${material.id}','480','400','no','no','videoviewer${material.id}')"></a>
+                            </td>
+                            <td class="col_title col_title_gl">
+                                <h2>
+                                <a 
+				title="View this asset."
+                                href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=viewonly&amp;id=${material.id}','480','400','no','no','videoviewer${material.id}')">$!{material.title}</a>
+                                </h2>
+                            </td>                           
+                        </tr>
+                        #end
+                    #else
+                        <tr valign="top">
+                            <td class="col_title col_title_gl" colspan="2" style="border-top:1px solid #999;">
+                            <p style="padding: 10px 10px 0 10px; color: #999; font-style: italic;">There are no videos for this question.</p>
+                            </td>                           
+                        </tr>
+                    #end
+
+                </table>
+            </div>
+        </div> <!-- End area for ASSIGNMENT MATERIALS TAB -->
+
+     </div><!-- End notes and materials tables, id="notesidetables" -->
+</div><!-- End div class="glv_material_box" -->
+                <div class="glv_answer_box"><!-- Begin div class="glv_answer_box" -->
+                    <!-- START ANSWER: --->
+                    #if (!$admin)
+                    <h2>My Answer:</h2>
+                    #else
+                    <h2>Answer:</h2>
+                    #end
+                                
+                    #set ($answer = $question.getAnswer($responder))
+                    <p>$!answer.text</p>
+                    
+                    <!-- END ANSWER: --->
+                    <!-- START COMMENTS: --->
+                    
+                    #if ( $commentsform && $commentsform == "true" && $assignmentResponse.status > 0) ## Allow faculty to enter and edit comments for submitted responses.
+                        
+                        #if ($answer.getComment($participant))
+                            #set ($mycomment  = $answer.getComment($participant))
+                        #else
+                            #set ($mycomment = false)
+                        #end
+                        <div class="greydivider" style="margin:10px 0;"></div>
+                        <h2>Feedback:</h2>
+                        #if($mycomment)
+                            #if($mycomment.getStatus() == 0)
+                                <p style="padding: 5px 0; margin: 0; color: #999; font-style: italic;">(This is a draft.)</p>
+                            #end
+                            <textarea cols="10" rows="5" tabindex="0" name="updateComment${mycomment.id}" class="regTextarea">$!{textFormatter.escapeForHTML($mycomment.text)}</textarea>
+                        #else
+                            <textarea cols="10" rows="5" tabindex="0" name="newComment${answer.id}" class="regTextarea"></textarea>
+                        #end
+                        
+                    #else  ## Allow students to view comments if they are submitted and the assignment belongs to them.
+
+                        #if( $assignmentResponse.status == 1  && $responder.id == $participant.id )
+                            <div class="greydivider" style="margin:10px 0;"></div>
+                            <h2>Faculty Feedback:</h2>
+                            #if ( $hasSubmittedComments)
+                                    #foreach ($comment in $answer.comments)
+                                                <p>
+                                                <b><i>Comments from $!{comment.participant.user.fullName}:</i></b><br />
+                                                $!{comment.text}
+                                                </p>
+                                     #end
+                            #else ## no submitted comments for this user.
+                             <p class="blanknote">No feedback has been submitted yet.</p>
+                            #end ## if has submitted comments
+                        #end ## don't show any comments for assignments that belong to other users.
+                   
+                    #end ##student comment view
+                    
+                    
+                </div><!-- End div class="glv_answer_box" -->
+
+                    
+            </div><!-- End div class="glv_material_answer_box" -->
+                <!-- END COMMENTS: --->
+                    
+            #set($questionNumber=$questionNumber+1)
+                        
+            <!--END FOR EACH QUESTION -->
+            #end
+        #end
+
+
+        <!-- SUBMIT BUTTONS: --->
+            
+    #if ($commentsform == "true" && $assignmentResponse.status > 0)
+<div class="dotteddivider" style="padding-bottom: 10px; margin-top:10px; clear:both;"></div>
+<div style="text-align:right; padding: 10px 0 0 0; margin: 0;">
+        #if($commentsExist)
+            #if  ($commentsSubmitted)
+                <input class="regButton" type="submit" value="Save Changes" />
+            #else
+                <input class="regButton" type="submit" value="Save Changes as Draft" />
+            #end
+        #else
+            <input class="regButton" onclick="return checkLock()" type="submit"  value="Save as draft" />
+        #end
+        
+        #if  (!$commentsSubmitted)
+            <input onclick="return confirmSubmit()" class="regButton" type="submit" name="form.button.submit" value="Submit feedback to student" />
+        #end
+        <!-- END SUBMIT BUTTONS -->
+</div>
+    #end
+    
+    #if(!$admin && $assignmentResponse.status != 1 && $responder.id == $participant.id)
+<div class="dotteddivider" style="padding-bottom: 10px; margin-top:10px; clear:both;"></div>
+<div style="text-align:right; padding: 10px 0 0 0; margin: 0;">
+        <input type="button" class="regButton" value="Continue Assignment" onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=${assignmentResponse.id}'">
+        ## The back-end for this is not ready yet.
+        <!--
+        <input type="button" class="regButton" value="Export / Print" onclick="document.location.href='http://ccnmtl.columbia.edu'">
+        -->
+</div>
+    #end    
+        
+    </form>
+
+
+
+
+</div><!-- End binderbox -->
+    
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+
+<br /><br />
+    
+
+
+
+#parse("footer.vm")

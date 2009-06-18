@@ -1,0 +1,6 @@
+
+/** convenient constructor: designed for manual <TMPL_VAR class> creation. **/
+    public <TMPL_VAR class>(<TMPL_LOOP props><TMPL_VAR type> <TMPL_VAR prop><TMPL_UNLESS __LAST__>, </TMPL_UNLESS></TMPL_LOOP>) {
+        
+        this(<TMPL_LOOP props><TMPL_VAR prop><TMPL_UNLESS __LAST__>, </TMPL_UNLESS></TMPL_LOOP><TMPL_LOOP sets>, new <TMPL_VAR typeImpl>()</TMPL_LOOP>);        
+    }

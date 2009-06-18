@@ -1,0 +1,88 @@
+#set($section = "userProfile")
+#set($title = "My Profile")
+#parse("header.vm")
+
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+    
+<h1>My Profile</h1>
+    
+    #if ($message)
+    <p class="message">$!{textFormatter.escapeForHTML($message)}</p>
+    #end
+    
+<br />
+
+<div class="divider" style="margin-bottom: 10px;"></div>
+<h3>Login: ${currentUser.userIdString}</h3>
+
+<p>This is the unique name you use to log in to VITAL.</i></p>
+
+
+<div class="divider" style="margin-bottom: 10px;"></div>
+<h3>Display name:</h3>
+
+<p>This is the name used for identification to other VITAL users.</i></p>
+
+<form method="post" action ="userProfile.smvc">
+	<input type="hidden" name="action" value="changeName">
+
+<table border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td style="padding: 0 3px 3px 0"><b>First name:</b></td>
+		<td style="padding: 0 0 3px 3px"><input class="namebox" type="text" name="firstName" value="$!{textFormatter.escapeForHTML($currentUser.firstName)}" /></td>
+	</tr>
+	<tr>
+		<td style="padding: 3px 3px 0 0"><b>Last name:</b></td>
+		<td style="padding: 3px 0 0 3px"><input class="namebox" type="text" name="lastName" value = "$!{textFormatter.escapeForHTML($currentUser.lastName)}" /></td>
+	</tr>
+	<tr>
+		<td style="padding: 6px 0 0 3px" colspan="2" align="right"><input type="submit" value="Change display name" class="regButton" id="customLogin" /></td>
+	</tr>
+</table>
+</form>
+
+
+<div class="divider" style="margin: 10px 0;"></div>
+<h3>Password:</h3>
+
+#if ($authMethod == "vital")
+	<p>To change your VITAL password, please provide your current password, followed by your new password.
+	<br />Your new password must be <b>at least four characters in length</b>:</p>
+
+	## normal auth password change form                    
+	<form method="post" action ="userProfile.smvc">
+	<input type="hidden" name="action" value="changePassword">
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td style="padding: 0 3px 3px 0"><b>Current password:</b></td>
+			<td style="padding: 0 0 3px 3px"><input class="namebox" type="password" name='old' ></td>
+		</tr>
+		<tr>
+			<td style="padding: 3px 3px 3px 0"><b>New password:</b></td>
+			<td style="padding: 3px 0 3px 3px"><input class="namebox" type="password" name='new1'></td>
+		</tr>
+		<tr>
+			<td style="padding: 3px 3px 0 0"><b>Confirm new password:</b></td>
+			<td style="padding: 3px 0 0 3px"><input class="namebox" type="password" name='new2'></td>
+		</tr>
+		<tr>
+			<td style="padding: 6px 0 0 3px" colspan="2" align="right"><input type="submit" value="Change password" class="regButton" id="customLogin" /></td>
+		</tr>
+	</table>
+	</form>
+#else
+	<br />
+	<p>Your login and password correspond to an external authentication system.
+    #if ($passwordChangeURL)
+        To change your password, please <a href="${passwordChangeURL}" target ="_blank" >click here</a>.
+    #end
+	<br />
+#end
+
+
+
+</div><!-- End content area, class="documentContentMain" -->
+#parse("footer.vm")

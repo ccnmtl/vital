@@ -1,0 +1,117 @@
+.stickyclose
+{
+	float: right;
+	margin: 0px;
+	font-family: verdana, sans-serif;
+	font-weight: bold;
+	font-size: 10px;
+	text-decoration: none;
+	padding: 1px;
+}
+
+.stickytitle
+{
+	background-color: #dd9;
+	padding: 1px;
+	padding-left: 3px;
+	margin-bottom: 1px;
+	margin-top: 0px;
+	display: block;
+	font-weight: bold;
+}
+
+.showsticky .stickytitle { cursor: move; }
+
+.stickyclose a
+{
+	text-decoration: none;
+	color: #000;
+}
+
+.stickyclose a:hover { color: #f00; }
+.stickynote { display: none; }
+
+.showsticky
+{
+	display: block;
+	background: url(shadowAlpha.png) no-repeat bottom right !important;
+	width: 200px;
+	height: 200px;
+	position: absolute;
+}
+
+.stickycontent
+{
+	position: relative;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	background-color: #ff9;
+	height: 194px;
+	font-family: verdana, sans-serif;
+}
+
+.stickybody
+{
+	padding: 0px 8px 0px 8px;
+	overflow: auto;
+	height: 163px;
+}
+
+.stickybody p { height: 0px !important; }
+
+.resizer
+{
+	float: right;
+	width: 10px;
+	height: 13px;
+	cursor: se-resize;
+	background: url(stickyresize.png) no-repeat bottom right;
+}
+
+.stickyfooter
+{
+	position: relative;
+	width: 100%;
+	height: 15px;
+}
+
+.stickyfooter:hover { background-color: #dd9; }
+.stickycolor { display: none; }
+
+.stickyfooter:hover .stickycolor
+{
+	display: block;
+	float: left;
+	width: 10px;
+	height: 10px;
+	border: #999 solid 1px;
+	margin: 2px;
+	cursor: pointer;
+}
+
+.pink { background-color: #fcc; }
+.blue { background-color: #ccf; }
+.green { background-color: #9f9; }
+.yellow { background-color: #ff9; }
+.purple { background-color: #fcf; }
+.stickycoloryellow .stickycontent { background-color: #ff9; }
+.stickycolorpink .stickycontent { background-color: #fcc; }
+.stickycolorblue .stickycontent { background-color: #ccf; }
+.stickycolorgreen .stickycontent { background-color: #9f9; }
+.stickycolorpurple .stickycontent { background-color: #fcf; }
+.stickycoloryellow .stickytitle { background-color: #dd9; }
+.stickycoloryellow .stickyfooter:hover { background-color: #dd9; }
+.stickycolorpink .stickytitle { background-color: #d99; }
+.stickycolorpink .stickyfooter:hover { background-color: #d99; }
+.stickycolorblue .stickytitle { background-color: #99d; }
+.stickycolorblue .stickyfooter:hover { background-color: #99d; }
+.stickycolorgreen .stickytitle { background-color: #9d9; }
+.stickycolorgreen .stickyfooter:hover { background-color: #9d9; }
+.stickycolorpurple .stickytitle { background-color: #d9d; }
+.stickycolorpurple .stickyfooter:hover { background-color: #d9d; }
+
+.stickyhead
+{
+	height: 16px;
+	overflow: hidden;
+}

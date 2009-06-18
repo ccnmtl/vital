@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="Answer" table="ANSWERS">
+        
+        <meta attribute="class-description">
+			The answer to a question in a Guided Lesson assignment. Note: Essay assignment responses have null for their set of answers.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ANSWER_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="assignmentResponse" lazy="false" class="AssignmentResponse" >
+            <meta attribute="field-description">The guided lesson response this answer is part of.</meta>
+            <column name="ASSIGNMENT_RESPONSE_ID" unique-key="ONE_ANSWER_PER_QUESTION_PER_RESPONSE" ></column>
+        </many-to-one>
+
+		<many-to-one name="question" lazy="false" class="Question" >
+            <meta attribute="field-description">The question this answer answers.</meta>
+            <column name="QUESTION_ID" unique-key="ONE_ANSWER_PER_QUESTION_PER_RESPONSE" ></column>
+        </many-to-one>
+
+        <property name="status" type="integer" column="STATUS">
+            <meta attribute="field-description">Indicates whether this answer has been submitted yet.</meta>
+		</property>
+		
+        <property name="text0" type="text">
+            <meta attribute="field-description">Text, part 0.</meta>
+		</property>   
+        
+        <property name="text1" type="text">
+            <meta attribute="field-description">Text, part 1.</meta>
+		</property>              
+        
+        <property name="text2" type="text">
+            <meta attribute="field-description">Text, part 2.</meta>
+		</property>              
+        
+        <property name="text3" type="text">
+            <meta attribute="field-description">Text, part 3.</meta>
+		</property>              
+        
+        <property name="text4" type="text">
+            <meta attribute="field-description">Text, part 4.</meta>
+		</property>              
+        
+        <property name="text5" type="text">
+            <meta attribute="field-description">Text, part 5.</meta>
+		</property>              
+        
+        <property name="text6" type="text">
+            <meta attribute="field-description">Text, part 6.</meta>
+		</property>              
+        
+        <property name="text7" type="text">
+            <meta attribute="field-description">Text, part 7.</meta>
+		</property>              
+        
+        <property name="text8" type="text">
+            <meta attribute="field-description">Text, part 8.</meta>
+		</property>              
+        
+        <property name="text9" type="text">
+            <meta attribute="field-description">Text, part 9.</meta>
+		</property>              
+        
+        <property name="text10" type="text">
+            <meta attribute="field-description">Text, part 10.</meta>
+		</property>    
+		
+        <property name="text11" type="text">
+            <meta attribute="field-description">Text, part 11.</meta>
+		</property>    
+		
+        <property name="text12" type="text">
+            <meta attribute="field-description">Text, part 12.</meta>
+		</property>    
+		
+        <property name="text13" type="text">
+            <meta attribute="field-description">Text, part 13.</meta>
+		</property>    
+		
+        <property name="text14" type="text">
+            <meta attribute="field-description">Text, part 14.</meta>
+		</property>    
+		
+        <property name="text15" type="text">
+            <meta attribute="field-description">Text, part 15.</meta>
+		</property>    
+		
+        
+        
+        
+        <set name="comments" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Any comments other participants may have submitted in relation to this guided lesson answer.</meta>
+            <key column="ANSWER_ID"/>
+			<one-to-many class="Comment"/>
+		</set>
+
+    </class>
+
+</hibernate-mapping>

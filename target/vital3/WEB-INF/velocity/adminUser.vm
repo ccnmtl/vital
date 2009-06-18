@@ -1,0 +1,188 @@
+#set($section = "myCourses")
+#set($title = "Administration: Global User Management")
+
+#parse("header.vm")
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+	<!-- For sorting the table -->
+	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+
+<script language="javascript">
+
+function checkAuthMethod() {
+    
+    authMethodBoxes = document.forms["userAdminForm"].authMethod;
+    if (authMethodBoxes[1].checked == true) {
+        enablePassword();
+    } else {
+        disablePassword();
+    }
+}
+
+function disablePassword() {
+    document.forms["userAdminForm"].password.disabled = true;
+    document.forms["userAdminForm"].email.disabled = true;
+    document.getElementById('uni_username').innerHTML="UNI:";
+    document.getElementById('pswd_field').style.color="#999";
+    document.getElementById('email_field').style.color="#999";
+}
+
+function enablePassword() {
+    document.forms["userAdminForm"].password.disabled = false;
+    document.forms["userAdminForm"].email.disabled = false;
+    document.getElementById('uni_username').innerHTML="Username:";
+    document.getElementById('pswd_field').style.color="#000";
+    document.getElementById('email_field').style.color="#000";
+}
+
+</script>
+
+<h1><a href="listing.smvc?mode=user">Global User Management</a>: Details for 
+#springBind("basicAdminCommand.firstName")
+$!{status.value}
+#springBind("basicAdminCommand.lastName")
+$!{status.value}
+</h1>
+
+
+<div id="admincontent" style="width: 600px">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div>
+		</div>
+
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
+    <tr>
+        <td colspan="2">
+    #if($user.Id != $currentUser.Id)
+        <form action="basicAdmin.smvc" method="POST" style="padding: 0 5px 5px 0; margin: 0; float: right;">
+        <input type="hidden" name="id" value="${user.id}">
+        <input type="submit" name="deleteUser" value="Delete this user" class="regButton" />
+        <input type="hidden" name="entity" value="user">
+        <input type="hidden" name="action" value="delete">
+         </form>
+    #end
+        </td>
+    </tr>
+
+    <form name="userAdminForm" action="basicAdmin.smvc" method="POST">
+    
+    <tr>
+        <th style="text-align: right;">First name:</th>
+        #springBind("basicAdminCommand.firstName")
+        <td><input type="text" name="firstName" value="$!{status.value}" size="30" /></td>
+    </tr>
+    <tr>
+        <th style="text-align: right;">Last name:</th>
+        #springBind("basicAdminCommand.lastName")
+        <td><input type="text" name="lastName" value="$!{status.value}" size="30" /></td>
+    </tr>
+    <tr>
+        <th style="text-align: right;">Login method:</th>
+        <td>
+        <input type="radio" name="authMethod" value="external" #if($basicAdminCommand.authMethod && $basicAdminCommand.authMethod != "vital") checked="true" #end onClick="disablePassword()" /> Institutional authentication <br />
+        <input type="radio" name="authMethod" value="vital" #if(!($basicAdminCommand.authMethod) || $basicAdminCommand.authMethod == "vital") checked="true" #end onClick="enablePassword()" /> Built-in VITAL-only authentication
+        </td>
+    </tr>
+    
+    <tr>
+        <th style="text-align: right;"><span id="uni_username">UNI:</span></th>
+        #springBind("basicAdminCommand.userIdString")
+        <td><input type="text" name="userIdString" value="$!{status.value}" size="30" /></td>
+    </tr>
+    <tr>
+        <th style="text-align: right;"><span id="pswd_field">Password:<br />(only for non-Columbia users)</span></th>
+        #springBind("basicAdminCommand.password")
+        <td><input type="password" name="password" value="$!{status.value}" size="30"></td>
+    </tr>
+    
+            
+    <tr>
+        <th style="text-align: right;"><span id="email_field">E-mail address:</span></th>
+        #springBind("basicAdminCommand.email")
+        <td><input type="text" name="email" value="$!{status.value}" size="30" /></td>
+    </tr>
+    <tr>
+    <th style="text-align: right;">Global access level:</th>
+        <td>
+            #set($tag0="selected")
+            #set($tag4="")
+            #if(${user.accessLevel} == 100)
+                #set($tag4="selected")
+            #end
+        
+            <select name="accessLevel">
+                <option value="0" ${tag0}>Regular</option>
+                <option value="100" ${tag4}>Administrator</option>
+            </select>
+        </td>
+    </tr>
+    <tr><td colspan="2" align="center">
+        <input type="hidden" name="id" value="${user.id}">
+        <input type="submit" name="updateUser" value="Update" class="regButton" />
+        <input type="hidden" name="entity" value="user">
+        <input type="hidden" name="action" value="update"></td>
+    </tr>
+    </form>
+    
+</table>
+
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+
+<div class="dotteddivider" style="margin: 20px 0;"></div>
+
+<h3>
+#springBind("basicAdminCommand.firstName")
+$!{status.value}
+#springBind("basicAdminCommand.lastName")
+$!{status.value}'s courses:
+</h3>
+
+
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:500px;" onclick="sortColumn(event)">
+	<thead>
+		<tr>
+			<th class="navOut DefaultSort" style="width: 350px;">Course Title</th>
+			<th class="navOut" style="width: 150px;">Access Level</th>
+		</tr>
+	</thead>
+        
+	<tbody>
+		#foreach($participant in $user.getParticipants())
+        <tr>
+		<td><a href="courseHome.smvc?worksiteId=${participant.worksite.id}">${participant.worksite.title}</a></td>
+		<td>${participant.labelForAccessLevel}</td>
+        </tr>
+		#end
+
+#if ($user.getParticipants().size() == 0)
+<tr><td>(none)</td><td>(none)</td></tr>
+#end
+
+	</tbody>
+    </table>
+
+
+
+
+<script language="javascript">
+    checkAuthMethod();
+</script>
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

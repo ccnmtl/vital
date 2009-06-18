@@ -1,0 +1,32 @@
+		<div class="essay_view" id="sticky_question_view">
+            $!{responseCommand.text}
+		</div>
+		<div class="wrkspcsidetable" style="width:auto !important;"><!--  Begin class="wrkspcsidetable" -->
+					
+			<table border="0" cellspacing="0" cellpadding="0" style="width: 100%; margin: 5px 0 0 0;">
+				<tr valign="middle">
+					<td>
+					    
+                    <form name="essay_submit" method="post" action="response.smvc">
+                        <input type="hidden" name="status" value="1" id="hiddenStatus">
+                        <input type="hidden" name="action" value="update" />
+                        <input type="hidden" name="entity" value="assignmentResponse" />
+                        <input type="hidden" name="id" value="${responseCommand.id}" />
+                        <input type="hidden" name="assignmentId" value="$!{assignment.id}">
+                        <input name="note_text_format" value="text/html" type="hidden" />
+                        <input type="hidden"  name="text" value = "$!{textFormatter.escapeForHTML($responseCommand.text)}">
+                        <input onclick="return confirmSubmit()" class="regButton" type="submit" name="form.button.submit" value="Submit" />
+            	    </form>
+            					    
+				</td>
+				<td style="text-align:right;">
+                <form name="essay_edit" method="post" action="response.smvc">
+                    <input onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=$!{responseCommand.id}&export=true'" class="regButton" id="export_print_button" type="button"  value="Print" /> 
+                    <input onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=$!{responseCommand.id}'" class="regButton" type="button" value=" Edit " /> 
+                </form>
+				
+				</td>
+				</tr>
+			</table>
+              
+		</div><!--  End class="wrkspcsidetable" -->

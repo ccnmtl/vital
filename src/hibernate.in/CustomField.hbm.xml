@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="CustomField" table="CUSTOM_FIELDS">
+        
+        <meta attribute="class-description">
+            A custom metadata field for Materials. Custom fields are per-worksite, and are connected to Materials through CustomFieldValues,
+            which hold the value of each field for each corresponding Material. The CustomField itself does not contain the field value,
+            that is what a CustomFieldValue is for.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="CUSTOM_FIELD_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="worksite" lazy="false" class="VitalWorksite" column="WORKSITE_ID">
+            <meta attribute="field-description">The Worksite in which this CustomField is used.</meta>
+        </many-to-one>
+        
+        <property name="name" type="string">
+            <meta attribute="field-description">The name of this custom field.</meta>
+		</property>
+
+        <property name="ordinalValue" type="integer" column="ORDINAL_VALUE">
+            <meta attribute="field-description">An integer value used for ordering the custom fields for display.</meta>
+		</property>
+        
+        <property name="visibility" type="integer">
+            <meta attribute="field-description">A binary integer which reflects whether or not the field should be visible to non-administrative
+            users.</meta>
+		</property>
+        
+        <set name="values" inverse="true" lazy="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">All CustomFieldValues for this custom field. Each CustomFieldValue corresponds to a particular Material.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="CUSTOM_FIELD_ID"/>
+            <one-to-many class="CustomFieldValue"/>
+        </set>
+        
+        
+    </class>
+
+</hibernate-mapping>

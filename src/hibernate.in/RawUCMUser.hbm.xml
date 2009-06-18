@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3.ucm">
+
+    <class name="RawUCMUser" table="UCM_USERS">
+        
+        <meta attribute="class-description">
+            This class represents a unique user, outside of the context of any particular course or worksite.
+            It is used exclusively within the UCM package.
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UCM_USER_ID">
+            <generator class="native"/>
+        </id>
+
+        <property name="userIdString" type="string" column="USER_ID_STRING">
+            <meta attribute="field-description">This person's institutional ID or username. At Columbia, this corresponds to the UNI.</meta>
+		</property>
+
+        <property name="email" type="string">
+            <meta attribute="field-description">This person's e-mail address</meta>
+		</property>
+        
+        <property name="firstName" type="string" column="FIRST_NAME">
+            <meta attribute="field-description">This person's first name (potentially provided by the institution's records)</meta>
+		</property>
+
+        <property name="lastName" type="string" column="LAST_NAME">
+            <meta attribute="field-description">This person's last name (potentially provided by the institution's records)</meta>
+		</property>
+
+        <set name="participants" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Associations with Worksites.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UCM_USER_ID"/>
+            <one-to-many class="RawUCMParticipant"/>
+        </set>
+
+    </class>
+</hibernate-mapping>

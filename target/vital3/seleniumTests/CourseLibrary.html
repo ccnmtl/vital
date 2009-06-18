@@ -1,0 +1,296 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>0809courseLibrary</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">0809courseLibrary</td></tr>
+</thead><tbody>
+<tr>
+    <td>setTimeout</td>
+    <td>120000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>loadStoredVars</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>../login.smvc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>${instructorUsername}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+<!-- go straight into the course home page
+<tr>
+	<td>clickAndWait</td>
+	<td>link=${worksiteTitle}</td>
+	<td></td>
+</tr> -->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Course Library</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage the video categories for this course</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name</td>
+	<td>Serial Number</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ordinalValue</td>
+	<td>33</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name</td>
+	<td>tool number</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ordinalValue</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name</td>
+	<td>course number</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ordinalValue</td>
+	<td>200</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name</td>
+	<td>class room</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ordinalValue</td>
+	<td>303</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Course Library</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add new video for this course</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>accessLevel</td>
+	<td>label=Public</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>test for the course library</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>url</td>
+	<td>http://qtss.cc.columbia.edu/projects/tc/hudk4027/01_01.mov</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-0-value</td>
+	<td>23</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-1-value</td>
+	<td>44</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-2-value</td>
+	<td>535</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-3-value</td>
+	<td>603</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=edit_1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-0-value</td>
+	<td>24</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-1-value</td>
+	<td>45</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-2-value</td>
+	<td>534</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>child0-3-value</td>
+	<td>602</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Update']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage the video categories for this course</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=class room</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Delete this category']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=Serial Number</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Delete this category']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=course number</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Delete this category']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=tool number</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Delete this category']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+<!-- save for later...
+<tr>
+	<td>open</td>
+	<td>../login.smvc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>${studentUserName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+-->
+</tbody></table>
+</body>
+</html>

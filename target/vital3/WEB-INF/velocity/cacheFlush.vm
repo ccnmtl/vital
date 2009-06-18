@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>Cache Flush</title>
+</head>
+<body>
+
+<div class="documentContentMain">
+
+#if($message)
+    <p>${message}</p>
+#end
+
+<!--
+Relevant pages:
+
+-->
+
+<p><a href="cacheFlush.smvc?mode=flush"><img src="images/flushHandle.jpg"></a></p>
+
+<p><b>DBCP Stats (at request time)</b><br>
+- active connections: ${activeConnections} out of a maximum allowed ${maxActiveConnections}.<br>
+- idle connections: ${idleConnections} out of a maximum allowed ${maxIdleConnections}.
+</p>
+
+<p>
+#if ($activeSessions)
+    <b>Current users:</b>
+    <p>
+    #foreach ($name in $loggedInUserList)
+        $name<br/>
+    #end
+    </p>
+    
+    <p>
+    Tomcat sessions: ${totalSessions}, of which ${activeSessions} are active.
+    </p>
+
+#else
+    No data on active sessions is available yet.
+#end
+</p>
+#*
+            model.put ("hibernateStats", statMap.remove("SessionFactoryStats"));
+            model.put ("OSCacheStats", statMap);
+*#
+<p>
+    #if ($hibernateStats)
+    
+<b>General info:</b><br />
+Start time: $hibernateStats.StartTime<br />
+Global number of executed queries: $hibernateStats.QueryExecutionCount<br />
+Global number of sessions opened: $hibernateStats.SessionOpenCount<br />
+Global number of sessions closed: $hibernateStats.SessionCloseCount<br />
+Global number of flush executed by sessions (either implicit or explicit): $hibernateStats.FlushCount<br />
+Global number of connections asked by the sessions: $hibernateStats.ConnectCount<br />
+Number of prepared statements that were acquired: $hibernateStats.PrepareStatementCount<br />
+Number of prepared statements that were released: $hibernateStats.CloseStatementCount<br />
+Number of StaleObjectStateExceptions that occurred: $hibernateStats.OptimisticFailureCount<br />
+
+<b>Collections:</b><br />
+Global number of collections fetched: $hibernateStats.CollectionFetchCount<br />        
+Global number of collections loaded: $hibernateStats.CollectionLoadCount<br />
+Global number of collections recreated: $hibernateStats.CollectionRecreateCount<br />
+Global number of collections removed: $hibernateStats.CollectionRemoveCount<br />
+Global number of collections updated: $hibernateStats.CollectionUpdateCount<br />
+<b>Entities:</b><br />
+Global number of entity deletes: $hibernateStats.EntityDeleteCount<br />
+Global number of entity fetchs:  $hibernateStats.EntityFetchCount<br />
+Global number of entity inserts: $hibernateStats.EntityInsertCount<br />
+Global number of entity loads: $hibernateStats.EntityLoadCount<br />
+Global number of entity updates: $hibernateStats.EntityUpdateCount<br />
+<b>Slow queries:</b><br />
+Time in milliseconds of the slowest query: $hibernateStats.QueryExecutionMaxTime<br />
+Query string for the slowest query: $hibernateStats.QueryExecutionMaxTimeQueryString<br />
+
+
+<!--
+Global number of cached queries successfully retrieved from cache: $hibernateStats.QueryCacheHitCount<br />
+Global number of cached queries *not* found in cache: $hibernateStats.QueryCacheMissCount<br />
+Global number of cacheable queries put in cache: $hibernateStats.QueryCachePutCount<br />
+Number of transactions we know to have been successful : $hibernateStats.SuccessfulTransactionCount<br />
+Number of transactions we know to have completed: $hibernateStats.TransactionCount<br />
+-->
+
+
+<b>Second level (OpenSymphony) cache:</b><br />
+Global number of cacheable entities/collections successfully retrieved from the second-level cache: $hibernateStats.SecondLevelCacheHitCount<br />
+Global number of cacheable entities/collections not found in the second-level cache and loaded from the database:$hibernateStats.SecondLevelCacheMissCount<br />
+Global number of cacheable entities/collections put in the second-level cache: $hibernateStats.SecondLevelCachePutCount<br />
+<br /> 
+#end ##if
+
+    #if ($OSCacheStats)
+
+<b>Second level (OpenSymphony) cache breakdown:</b><br />
+        <table>
+        <tr>
+            <td>Class</td>
+            <td>Hits</td>
+            <td>Misses</td>
+            <td>Puts</td>
+        </tr>
+        
+        #foreach ($stat in  ${OSCacheStats})
+        <tr>
+            <td>$stat.name</td>
+            <td>$stat.hits</td>
+            <td>$stat.misses</td>
+            <td>$stat.puts</td>
+        </tr>
+        
+        #end ##foreach
+        </table>
+    #else
+        Not defined.
+    #end ##if
+    
+</p>
+
+</div><!-- documentContentMain -->
+
+</body>

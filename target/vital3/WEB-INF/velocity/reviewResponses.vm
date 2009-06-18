@@ -1,0 +1,128 @@
+#set($section = "courseHome")
+#set($title = "$worksite.title : $assignment.title")
+#parse("header.vm")
+
+<!-- For sorting the table -->
+<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+    
+	function gotoDest(form) {
+		var index=form.select.selectedIndex
+		if (form.select.options[index].value != "0") {
+            document.location.href =  "reviewResponses.smvc?id=${assignment.id}" + form.select.options[index].value;
+		}
+	}
+</script>
+
+
+#parse("assignmentSubheader.vm")
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+<h1>Responses to ${assignment.title}</h1>
+
+<br />
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+
+#if($assignment.instructions)
+    #if($assignment.type == "gl")
+        <p><b>Introduction: </b> 
+    #else
+        <p><b>Instructions: </b>
+    #end
+    <br />
+    $!{assignment.instructions}</p>
+    <hr />
+#end
+
+
+
+<FORM NAME="form2">
+<SELECT NAME="select" onchange="gotoDest(this.form)" SIZE="1">
+	<option VALUE="0">View:
+	<option VALUE="&sortOrder=$!{sortOrder}&ascending=$!{ascending}&viewBy=all"> All
+	<option VALUE="&sortOrder=$!{sortOrder}&ascending=$!{ascending}&viewBy=students"> Students
+	<option VALUE="&sortOrder=$!{sortOrder}&ascending=$!{ascending}&viewBy=guests"> Guests
+	<option VALUE="&sortOrder=$!{sortOrder}&ascending=$!{ascending}&viewBy=withfeedback"> Submissions with feedback
+	<option VALUE="&sortOrder=$!{sortOrder}&ascending=$!{ascending}&viewBy=nofeedback"> Submissions without feedback
+</SELECT>
+</FORM>
+
+#if ($assignment.type == "essay" )
+<a href="#" onclick="if(confirm('Do you really want to reset all the responses to this assignment ?')) document.location.href='specialActions.smvc?action=resetAllResponses&assignmentId=${assignment.id}&participantId=$!{participant.id}'">Reset All</a><br />
+#end
+<a href="reviewAllResponses.smvc?id=${assignment.id}">View all</a>
+
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" onclick="sortColumn(event)">
+    <thead>
+        <tr>
+            <th class="navOut DefaultSort">Last Name</th>
+            <th class="navOut">First Name</th>
+            <th class="navOut">Access Level</th>
+            <th class="navOut">Date Submitted</th>
+            <th class="navOut">Feedback</th>
+            <th class="navOut">Actions</th>
+        </tr>
+    </thead>
+
+
+<tbody>
+#foreach ($assignmentResponse in  $sortedResponses)
+	#if ( $assignmentResponse.status == 1 )
+	
+        <tr>
+            <!-- $!{assignmentResponse.id} -->
+                
+            #if ($assignmentResponse.participant.user.lastName && $assignmentResponse.participant.user.firstName)
+            <td>$!{assignmentResponse.participant.user.lastName}</td>
+            <td>$!{assignmentResponse.participant.user.firstName}</td>
+            #else
+            <td><b>$!{assignmentResponse.participant.user.userIdString}</b></td>
+            <td></td>     
+            
+            #end
+            
+            <td>$!{assignmentResponse.participant.labelForAccessLevel}</td>
+            <td>$!{textFormatter.dateToDateOnlyString($assignmentResponse.dateSubmitted)}</td>
+            <td> 
+			#if ($assignmentResponse.hasSubmittedComments())
+				$!{textFormatter.dateToDateOnlyString($assignmentResponse.CommentsDate)}
+			#else
+				None
+			#end
+            </td>
+            <td>
+			#if ($assignment.type == "essay" )
+                <a href="#" onclick="if(confirm('Do you really want to reset this assignment ?')) document.location.href='specialActions.smvc?action=resetEssayResponse&assignmentResponseId=$!{assignmentResponse.id}&assignmentId=${assignment.id}&participantId=$!{participant.id}'">Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="response.smvc?action=display&entity=assignmentResponse&id=$!{assignmentResponse.id}">View</a>
+			#end
+			#if ($assignment.type == "gl" )
+				<a href="reviewGuidedLesson.smvc?id=$!{assignmentResponse.id}">View</a>
+			#end
+            </td>
+        </tr>  
+    #else 
+        <tr>
+             <td>
+        Assignment response ID: $!{assignmentResponse.id} is NOT submitted.
+            </td>
+        </tr> 
+	#end ##if assignment submitted
+#end ##foreach
+
+</tbody>
+</table>
+<br />
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")

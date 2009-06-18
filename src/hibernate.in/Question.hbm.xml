@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+    <class name="Question" table="QUESTIONS">
+        
+        <meta attribute="class-description">
+            A question posed to a Participant as part of an  Assignment whose type is "Guided Lesson". (Essay assignments may not contain questions.)
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="QUESTION_ID">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="assignment" lazy="false" class="Assignment" column="ASSIGNMENT_ID">
+            <meta attribute="field-description">The guided lesson this question is part of.</meta>
+        </many-to-one>
+		
+        <property name="ordinalValue" type="integer" column="ORDINAL_VALUE">
+            <meta attribute="field-description">Determines the order in which the questions are asked.</meta>
+         </property>
+		
+        <property name="text" type="text">
+            <meta attribute="field-description">The text of the question.</meta>
+		</property>
+		
+		<set name="materialAssociations" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Used to look up materials that pertain to this question.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="QUESTION_ID"/>
+            <one-to-many class="QuestionMaterialAssoc"/>
+		</set>	
+		<set name="answers" lazy="true" inverse="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">Answers to this question.</meta>
+            <key column="QUESTION_ID"/>
+			<one-to-many class="Answer"/>
+		</set>	
+
+    </class>
+</hibernate-mapping>

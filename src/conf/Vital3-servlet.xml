@@ -1,0 +1,434 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    
+    <!-- NOTE: Some beans referenced here may be defined in applicationContext.xml -->
+    
+    <!-- Allows placeholders (e.g. ${context.name} ) to be used in bean definitions. -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:spring.properties" />
+    </bean>
+    
+    
+    
+    <!-- Command Validators -->
+    
+    <bean id="parentValidator" abstract="true">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+    </bean>
+    
+    <bean id="specialActionsValidator" class="ccnmtl.vital3.commands.SpecialActionsValidator" parent="parentValidator" />
+    <bean id="discussionEntryValidator" class="ccnmtl.vital3.commands.DiscussionEntryValidator" parent="parentValidator" />
+    
+    <bean id="annotationValidator" class="ccnmtl.vital3.commands.AnnotationValidator" parent="parentValidator" />
+    
+    <bean id="assocValidator" class="ccnmtl.vital3.commands.AssocValidator" parent="parentValidator" />
+        
+    <bean id="basicAdminValidator" class="ccnmtl.vital3.commands.BasicAdminValidator" parent="parentValidator" /> 
+    
+    <bean id="responseValidator" class="ccnmtl.vital3.commands.ResponseValidator" parent="parentValidator" />
+    
+    <bean id="guidedLessonValidator" class="ccnmtl.vital3.commands.GuidedLessonValidator" parent="parentValidator" />
+    
+    <bean id="importValidator" class="ccnmtl.vital3.commands.ImportValidator" parent="parentValidator" />
+
+    <bean id="listingValidator" class="ccnmtl.vital3.commands.ListingValidator" parent="parentValidator" />
+    
+    <bean id="viewMaterialValidator" class="ccnmtl.vital3.commands.ViewMaterialValidator" parent="parentValidator" />
+ 		     
+ 	<bean id="worksiteIdValidator" class="ccnmtl.vital3.commands.WorksiteIdValidator" parent="parentValidator" />
+
+	<bean id="userProfileController" class="ccnmtl.vital3.controllers.UserProfileController" parent="parentController"/>
+	
+	<bean id="participantSearchController" class="ccnmtl.vital3.controllers.ParticipantSearchController" parent="parentController"/>
+
+	<bean id="loadTestingController" class="ccnmtl.vital3.controllers.LoadTestingController" parent="parentController"/>
+
+
+    <!-- JTasty: -->
+    <bean id="tastyBean" class="ccnmtl.jtasty.TastyBean">
+        <property name="dao"><ref bean="tastyDao"/></property>
+        <property name="messageSource"><ref bean="messageSource"/></property>
+        <!-- Prefix to be removed from each incoming URL. We're using a zero-length string for Vital. -->
+        <property name="urlPrefix" value=""/>
+    </bean>
+
+    <bean id="tastyDao" class="ccnmtl.jtasty.dao.JTastyHibernateDAO">
+        <property name="sessionFactory"><ref local="sessionFactory"/></property>
+    </bean>
+    <!-- end JTasty. -->
+
+    <!-- TastyClient bean for the Tasty Client -->
+    <bean id="tastyClient" class="ccnmtl.utils.TastyClient">
+        <constructor-arg index="0" type="java.lang.String" value="${tasty.url}" />
+        <constructor-arg index="1" type="java.lang.String" value="${tasty.servicename}" />
+        <property name="tastyBean"><ref bean="tastyBean"/></property>
+    </bean>
+
+
+    <!-- MVC Controllers -->
+    
+    <!-- all beans with parent="parentController" inherit these property values -->
+    <bean id="parentController" abstract="true">
+        <property name="textFormatter"><ref bean="textFormatter"/></property>
+        <property name="messageSource"><ref bean="messageSource"/></property>
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+    </bean>
+        
+    <bean id="annotationController" class="ccnmtl.vital3.controllers.AnnotationController" parent="parentController">
+        <property name="commandName" value="annotationCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.AnnotationCommand" />
+        <property name="validator"><ref bean="annotationValidator"/></property>
+        <property name="tastyClient"><ref bean="tastyClient"/></property>
+    </bean>
+    
+    <bean id="assocController" class="ccnmtl.vital3.controllers.AssocController" parent="parentController">
+        <property name="commandName" value="basicAdminCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="assocValidator"/></property>
+	</bean>
+    
+    <bean id="basicAdminController" class="ccnmtl.vital3.controllers.BasicAdminController" parent="parentController">
+        <property name="commandName" value="basicAdminCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="basicAdminValidator"/></property>
+    </bean>
+    
+    <bean id="cacheFlushController" class="ccnmtl.vital3.controllers.CacheFlushController" parent="parentController">
+        <property name="commandName" value="vital3Command" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" />
+        <property name="tastyClient"><ref bean="tastyClient"/></property>
+	</bean>
+    
+    <bean id="courseHomeController" class="ccnmtl.vital3.controllers.CourseHomeController" parent="parentController">
+		<property name="commandName" value="vital3Command" /> 
+		<property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" /> 
+		<property name="validator"><ref bean="worksiteIdValidator"/></property>
+    </bean>
+    
+    <bean id="errorController" class="ccnmtl.vital3.controllers.ErrorController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+    </bean>
+    
+    <bean id="forgotPasswordController" class="ccnmtl.vital3.controllers.ForgotPasswordController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+        <!-- set to "true" to temporarily disable sending mail. -->
+        <property name="disabled" value="false"/>
+        <!-- SMTP Hostname. If not sure, try "localhost". -->
+        <property name="smtpHostname" value="localhost"/>
+        <!-- SMTP port number. If not sure, try "25". -->
+        <property name="smtpPort" value="25"/>
+        <!-- Emails to users who have forgotten their passwords go out from this address: -->
+        <property name="fromEmailAddress" value="ccnmtl-vital@columbia.edu"/>
+        <!-- In case of trouble, users are requested to send email to this address: -->
+        <property name="problemEmailAddress" value="ccnmtl-vital@ccnmtl.columbia.edu"/>
+    </bean>
+    
+    
+    <!--
+	<bean id="foundAssetsController" class="ccnmtl.vital3.controllers.FoundAssetsController">
+		<property name="indexing"><ref bean="indexing"/></property>
+	</bean>
+    -->
+    <bean id="guidedLessonExportController" class="ccnmtl.vital3.controllers.GuidedLessonExportController" parent="parentController">
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="guidedLessonValidator"/></property>
+	</bean>
+    <!--
+	<bean id="indexing" class="ccnmtl.vital3.utils.Indexing">
+		<property name="indexPath" value="target/vital3/WEB-INF/lucene/index/" />
+	</bean>
+    -->
+    <bean id="insertUsersController" class="ccnmtl.vital3.controllers.InsertUsersController"> 
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+    </bean>
+    
+    <bean id="importController" class="ccnmtl.vital3.controllers.ImportController" parent="parentController">
+        <property name="commandClass" value="ccnmtl.vital3.commands.ImportCommand" />
+        <property name="validator"><ref bean="importValidator"/></property>
+	</bean>
+    
+    <bean id="listingController" class="ccnmtl.vital3.controllers.ListingController" parent="parentController">
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="listingValidator"/></property>
+	</bean>
+    
+	<bean id="loginController" class="ccnmtl.vital3.controllers.LoginController" />
+
+    <bean id="loginProcessingController" class="ccnmtl.vital3.controllers.LoginProcessingController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+    </bean>
+    
+    <bean id="materialsLibController" class="ccnmtl.vital3.controllers.MaterialsLibController" parent="parentController">
+        <property name="commandName" value="vital3Command" /> 
+        <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" /> 
+        <property name="validator"><ref bean="worksiteIdValidator"/></property>
+	</bean>
+    
+    <bean id="myCoursesController" class="ccnmtl.vital3.controllers.MyCoursesController" parent="parentController">
+	</bean>
+    
+    <bean id="reviewGuidedLessonController" class="ccnmtl.vital3.controllers.ReviewGuidedLessonController" parent="parentController">
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="guidedLessonValidator"/></property>
+	</bean>
+    
+<!--
+    <bean id="rebuildIndexController" class="ccnmtl.vital3.controllers.RebuildIndexController">
+		 <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+		 <property name="indexing"><ref bean="indexing"/></property>
+	</bean>
+    -->
+    <bean id="reportErrorController" class="ccnmtl.vital3.controllers.ReportErrorController" parent="parentController">
+    </bean>
+    
+    <bean id="responseController" class="ccnmtl.vital3.controllers.ResponseController" parent="parentController">
+        <property name="commandName" value="responseCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.ResponseCommand" />
+        <property name="validator"><ref bean="responseValidator"/></property>
+        <property name="annotationController"><ref bean="annotationController"/></property>
+    </bean>
+    
+    <bean id="reviewResponsesController" class="ccnmtl.vital3.controllers.ReviewResponsesController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+		<!--
+        <property name="validator"><ref bean="worksiteIdValidator"/></property>
+        -->
+	</bean>
+    
+    <bean id="reviewAllResponsesController" class="ccnmtl.vital3.controllers.ReviewAllResponsesController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+	</bean>
+	
+    <bean id="specialActionsController" class="ccnmtl.vital3.controllers.SpecialActionsController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="specialActionsValidator"/></property>
+    </bean>
+
+    <bean id="discussionEntryController" class="ccnmtl.vital3.controllers.DiscussionEntryController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="discussionEntryValidator"/></property>
+    </bean>
+    
+    <bean id="staticContentController" class="ccnmtl.vital3.controllers.StaticContentController" parent="parentController">
+    </bean>
+    
+    <bean id="viewMaterialController" class="ccnmtl.vital3.controllers.ViewMaterialController" parent="parentController">
+        <property name="commandName" value="basicAdminCommand" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="viewMaterialValidator"/></property>
+        <property name="annotationController"><ref bean="annotationController"/></property>
+    </bean>
+    
+    <bean id="windTunnelController" class="ccnmtl.vital3.controllers.WindTunnelController">
+	</bean>
+    
+    
+    <!-- Map URLs to Controller beans: -->
+    
+    <bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/annotations.smvc">annotationController</prop>
+                <prop key="/assoc.smvc">assocController</prop>
+                <prop key="/basicAdmin.smvc">basicAdminController</prop>
+                <prop key="/cacheFlush.smvc">cacheFlushController</prop>
+                <prop key="/courseHome.smvc">courseHomeController</prop>
+                <prop key="/error.smvc">errorController</prop>
+                <prop key="/forgotPassword.smvc">forgotPasswordController</prop>
+<!--                <prop key="/foundAssets.smvc">foundAssetsController</prop> -->
+                <prop key="/guidedLessonExport.smvc">guidedLessonExportController</prop>
+                <prop key="/insertUsers.smvc">insertUsersController</prop>
+                <prop key="/import.smvc">importController</prop>
+                <prop key="/listing.smvc">listingController</prop>
+                <prop key="/login.smvc">loginController</prop>
+                <prop key="/loginProcessing.smvc">loginProcessingController</prop>
+                <prop key="/materialsLib.smvc">materialsLibController</prop>
+                <prop key="/myCourses.smvc">myCoursesController</prop>
+                <prop key="/myNotes.smvc">annotationController</prop>
+<!--		
+				<prop key="/rebuildIndex.smvc">rebuildIndexController</prop>
+-->
+                <prop key="/reportError.smvc">reportErrorController</prop>
+                <prop key="/response.smvc">responseController</prop>
+                <prop key="/reviewGuidedLesson.smvc">reviewGuidedLessonController</prop>
+                <prop key="/reviewResponses.smvc">reviewResponsesController</prop>
+                <prop key="/reviewAllResponses.smvc">reviewAllResponsesController</prop>
+                <prop key="/specialActions.smvc">specialActionsController</prop>
+                <prop key="/discussionEntry.smvc">discussionEntryController</prop>
+                <prop key="/static.smvc">staticContentController</prop>
+                <prop key="/videoViewer.smvc">viewMaterialController</prop>
+                <prop key="/windTunnel.smvc">windTunnelController</prop>
+                <prop key="/userProfile.smvc">userProfileController</prop>
+                <prop key="/participantSearch.smvc">participantSearchController</prop>
+                <prop key="/loadTesting.smvc">loadTestingController</prop>
+            </props>
+        </property>
+        <!-- interceptors for these mappings -->
+        <property name="interceptors">
+            <list>
+                <!-- OSIHI Provides a Hibernate session for duration of the handleRequest method -->
+                <bean name="sessionSupply" class="ccnmtl.vital3.utils.OpenSessionInHandlerInterceptor">
+                    <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- The UserCourseManager implementation -->
+	<bean id="ucm" class="ccnmtl.vital3.ucm.ColumbiaUCM">
+			<property name="vital3DAO"><ref bean="vital3DAO"/></property>
+			<property name="ldapDisabled" value="false"/>
+	</bean>
+
+    <!-- The Vital Data Access Object -->
+    <bean id="vital3DAO" class="ccnmtl.vital3.dao.Vital3HibernateDAO">
+    	<property name="sessionFactory"><ref local="sessionFactory"/></property>
+	</bean>
+
+    
+    
+    <!-- textFormatter bean for date parsing and formatting -->
+    <bean id="textFormatter" class="ccnmtl.vital3.utils.SimpleTextFormatter"/>
+    
+    <!-- MessageSource bean for error code-to-message translation -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list><value>classpath:errors</value></list>
+        </property>
+    </bean>
+    
+    <!-- The DataSource bean -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <!-- database properties -->
+	<!--
+	NOTE: These properties should also be changed in:
+	src/hibernate/maven.hibernate.properties
+	#####
+	Sample values (set value in spring.properties):
+        database.driverclassname
+	     oracle.jdbc.OracleDriver
+	     org.postgresql.Driver
+	     com.mysql.jdbc.Driver
+        database.url
+	     jdbc:oracle:thin:@chili.cc.columbia.edu:1521:acisora1
+	     jdbc:postgresql://localhost/vital3
+	     jdbc:mysql://localhost/vital3?createDatabaseIfNotExist=false&amp;useUnicode=true&amp;characterEncoding=utf-8
+	-->
+	
+	<property name="driverClassName" value="${database.driverclassname}" />
+	<property name="url" value="${database.url}" />
+	<property name="username" value="${database.username}" />
+	<property name="password" value="${database.password}" />
+
+	<!-- connection pool properties for DBCP -->
+	<!-- see http://jakarta.apache.org/commons/dbcp/configuration.html -->
+        <property name="maxActive" value="${dbcp.maxActive}" />
+        <property name="maxIdle" value="${dbcp.maxIdle}" />
+        <property name="maxWait" value="10000" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="10" />
+        <property name="logAbandoned" value="true" />
+        <!-- experimental (for us) PS pooling properties: -->
+        <!-- if we hit an oracle max_cursors error, comment out both of these! 
+        (we were getting sessions_per_user limit errors, so... commented out!)-->
+        <!--<property name="poolPreparedStatements" value="true" />
+        <property name="maxOpenPreparedStatements" value="25" />-->
+    </bean>
+
+
+    <!-- The Hibernate SessionFactory bean -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">  
+        <property name="dataSource"><ref local="dataSource"/></property>  
+        <property name="mappingResources">  
+            <list>  
+                <value>Annotation.hbm.xml</value>  
+                <value>Answer.hbm.xml</value>  
+                <value>Assignment.hbm.xml</value>  
+                <value>AssignmentMaterialAssoc.hbm.xml</value>  
+                <value>AssignmentResponse.hbm.xml</value>  
+                <value>Comment.hbm.xml</value>  
+                <value>CustomField.hbm.xml</value>  
+                <value>CustomFieldValue.hbm.xml</value>  
+                <value>Material.hbm.xml</value>  
+                <value>Question.hbm.xml</value>  
+                <value>QuestionMaterialAssoc.hbm.xml</value>  
+                <value>RawUCMCourse.hbm.xml</value>  
+                <value>RawUCMCourseWorksiteAffil.hbm.xml</value>  
+                <value>RawUCMParticipant.hbm.xml</value>  
+                <value>RawUCMTerm.hbm.xml</value>  
+                <value>RawUCMUser.hbm.xml</value>  
+                <value>RawUCMWorksite.hbm.xml</value>  
+                <value>Unit.hbm.xml</value>  
+                <value>UnitMaterialAssoc.hbm.xml</value>  
+                <value>VitalParticipant.hbm.xml</value>  
+                <value>VitalUser.hbm.xml</value>  
+                <value>VitalWorksite.hbm.xml</value>
+
+                <value>jtasty/Service.hbm.xml</value>
+                <value>jtasty/User.hbm.xml</value>
+                <value>jtasty/Item.hbm.xml</value>
+                <value>jtasty/Tag.hbm.xml</value>
+                <value>jtasty/UserTag.hbm.xml</value>
+                <value>jtasty/UserItem.hbm.xml</value>
+                <value>jtasty/ItemTag.hbm.xml</value>
+                <value>jtasty/UserItemTag.hbm.xml</value>
+                
+
+            </list>  
+        </property>  
+        <property name="hibernateProperties">  
+            <props>  
+
+	        <prop key="hibernate.dialect">${database.hibernate.dialect}</prop>
+                <prop key="hibernate.cache.provider_class">ccnmtl.utils.OSCacheProvider</prop> 
+                <prop key="hibernate.jdbc.batch_size">0</prop> 
+                <!--<prop key="hibernate.show_sql">true</prop>-->
+                <!--<prop key="hibernate.max_fetch_depth">2</prop>-->
+            </props>  
+        </property>  
+    </bean> 
+
+    <!-- Configure Velocity -->
+    <!-- Note: resourceLoaderPath sets velocity's template_root. The viewResolver "prefix" property is appended to this. -->
+    <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/velocity/" />
+    </bean>
+    
+    
+    <!-- Alternate view resolver (used when default settings are not suitable, e.g. xml content type) -->
+    <bean id="alternateViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="order" value="1" />
+        <property name="location"><ref bean="viewXML" /></property>
+    </bean>
+    
+    <!-- Resource for Alternate View Resolver (XML) -->
+    <bean id="viewXML" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg type="java.lang.String" value="views.xml" />
+    </bean>
+    
+    <!-- Velocity View Resolver: will resolve a view name by prepending the velocity resourceLoaderPath and the "prefix",
+         and then appending the "suffix". -->
+    <bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".vm" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+    </bean>
+
+    <!-- in case you're looking for the tasty bean or baseurl, they're in applicationContext.xml -->
+
+    <!-- MultipartResolver (for file uploading) -->
+    <!-- commented out until we need file uploading
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize"><value>400000000</value></property>
+    </bean>
+    -->
+
+</beans>

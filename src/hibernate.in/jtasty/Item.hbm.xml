@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.jtasty">
+
+    <class name="Item" table="TASTY_ITEMS">
+        
+        <meta attribute="class-description">
+	  An item.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ITEM_ID">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" type="string">
+            <meta attribute="field-description">The string used to identify the tagged item in the client application.</meta>
+	    </property>
+
+        <many-to-one name="service" class="Service" column="SERVICE_ID"  lazy="false">
+            <meta attribute="field-description">The Service to which this UserItemTag belongs.</meta>
+        </many-to-one>
+
+        <set name="itemTags" lazy="true" inverse="true" batch-size="3">
+            <meta attribute="field-description">A set of associations with tags.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="ITEM_TAG_ID"/>
+            <one-to-many class="ItemTag"/>
+        </set>
+
+        <set name="userItems" lazy="true" inverse="true" batch-size="3">
+            <meta attribute="field-description">A set of associations with users.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="USER_ITEM_ID"/>
+            <one-to-many class="UserItem"/>
+        </set>
+    </class>
+</hibernate-mapping>

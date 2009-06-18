@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <!-- Disable IE6 image toolbar -->
+    <meta http-equiv="imagetoolbar" content="no" />    
+
+    <title>
+        VITAL &mdash; Report Problems
+    </title>
+
+	<style type="text/css" media="all"><!-- @import url('style/tacky_portlet.css'); --></style>
+
+	<style type="text/css" media="all"><!-- @import url('style/general.css'); --></style>
+	
+	<!-- Below is IE css adjustments, don't delete! --> 
+	<!--[if IE]><style type="text/css" title="text/css">@import url('style/IEfixes.css');</style><![endif]-->
+    
+<script language="JavaScript" type="text/javascript">
+    
+    
+    function validateRequired(theForm) {
+    
+        var errormsg = new Array();
+        errormsg[0] = " Your e-mail address";
+        errormsg[8] = " Details of problem";
+    
+        var errorstring = "";
+        var field0 = theForm.email.value;
+        var field8 = theForm.details.value;
+ 
+        if (field0 == "") errorstring += errormsg[0]+"\n";
+        if (field8 == "") errorstring += errormsg[8]+"\n";
+        
+        if (errorstring != ""){
+            alert("Please enter all required fields:\n"+errorstring);
+            if (field0 == "") {theForm.email.focus();}
+            else if  (field8 == "") {theForm.details.focus();}
+            
+            return false;
+        }
+        return true;
+    }
+    
+    function fillAutoFields() {
+    
+        if (document.getElementById){
+            var uaString = navigator.userAgent;
+            if (uaString) document.errorForm.auto_UserAgent.value = uaString;
+        }
+        //alert(document.errorForm.auto_UserAgent.value + " " + document.errorForm.screen_num.value + " " + document.errorForm.auto_CourseName.value);
+        
+    }
+    
+    function submitErrorForm() {
+    
+        var ef = document.errorForm;
+        var pf = document.pmtForm;
+        if (ef == null || pf == null) alert("could not find error form!");
+        
+        // Validate the required fields:
+        if ( !validateRequired(ef) ) return false;
+        
+        // Move the data from the error form fields into the pmt form fields:
+        pf.name.value = ef.name.value;
+        pf.description.value = "Vital 3 Error Report:\n\n" + ef.details.value + "\n\nerror_time = (" + ef.error_time.value + ")\nprev_steps = (" + ef.prev_steps.value + ")\n";
+        pf.debug_info.value = "User Agent = (" + ef.auto_UserAgent.value + ")\n";
+        pf.email.value = ef.email.value;
+        
+        pf.submit();
+    }
+    
+	</script>
+	
+	
+</head>
+
+<body onload="fillAutoFields()">
+
+
+<div class="visual-portal-wrapper"><!-- Page wrapper -->
+
+
+<div class="help-portal-top"><!-- Begin div for top navigation -->
+
+	<div class="help-portal-top-shadeL"><!-- Begin div for logo and personal tools  class="portal-header-caseleft" -->
+	<div class="help-portal-top-shadeR"><!-- Begin div for logo and personal tools  class="portal-header-caseright" -->
+	
+
+ 		<hr class="hiddenStructure" />
+	
+		<h1 class="portal-logo"><a href="javascript:window.close()">VITAL</a></h1>
+		<h1 class="print_only">VITAL: Video Interactions for Teaching and Learning</h1>
+		<hr class="print_only" />
+	
+	
+	</div><!-- End div for logo and personal tools  class="portal-header-caseright" -->
+	</div><!-- End div for logo and personal tools  class="portal-header-caseleft" -->
+	
+</div><!-- End div for top navigation, class="help-portal-top" -->
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+
+<h1>Report Problems</h1>
+
+
+<form name="pmtForm" action="http://pmt.ccnmtl.columbia.edu/external_add_item.pl" method="post">
+
+    <input type="hidden" name="pid" value="318" />
+    <input type="hidden" name="mid" value="1477" />
+    <input type="hidden" name="owner" value="mpreston" />
+    <input type="hidden" name="assigned_to" value="mpreston" />
+    <input type="hidden" name="type" value="bug" />
+    <input type="hidden" name="title" value="Error Report from Web User" />
+    <input type="hidden" name="redirect_url" value="${baseUrl}reportErrorConfirmation.html" />
+    <input type="hidden" name="keyword" value="user-reported-error" />
+    <!--<input type="hidden" name="append_iid" value="on">-->
+    <input type="hidden" name="url" value="" />
+
+    <input type="hidden" name="description" value="" />
+
+    <input type="hidden" name="debug_info" value="" />
+    <input type="hidden" name="name" value="" />
+    <input type="hidden" name="email" value="" />
+
+</form>
+    
+
+<table border="0" cellspacing="0" cellpadding="0" class="r-e_table">
+
+    <form name="errorForm" onsubmit="return false">
+
+        <tr valign="middle">
+            <td align="right" nowrap="nowrap">Your Name:<br /></td>
+            <td align="left"><input class="errortxt" type="text" name="name" /></td>
+        </tr>
+        
+        <tr valign="middle">
+            <td align="right" nowrap="nowrap">Your E-mail:<br /><span class="required">(required)</span></td>
+            <td align="left"><input class="errortxt" type="text" name="email" /></td>
+        </tr>
+        
+        <tr valign="middle">
+            <td align="right">Time error<br />occurred:</td>
+            <td align="left"><input class="errortxt" type="text" name="error_time" /></td>
+        </tr>
+        
+        <tr valign="top">
+            <td align="right" width="110">Please tell us which course you are in and describe the steps you underwent <i>before</i> reaching the error:</td>
+            <td align="left"><textarea name="prev_steps" class="errortxtarea"></textarea></td>
+        </tr>
+        
+        <tr valign="top">
+            <td align="right" width="110">Describe, in detail, the problem you encountered with the application:<br /><span class="required">(required)</span></td>
+            <td align="left"><textarea name="details" class="errortxtarea"></textarea>
+            <input type="hidden" name="......" value=".............................." />
+            <input type="hidden" name="auto_UserAgent" value="" />
+            </td>
+        </tr>
+        
+    </form>
+    
+	<tr valign="middle">
+        <td colspan="2" align="center">
+            <form>
+            <input type="button" name="submit" value="Submit Error Report" class="regButton" onclick="submitErrorForm()" />
+            </form>
+        </td>
+	</tr>
+</table>
+
+
+
+</div>
+</div>
+
+
+</body>
+
+</html>

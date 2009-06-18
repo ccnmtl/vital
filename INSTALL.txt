@@ -1,0 +1,172 @@
+REQUIREMENTS
+------------
+    * Java 1.5.0 installed and in the path.
+    * Quicktime streaming server running and accessible
+    * Tomcat installed and running
+    * svn client installed and in the path
+    * Maven 1.0.2., installed and in the path (see Maven Setup below)
+    * sudo access
+    * a home directory and a HOME env variable pointing to it (needed for Maven)
+    * a working SMTP host - please have hostname and port number ready. (usually 'localhost' and 25 work fine) 
+
+    FOR HELP RUN: 
+	./check_requirements.sh
+
+
+MAVEN SETUP:
+-----------
+HOW TO INSTALL MAVEN 1.0.2:
+
+    * Get the source from 
+
+ wget http://archive.apache.org/dist/maven/binaries/maven-1.0.2.tar.gz
+
+    * decompress the directory
+    * move it to /usr/local,
+    * add its bin directory to your path. 
+    * Maven 1.0.2. requires Java 1.5.0, which you can download from:
+       http://java.sun.com/j2se/1.5.0
+
+JARS YOU NEED TO DOWNLOAD:
+--------------------------
+
+Download the following jars, placing them in  /archives:
+
+jgroups-all-2.4.0.jar
+http://sourceforge.net/project/showfiles.php?group_id=6081
+
+jgroups-concurrent-2.4.0.jar
+http://linux.softpedia.com/get/System/Clustering-and-Distributed-Networks/JGroups-39223.shtml
+
+javaMail-1.4.jar
+http://java.sun.com/products/javamail/javamail-1_4.html
+
+jta-1.0.1b.jar
+http://java.sun.com/javaee/technologies/jta/index.jsp
+                
+jaf-1.1.jar
+http://java.sun.com/products/archive/javabeans/jaf11.html
+
+If you're planning on using Oracle:
+oracle-jdbc14-9.2.0.3.jar
+http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/htdocs/jdbc9201.html
+
+maven-hibernate-plugin-1.4.jar
+http://www.oreillynet.com/users/files/134858/maven-hibernate-plugin-1.4.jar
+
+
+
+
+VITAL DATABASE SETUP
+--------------------
+
+If you are setting up a new instance of Vital which will not be connecting to the Vital Oracle database at Columbia University, you will need to set up a new database and configure Vital appropriately. 
+
+At Columbia, although our production servers uses an Oracle database, we have tried running Vital against both MySQL and PostGRES and are confident that you should be able to use Vital with both of these open-source databases.
+
+DB creation specifics will vary a fair amount depending on the database version, the operating system it's running on, and the policies of your institution; in the following example we will be installing a PostGreSQL DB on an Ubuntu OS. Of necessity, we cannot provide complete documentation for setting up a database that will work for you; if you're in doubt, you might want to consult a database administration for help with this. With these disclaimers out of the way, you can base your setup on the following instructions:
+
+    1) Create a new database (Postgres, MySQL or Oracle.)
+        sudo -u postgres createuser -D -A -P vital_db_user
+        sudo -u postgres createdb -O vital_db_user vital_db
+    
+    2) Generate table DDL based on the current database settings:
+       maven -X hibernate:schema-export
+
+    3) Import the table structure into the database:
+       	psql vital_db_user -d vital_db -f target/schema/vital3-3.0-schema.sql
+    
+    4) Add a minimal set of data into the database:
+        psql vital_db_user -d vital_db -f db_creation/basicdata.sql
+    
+    You now have an administrative user with the following username and password:
+    
+            admin
+            changeme
+            
+    and which you can use to create more users, courses and participants.
+    
+NOTE:
+    db_creation/generate_sql.sh creates SQL data definition language (i.e. a bunch of table deletes and creates) corresponding to the current database settings, saving a new file in target/schema/vital3-3.0-schema.sql .
+    
+    
+VITAL SETUP
+-----------
+On our example server, which is named platypus:
+
+    * Tomcat runs on port:
+          o http://platypus.ccnmtl.columbia.edu:9006 
+    * Running tomcat:
+          o /Library/Tomcat/bin/catalina.sh run -- runs in the shell
+          o /Library/Tomcat/bin/catalina.sh start -- runs as a daemon 
+    * Webapps in general go in:
+          o /Library/WebServer/Documents/ 
+    * and we will put our application in:
+          o /Library/WebServer/Documents/vital 
+
+1. Open Makefile and add platypus as a target:
+	platypus:
+        	scripts/autogen_properties.sh $@
+
+2. Generate the properties files
+    2.1) Edit scripts/autogen_properties.sh to specify the properties of this target:
+	    "platypus" )
+            IS_CUIT=0;
+            USE_PROD_DATA=0
+            BASE_URL='http:\/\/platypus.ccnmtl.columbia.edu:9006'
+            # this path is local to each machine on the cluster
+            # not on the shared nsf drive
+            PATH_TO_LOG_DIR="\/Library\/Webserver\/Documents\/vital\/vital3"
+            CONTEXT_NAME="/vital3"
+            USE_JGROUPS=0
+            TOMCAT_HOME='\/Library\/Tomcat/'
+            CONTEXT_NAME="vital3"
+            DATABASE_TYPE='postgres'            
+            ;;
+
+    2.2) In the same file, set the database properties for the database you selected (see Database Setup above):
+        "postgres"  )
+            DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.PostgreSQLDialect'
+            DATABASE_DRIVER_CLASS_NAME='org.postgresql.Driver'
+            DATABASE_URL='jdbc:postgresql://localhost/vital3_db'
+            DATABASE_USERNAME='vital_db_user'
+            DATABASE_PASSWORD='vital_db_password'
+	    ;;
+        
+    
+    
+    2.3) Run, to rewrite the property files in src/conf. 
+
+    cd scripts
+    ./setup.sh
+    cd ..
+    make platypus
+
+	NOTE: don't edit the properties files themselves, since they get overwritten by autogen_properties.
+
+    2.4) Run
+
+      build.sh
+
+	If the tests don't pass, something needs to be edited in 
+	scripts/autogen_properties.sh - do not pass go, return to 2.1
+
+3. Add the following stanza to /Library/Tomcat/conf/server.xml
+	<!-- Vital3 test bed: -->
+	<Context path="/vital3"
+                docBase="/Library/WebServer/Documents/vital/vital3/target/vital3">
+	</Context>
+
+   Resulting in the context:
+	http://platypus.ccnmtl.columbia.edu:9006/vital3
+
+4. Test the URL by logging in and futzing around.
+   Start or restart the server:
+
+	/Library/Tomcat/bin/catalina.sh run 
+
+   runs a toy version right in your shell and actually stop and start the daemon, respectively.
+
+	/Library/Tomcat/bin/catalina.sh stop
+	/Library/Tomcat/bin/catalina.sh start 
+	

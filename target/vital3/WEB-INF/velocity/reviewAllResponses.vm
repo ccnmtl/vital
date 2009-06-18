@@ -1,0 +1,77 @@
+#set($section = "courseHome")
+#set($title = "$worksite.title : $assignment.title")
+#parse("header.vm")
+
+<script type="text/javascript" language="javascript" src="scripts/assetwindow.js"></script>
+<script type="text/javascript" language="javascript">
+    baseUrl = "${baseUrl}";
+</script>
+    
+#parse("assignmentSubheader.vm")
+    
+    
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+<h1>Responses to ${assignment.title}</h1>
+
+<br />
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+#set($view_guided_lesson_link="reviewGuidedLesson.smvc?id=")
+#set($view_essay_link="response.smvc?action=display&entity=assignmentResponse&id=")
+#if($assignment.type == "essay")
+    #set($view_link=$view_essay_link)
+#else
+    #set($view_link=$view_guided_lesson_link)
+#end
+
+#foreach($assignmentResponse in  $responses)
+    <div class="dotteddivider" style="margin-bottom: 10px;"></div>
+    #if ($assignmentResponse.participant.user.firstName)
+        <h2><a href="${view_link}${assignmentResponse.id}#fb" alt="Click to enter feedback">${assignmentResponse.participant.user.firstName} ${assignmentResponse.participant.user.lastName}</a></h2>(Click to enter feedback)
+    #else 
+        <h2><a href="${view_link}${assignmentResponse.id}#fb" alt="Click to enter feedback">${assignmentResponse.participant.user.userIdString}</a></h2>(Click to enter feedback)
+    #end
+    
+    #if($assignment.type == "essay")
+        <div style="padding: 10px 0; border-bottom: 1px solid #999;">${assignmentResponse.text}</div>
+    #else 
+        #set($questionNumber=1)
+        #foreach ($question in $assignment.questions)             
+            #if ($question.getAnswer($assignmentResponse.participant))
+            <!-- FOR EACH QUESTION -->
+                
+                <div class="dotteddivider" style="padding-top: 10px; margin-bottom:10px; clear:both;"></div>
+
+                <b>Question ${questionNumber} Instructions:</b><br />
+                $question.text
+                <br /><br />                      
+                               
+                #set ($answer = $question.getAnswer($assignmentResponse.participant))
+                <p>$answer.getText()</p>         
+                  
+                #set($questionNumber = $questionNumber + 1)
+                        
+           <!--END FOR EACH QUESTION -->
+           #end
+        #end
+    #end
+
+#end ##foreach
+
+<br /><br /><hr>
+
+<form style="margin-top: 5px;" class="returnview">
+    <input class="regButton" type="button" onclick="window.location.href='reviewResponses.smvc?id=${assignment.id}&sortOrder=lastName&ascending=true&viewBy=all'" value="Return" />
+</form>
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")

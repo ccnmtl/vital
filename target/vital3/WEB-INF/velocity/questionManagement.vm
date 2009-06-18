@@ -1,0 +1,145 @@
+#set($section = "courseHome")
+
+#if($questions.size() > 0)
+#set($title = "Administration: Guided Lesson Question")
+#else
+#set($title = "Administration: Add New Guided Lesson Question")
+#end
+
+
+#parse("header.vm")
+
+</script>
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+<h1>
+Questions for ${assignment.title}
+</h1>
+
+
+#if ($message)
+	<p class="message">$!{message}</p>
+#end
+
+
+#macro(fieldError)
+    #if(${status.errorMessage}!= "") <div class="error">${status.errorMessage}</div> #end
+#end
+
+
+#if($questions.size() > 0) <!-- start questions -->
+
+<br />
+
+<h2>
+Current questions
+</h2>
+
+<p>There are ${questions.size()} questions for this assignment.</p>
+
+<p>Click "Edit" to make changes to the text or the order of the questions.  To associate videos from the Course Library to these questions, click "Associated videos".</p>
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width: 730px;">
+    
+	<thead>
+	    
+		<tr>
+			<th class="navOut" style=" white-space: nowrap;">Question number</th>
+			<th class="navOut">Question text</th>
+			<th class="navOut">&nbsp;</th>
+		</tr>
+	</thead>
+
+        #set($count=0)
+        #foreach($question in $questions)
+          <tr valign="top"><td style="padding-top: 10px; padding-bottom: 10px; white-space: nowrap; white-space: nowrap;width: 110px;">
+          #set($count=$count+1)
+          <b><em>Question $!{question.ordinalValue}:</em></b></td>
+          <td style="padding-top: 10px; padding-bottom: 10px;">$!{question.text}</td>
+           <td style="padding-top: 10px; padding-bottom: 10px; white-space: nowrap;width: 100px;"><a href="listing.smvc?mode=qmAssoc&id=${question.id}" class="regButton" style="margin: 0 10px;"> Associated videos </a>
+           <a href="basicAdmin.smvc?action=display&entity=question&id=$question.id&assignmentId=${assignment.id}" class="regButton" style="margin: 0 20px 0 0;">&nbsp; Edit &nbsp;</a></td>
+         </tr>
+        #end
+</table>
+<br />
+<hr />
+<!-- end questions -->#end
+
+<br />
+<h2>
+Add New Question
+</h2>
+
+<p>
+Please use this form to create new questions for this guided lesson.
+</p>
+
+<p>
+When you have created the question, you can add videos from the Course Library.
+</p>
+
+<div id="admincontent">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div><!-- id="admincontent-top-inner -->
+		</div><!-- id="admincontent-top -->
+
+
+<form action="basicAdmin.smvc" method="post">
+<input type="hidden" name="entity" value="question">
+
+<input type="hidden" name="assignmentId" value="${assignment.id}">
+
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
+  
+######## Begin properties #########
+<tr><th align="right">Question number:
+#fieldError()</th>
+<th align="left">#if($questions.size() == 0)<input type="text" name="ordinalValue" value="1" size="3">#end
+#if($questions.size() > 0)<input type="text" name="ordinalValue" value="" size="3">#end
+</th>
+</tr>
+
+<tr>
+	<th align="right">Question:</th>
+<th align="left"><textarea name="text" rows="5" cols="60" wrap="virtual" value=""></textarea></th></tr>
+
+
+######### End Properties #########
+
+
+<tr><td colspan="2" align="center">
+    <input type="hidden" name="action" value="insert">
+    <input type="submit" value="Add a new question" class="regButton">
+</td></tr>
+
+</table>
+
+
+</form>
+
+
+
+
+
+
+
+
+
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

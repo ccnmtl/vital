@@ -1,0 +1,507 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>createUnits</title> 
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+	<thead>
+		<tr>
+			<td rowspan="1" colspan="3">Essay test</td>
+		</tr>
+	</thead>
+<tbody>
+<tr>
+    <td>setTimeout</td>
+    <td>120000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>loadStoredVars</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>../login.smvc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>${instructorUsername}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+
+<!--
+only one course declared, so skip this one...
+<tr>
+	<td>clickAndWait</td>
+	<td>link=${worksiteTitle}</td>
+	<td></td>
+</tr>
+-->
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='addTopic']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>essay course description "test" ©ñé 123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>startDate</td>
+	<td>2006/08/20-0:00:00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>endDate</td>
+	<td>2006/08/30-0:00:00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>essay course "test" ©ñé 123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, '#unit')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add Assignment']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>customType</td>
+	<td>Assignment 1234567890</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dateDue</td>
+	<td>2006/08/20-0:00:00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>instructions</td>
+	<td>Instructions for Essay "test" ©ñé 123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ordinalValue</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>Essay One</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Associated Videos']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Click here to add a video</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>QuickTime Video "test"</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>url</td>
+	<td>http://qtss.cc.columbia.edu/projects/vital_nsf/kaplan/WPU-1-1.mov</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>thumbUrl</td>
+	<td>http://ccnmtl.columbia.edu/draft/briano/vital_thumbs/test.jpg</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Course Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@id='menustat']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='assignmentAssocs_Essay One']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>ids</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>apply</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Course Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>${studentUsername}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@id='menustat']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, "videoViewer.smvc")][1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td>videoviewer</td>
+	<td>1000000</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>videoviewer</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>Clip</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clipBegin</td>
+	<td>00:00:10</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clipEnd</td>
+	<td>00:00:20</td>
+</tr>
+
+<tr>
+	<td>click</td>
+	<td>link=Add/Remove tags</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>newtagsfield</td>
+	<td>tag1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>newtagsfield</td>
+	<td>tag2</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>newtagsfield</td>
+	<td>tag3</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>assignedTagsList</td>
+	<td>label=tag3</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>remove_selected</td>
+	<td></td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>assignedTagsList</td>
+	<td>label=tag1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>remove_selected</td>
+	<td></td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>existingTagsList</td>
+	<td>label=tag1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>add_selected</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>newtagsfield</td>
+	<td>tag4</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>remove_selected</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Close' and @type='button' and @onclick='closetagbox()']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@id='submitNote']</td>
+	<td></td>
+</tr>
+
+<tr>
+	<td>assertTextPresent</td>
+	<td>tag2, tag4</td>
+	<td></td>
+</tr>
+
+<tr>
+	<td>pause</td>
+	<td>20000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td>videoviewer</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Essay One</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=My Clips</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[@onclick='return false;']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//img[@title='Clip 00:00:10-00:00:20']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.essay_edit.elements['form.button.submit'][2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value=' Edit ']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>form.button.submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Do you really want to submit this assignment to the instructor ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>selenium_test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+
+<tr>
+	<td>selectAndWait</td>
+	<td>select</td>
+	<td>label=View all my courses</td>
+</tr>
+
+
+<tr>
+	<td>clickAndWait</td>
+	<td>link=${worksiteTitle}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@id='menustat']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='viewResponses_Essay One']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=exact:View</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//textarea[@name='text']</td>
+	<td>Bravo! "test" ©ñé 123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit to student']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Submit this feedback to the student ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>${studentUsername}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Essay One</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

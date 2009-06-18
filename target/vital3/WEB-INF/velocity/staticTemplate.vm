@@ -1,0 +1,12 @@
+#if ($path == 'help.html')
+	#include('static/help_header.html')
+#else
+	#parse("header.vm")
+#end
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+#include("static/${path}")
+
+</div><!-- End content area, class="documentContentMain" -->
+#parse("footer.vm")

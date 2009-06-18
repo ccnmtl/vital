@@ -1,0 +1,108 @@
+body
+{
+	background-color: #fff;
+	background-image: url(images/logo_small_back.gif);
+	background-repeat: repeat-x;
+	margin: 20px;
+	padding: 0px;
+	font-family: arial, helvetica, sans-serif;
+	background-attachment: fixed;
+}
+
+h1
+{
+	font-size: 12px;
+	color: #999;
+}
+
+.assetinfo { color: #000; }
+
+
+.portalMessage img { display: none; }
+
+#small-logo
+{
+	position: absolute;
+	background-image: url(../images/logo_small.gif);
+	top: 0px;
+	right: 10px;
+	width: 139px;
+	height: 69px;
+	background-repeat: no-repeat;
+}
+
+#text
+{
+	overflow: auto;
+	height: 300px;
+	padding: 5px;
+}
+
+.sticky
+{
+	border: #000 solid 1px;
+	background-color: #ff9;
+}
+
+.context,
+.documentEditable * .context
+{
+	background: transparent url(images/newlinkTransparent.gif) 5px center no-repeat;
+	font-family: arial, helvetica, sans-serif;
+	text-transform: capitalize;
+	font-weight: bold;
+}
+
+
+table#assetnotearea
+{
+	margin-top: 10px;	
+	width: 100%;
+	
+}
+
+table#assetnotearea td
+{
+	vertical-align: top;
+	width: 50%;
+	padding: 4px;
+}
+
+table#assetnotearea td table#notearea
+{
+	width: 100%;
+}
+
+table#assetnotearea table#notearea td#noteheader
+{
+	background-color: #dd9;
+	font-family: verdana;
+	font-weight: bold;
+	color: #000;
+	margin: 0;
+	padding: .25em;
+	text-transform: capitalize;
+}
+
+table#assetnotearea table#notearea td#notebody
+{
+	background-color: #ff9;
+	border: 0;
+	font-family: verdana;
+	color: #000;
+	margin-bottom: 10px;
+	padding: .25em;
+	height: 300px;
+}
+
+table#assetnotearea table#notearea td#notebody textarea#note
+{
+	background-color: transparent;
+	font-family: verdana;
+	color: #000;
+	height: 300px;
+	border: 0;
+	padding: 8px;
+}
+
+p {font-size: 1em;}

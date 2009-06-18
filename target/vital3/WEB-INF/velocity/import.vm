@@ -1,0 +1,256 @@
+#set($section = "courseHome")
+#set($title = "Administration: Import Course")
+
+#parse("header.vm")
+
+
+<script language="JavaScript" type="text/javascript">
+    
+var locked = 0; // buttons only function when this is zero.
+
+
+
+function submitImport() {
+
+    if (checkLock()) {
+        document.forms['importForm'].submit();
+		document.forms['importForm'].mysubmit.value = 'Importing...';
+		document.forms['importForm'].mysubmit.disabled = true;
+		document.getElementById('pleasewait').style.visibility = 'visible';
+        return true;
+
+    }
+    else return false;
+}
+
+function checkLock () {
+    if (locked == 1) return false;
+    else {
+        //locks the page for 20 seconds -- prevents repeated clicks from resulting in more than one submission.
+        locked = 1;
+        window.setTimeout(unlock,20000);
+        return true;
+    }
+}
+
+function unlock() {
+    locked = 0;
+}
+
+</script>
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+
+    <h1>Import from Another Course</h1>
+    
+#if ($message)
+	<p class="message">$!{message}</p>
+#end
+
+
+#if ($mode == "chooseSource")
+    
+    
+    <br />
+    
+    #if ($worksites.size() == 0)
+    
+        <p>You must be an administrator, an instructor, or a teaching assistant in at least one other course to use this feature.</p>
+        
+        <p>(Return to <a href="courseHome.smvc?worksiteId=${worksite.id}" title="">Course Home</a>.)
+    
+    #else
+    
+    <p>If you are an administrator, an instructor, or a teaching assistant of another VITAL course, you can import videos and assignments from that course into <b>${worksite.title}</b>.
+    
+    <h3>Choose a course to import from:</h3>
+    
+    <p>First, select the course that contains the materials you would like to import:</p>
+
+        <form action="import.smvc" method="post">
+        
+        <input type="hidden" name="mode" value="displayItems" />
+        <input type="hidden" name="worksiteId" value="${worksiteId}" />
+        
+        <select name="sourceWorksiteId">
+            #foreach ($worksite in $worksites)
+          		#set($accessLevel = $currentUser.getAccessLevelForWorksite($worksite))
+          		#if ($accessLevel >= 30)
+            	<option value="${worksite.id}">${worksite.title} - ${worksite.term.name}</option>
+            	#end
+            #end
+        </select>
+        
+        <input type="submit" class="regButton" value="Choose this course &gt;" />
+        
+        </form>
+    #end
+    
+    
+#else
+## displayItems:
+    
+    <br />
+    <h3>Choose items to import</h3>
+    
+   
+    <p>You can import videos and assignments grouped by topic.  Check the boxes next to the topics and click "Import."
+     <br />
+    All videos that are not associated with any topic are listed as "Unassociated Videos".  Check the box next to this group to import into your course.</p>
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <form action="import.smvc" name="importForm" method="post">
+    
+    <input type="hidden" name="mode" value="import" />
+    <input type="hidden" name="worksiteId" value="${worksiteId}" />
+    <input type="hidden" name="sourceWorksiteId" value="${sourceWorksiteId}" />
+    
+	<div id="importorigin">
+	
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:420px; padding-top: 0; margin-top: 0;">
+        <tr>
+            <th colspan="2" class="importheaderCell">Import from ${sourceWorksite.title}...</th>
+        </tr>
+        <tr>
+            <th style="width: 40px;">Import</th>
+            <th style="width: 380px;">Title</th>
+        </tr>
+        
+         #if ($sourceUnits.size() == 0)
+            <tr>
+                <td colspan="2">This course contains no assignments and videos.</td>
+            </tr>
+        #end
+        
+        #foreach ($unitMap in $sourceUnits)
+            #set ($assignments = $unitMap.get("assignments"))
+            #set ($materials = $unitMap.get("materials"))
+            #set ($unit = $unitMap.get("unit"))
+            
+            <tr>
+                <td style="text-align: center;"><input type="checkbox" name="ids" value="${unit.id}" /></td>
+                <td class="importUnitHeader">
+                #if ($unit.title == "Loose Materials")
+                	Unassociated Videos
+                #else
+                	Topic: ${unit.title}
+                #end
+                </td>
+            </tr>
+			<tr>
+				<td colspan="2" class="importItemsCell">
+				#if ($assignments.size() > 0)
+					<i>Includes the following assignments:</i>
+					<ol>
+					#foreach ($assignment in $assignments)
+						<li>${assignment.title}</li>
+					#end
+					</ol>
+				#else
+					<i>There are no assignments in this topic.</i>
+				#end
+				
+				<div class="dotteddivider" style="margin: 5px 0;"></div>
+
+				#if ($materials.size() > 0)
+					<i>Includes the following videos:</i>
+					<ol>
+					#foreach ($material in $materials)
+						<li>${material.title}</li>
+					#end
+					</ol>
+				#else
+					<i>There are no videos in this topic.</i>
+				#end
+				</td>
+			</tr>
+            
+        #end
+        
+    </table>
+    </div>
+    
+    <!-- TARGET WORKSITE -->
+    <div id="importdest">
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:380px; padding-top: 0; margin-top: 0;">
+        <tr>
+            <th class="importheaderCell">...into ${worksite.title}</th>
+        </tr>
+        <tr>
+            <th style="width: 380px;">Title</th>
+        </tr>
+        
+        #if ($targetUnits.size() == 0)
+            <tr>
+                <td colspan="2">This course contains no assignments and videos.</td>
+            </tr>
+        #end
+        
+        #foreach ($unitMap in $targetUnits)
+            #set ($assignments = $unitMap.get("assignments"))
+            #set ($materials = $unitMap.get("materials"))
+            #set ($unit = $unitMap.get("unit"))
+            
+            <tr>
+                <td class="importUnitHeader">Topic: ${unit.title}</td>
+            </tr>
+			<tr>
+				<td colspan="2" class="importItemsCell">
+				#if ($assignments.size() > 0)
+					<i>Includes the following assignments:</i>
+					<ol>
+					#foreach ($assignment in $assignments)
+						<li>${assignment.title}</li>
+					#end
+					</ol>
+				#else
+					<i>There are no assignments in this topic.</i>
+				#end
+				
+				<div class="dotteddivider" style="margin: 5px 0;"></div>
+
+				#if ($materials.size() > 0)
+					<i>Includes the following videos:</i>
+					<ol>
+					#foreach ($material in $materials)
+						<li>${material.title}</li>
+					#end
+					</ol>
+				#else
+					<i>There are no videos in this topic.</i>
+				#end
+				</td>
+			</tr>
+            
+        #end
+        
+    </table>
+    </div>
+    
+    <br clear="all" />
+         #if ($sourceUnits.size() != 0)
+		<div style="border: 1px solid #999; border-top: 0;width: 408px; padding: 5px;">
+			Click only once: 
+			<input type="button" value="Import!" name="mysubmit" onclick="submitImport();" class="regButton" />
+			<span id="pleasewait">Please wait...</span>
+		</div>
+		#end
+    
+    </form>
+    
+#end
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")

@@ -1,0 +1,6 @@
+hibernate.dialect=<DATABASE_HIBERNATE_DIALECT>
+hibernate.connection.driver_class=<DATABASE_DRIVER_CLASS_NAME>
+hibernate.connection.username=<DATABASE_USERNAME>
+hibernate.connection.password=<DATABASE_PASSWORD>
+hibernate.connection.url=<DATABASE_URL>
+hibernate.jdbc.batch_size=0

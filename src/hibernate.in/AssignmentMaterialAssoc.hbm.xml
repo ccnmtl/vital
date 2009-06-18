@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+    <class name="AssignmentMaterialAssoc" table="ASSIGNMENT_MATERIAL_ASSOCS">
+        <meta attribute="class-description">
+		Assigns a material to an assignment.
+		@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ASSIGNMENT_MATERIAL_ASSOC_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="material" lazy="false" class="Material" column="MATERIAL_ID">
+            <meta attribute="field-description">The Material</meta>
+        </many-to-one>
+
+        <many-to-one name="assignment" lazy="false" class="Assignment" column="ASSIGNMENT_ID">
+            <meta attribute="field-description">The Assignment the material is part of.</meta>
+        </many-to-one>
+    </class>
+
+</hibernate-mapping>

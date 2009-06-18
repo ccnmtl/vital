@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+
+   <!-- the version of maven's project object model -->
+   <pomVersion>3</pomVersion>
+   
+   <!-- a unique name for this project -->
+   <id>vital3</id>
+   
+   <!-- a short but descriptive name for the project -->
+   <name>VITAL</name>
+   
+   <!-- The version string of the project under development -->
+   <currentVersion>3.0</currentVersion>
+   
+   <!-- details about the organization that 'owns' the project -->
+   <organization>
+      <name>CCNMTL</name>
+      <url>http://ccnmtl.columbia.edu/</url>
+      <logo>http://www.ccnmtl.columbia.edu/web/images/slce_logo.gif</logo>
+   </organization>
+   
+   <!-- the year the project started -->
+   <inceptionYear>2005</inceptionYear>
+   <package>ccnmtl.vital3</package>
+   <logo>http://www.ccnmtl.columbia.edu/web/images/slce_logo.gif</logo>
+   <description>Video Interactions for Teaching and Learning.</description>
+   <shortDescription>Video Interactions for Teaching and Learning.</shortDescription>
+   
+   <!-- the project home page -->
+   <url>http://www.ccnmtl.columbia.edu/</url>
+   
+   <issueTrackingUrl>http://pmt.ccnmtl.columbia.edu</issueTrackingUrl>
+   
+   <!-- the version control repository and http url for online access -->
+   <repository>
+      <connection>scm:svn:http://svn.ccnmtl.columbia.edu/vital3/trunk</connection>
+      <developerconnection>scm:svn:http://svn.ccnmtl.columbia.edu/vital3/trunk</developerconnection>
+      <url>http://svn.ccnmtl.columbia.edu/view/browser/</url>
+   </repository>
+   
+   <!-- reports to include -->
+   <reports>
+      <report>maven-changelog-plugin</report>
+   </reports>
+   
+   <!-- who the developers are for the project -->
+   <developers>
+      <developer>
+         <id>em2140</id>
+         <name>Eric Mattes</name>
+         <email>em2140@columbia.edu</email>
+      </developer>
+      <developer>
+         <id>egr2107</id>
+         <name>Eddie Rubeiz</name>
+         <email>egr2107@columbia.edu</email>
+      </developer>
+   </developers>
+   
+   <!-- jar files the project is dependent on -->
+   <dependencies>
+
+<!-- THIS FILE CAN BE FOUND IN THE ARCHIVES FOLDER! You must put it into your local repository, under the
+    directory: ~/.maven/repository/json/jars/ with the name "org.json-0.jar -->
+      <dependency>
+            <groupId>json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>0</version>
+            <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+      </dependency>
+      
+<!-- THIS FILE CAN BE FOUND IN THE ARCHIVES FOLDER! You must put it into your local repository, under the
+    directory: ~/.maven/repository/oracle-jdbc14/jars/ with the name "oracle-jdbc14-9.2.0.3.jar" -->
+<!-- ORACLE: -->
+
+      <dependency>
+            <groupId>oracle-jdbc14</groupId>
+            <artifactId>oracle-jdbc14</artifactId>
+            <version>9.2.0.3</version>
+            <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+      </dependency>
+
+<!-- POSTGRESQL: -->
+      <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.2-504.jdbc3</version>
+            <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+      </dependency>      
+<!-- MYSQL: -->
+<dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.0.5</version>
+        <type>jar</type>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+</dependency>
+
+
+<!-- THIS FILE CAN BE FOUND IN THE ARCHIVES FOLDER! You must put it into your local repository, under the
+    directory: ~/.maven/repository/jtasty/jars/ with the name "jtasty-0.0.8.jar" -->
+      <dependency>
+         <groupId>jtasty</groupId>
+         <artifactId>jtasty</artifactId>
+         <version>0.0.8</version>
+         <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+
+      
+      <!-- THIS FILE CAN BE FOUND IN THE ARCHIVES FOLDER! You must put it into your local repository, under the
+    directory: ~/.maven/repository/jaf/jars/ with the name "jaf-1.1.jar" -->
+      <!--
+      <dependency>
+         <groupId>jaf</groupId>
+         <artifactId>jaf</artifactId>
+         <version>1.1</version>
+         <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      -->
+      <!-- THIS FILE CAN BE FOUND IN THE ARCHIVES FOLDER! You must put it into your local repository, under the
+    directory: ~/.maven/repository/javaMail/jars/ with the name "javaMail-1.4.jar" -->
+      <dependency>
+         <groupId>javaMail</groupId>
+         <artifactId>javaMail</artifactId>
+         <version>1.4</version>
+         <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+        <!-- required by hibernate -->
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>2.7.6</version>
+            <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <dependency>
+        <groupId>ldapsdk</groupId>
+            <artifactId>ldapsdk</artifactId>
+            <version>4.1</version>
+            <type>jar</type>
+	    <url>http://www.ibiblio.org/maven/ldapsdk/jars/</url>
+            <properties>
+               <war.bundle>true</war.bundle>
+            </properties>
+      </dependency>
+	  
+        <!-- required by hibernate -->
+      <dependency>
+        <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>2.1_3</version>
+            <type>jar</type>
+            <properties>
+               <war.bundle>true</war.bundle>
+            </properties>
+      </dependency>
+      
+      <!-- required by hibernate -->
+      <dependency>
+         <groupId>commons-collections</groupId>
+         <artifactId>commons-collections</artifactId>
+         <version>3.1</version>
+         <type>jar</type>
+         <url>http://jakarta.apache.org/site/downloads/downloads_commons-collections.cgi</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      <dependency>
+         <groupId>commons-dbcp</groupId>
+         <artifactId>commons-dbcp</artifactId>
+         <version>1.2</version>
+         <type>jar</type>
+         <url>http://jakarta.apache.org/site/downloads/downloads_commons-dbcp.cgi</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+   <!--
+      <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>1.1</version>
+         <type>jar</type>
+         <url>http://jakarta.apache.org/site/downloads/downloads_commons-fileupload.cgi</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+    -->
+      <dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+         <version>2.1</version>
+         <type>jar</type>
+         <url>http://jakarta.apache.org/site/downloads/downloads_commons-lang.cgi</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+        
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+         <version>1.0.4</version>
+         <type>jar</type>
+         <url>http://jakarta.apache.org/site/downloads/downloads_commons-logging.cgi</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <!-- this is needed on the production server -->
+      <dependency>
+         <groupId>commons-pool</groupId>
+         <artifactId>commons-pool</artifactId>
+         <version>1.1</version>
+         <type>jar</type>
+         <url>http://www.ibiblio.org/maven2/commons-pool/jars/</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+	 </properties>
+      </dependency>
+
+      <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+            <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <!-- required by hibernate -->
+      <dependency>
+          <groupId>net.sf.ehcache</groupId>
+          <artifactId>ehcache</artifactId>
+          <version>1.2.4</version>
+          <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate</artifactId>
+         <version>3.1.3</version>
+         <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <version>2.3</version>
+      </dependency>
+        
+        <!-- required by oscache for clustering -->
+      <dependency>
+        <groupId>jgroups</groupId>
+        <artifactId>jgroups-all</artifactId>
+        <version>2.4.0</version>
+        <type>jar</type>
+        <properties>
+          <war.bundle>true</war.bundle>
+        </properties>
+      </dependency>
+      
+      <!-- required by jgroups -->
+      <dependency>
+        <groupId>jgroups</groupId>
+        <artifactId>jgroups-concurrent</artifactId>
+        <version>2.4.0</version>
+        <type>jar</type>
+        <properties>
+          <war.bundle>true</war.bundle>
+        </properties>
+      </dependency>
+      
+      <!-- required on the production server -->
+      <dependency>
+         <groupId>jta</groupId>
+         <artifactId>jta</artifactId>
+         <version>1.0.1b</version>
+         <type>jar</type>
+         <url>http://www.ibiblio.org/maven2/jta/jta/</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <version>1.2.9</version>
+         <type>jar</type>
+         <url>http://www.ibiblio.org/maven/log4j/jars/</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+
+<!--
+      <dependency>
+         <groupId>lucene</groupId>
+         <artifactId>lucene</artifactId>
+         <version>1.4.3</version>
+         <type>jar</type>
+         <url>http://www.ibiblio.org/maven/lucene/jars/</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+-->  
+      <dependency>
+         <groupId>maven</groupId>
+         <artifactId>maven-hibernate-plugin</artifactId>
+         <version>1.4</version>
+         <type>plugin</type>
+      </dependency>
+      
+      <dependency>
+        <groupId>odmg</groupId>
+        <artifactId>odmg</artifactId>
+        <version>3.0</version>
+        <type>jar</type>
+        <properties>
+            <war.bundle>true</war.bundle>
+        </properties>
+      </dependency>
+      
+      <!-- required by hibernate for clustered cache -->
+      <dependency>
+          <groupId>opensymphony</groupId>
+          <artifactId>oscache</artifactId>
+          <version>2.3</version>
+          <type>jar</type>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <dependency>
+         <groupId>springframework</groupId>
+         <artifactId>spring</artifactId>
+         <version>1.2.3</version>
+         <type>jar</type>
+         <url>http://www.springframework.org/download</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+      
+      <dependency>
+         <groupId>springframework</groupId>
+         <artifactId>spring-mock</artifactId>
+         <version>1.2.3</version>
+         <type>jar</type>
+         <url>http://www.springframework.org/download</url>
+      </dependency>
+      
+      <dependency>
+         <groupId>velocity</groupId>
+         <artifactId>velocity</artifactId>
+         <version>1.4</version>
+         <type>jar</type>
+         <url>http://jakarta.apache.org/site/downloads/downloads_velocity-engine.cgi</url>
+         <properties>
+            <war.bundle>true</war.bundle>
+         </properties>
+      </dependency>
+   </dependencies>
+   
+   <!-- build information for the project -->
+   <build>
+   
+      <sourceDirectory>src/java</sourceDirectory>
+     
+      <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+      <unitTest>
+         <includes>
+            <include>**/*Test.java</include>
+         </includes>
+         <excludes>
+            <exclude>._*</exclude>
+         </excludes>
+      </unitTest>
+     
+      <resources>
+      
+         <resource>
+            <directory>src/conf</directory>
+            <includes>
+               <include>*.properties</include>
+               <include>*.xml</include>
+            </includes>
+            <excludes>
+               <exclude>._*</exclude>
+            </excludes>
+         </resource>
+         
+         <resource>
+            <directory>src/hibernate</directory>
+            <includes>
+               <include>**/*.hbm.xml</include>
+            </includes>
+            <excludes>
+               <exclude>._*</exclude>
+            </excludes>
+         </resource>
+         
+      </resources>
+     
+   </build>
+   
+   
+</project>

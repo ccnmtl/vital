@@ -1,0 +1,322 @@
+#set($section = "courseHome")
+#set($helptopic = "guidedlesson")
+#set($title = "$worksite.title : $assignment.title")
+## questionIndex is now set in the controller.
+#set($questionNumber  = $questionIndex + 1)
+#set($question = $assignment.getQuestion($questionIndex))
+#parse("header.vm")
+
+
+<!-- styles and javascript exclusively for this page: -->
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/resizeIE.js"></script>
+
+
+<script language="JavaScript" type="text/javascript">
+
+var locked = 0; // buttons only function when this is zero.
+
+
+function checkLock () {
+    if (locked == 1) return false;
+    else {
+        //locks the page for 20 seconds -- prevents repeated clicks from resulting in more than one submission.
+        locked = 1;
+        window.setTimeout(unlock,20000);
+        return true;
+    }
+}
+
+function confirmSubmit() {
+    if (checkLock()) {
+		document.essay_edit.hidden_status.value = 1;
+		return true;
+    }
+    else return false;
+}
+
+function review() {
+    if (checkLock()) {
+        var agree=confirm("WARNING: If you leave this page, all your work on question $!{questionNumber} will be discarded.");
+		if (agree) {
+			document.location.href="reviewGuidedLesson.smvc?id=$thisAssignmentResponse.id";
+		}
+	}
+}
+
+function gotoSelected(select) {
+	var index=select.selectedIndex;
+	if (select.options[index].value != "0") {
+		document.location.href=select.options[index].value;
+	}
+}
+
+function unlock() {
+    locked = 0;
+}
+
+
+</script>
+
+
+#parse("assignmentSubheader.vm")
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+
+#if ($assignment.instructions)
+<div id="assign_instr" class="a_instructions"><!-- Begin assignment instructions -->
+<a href="#assign_instr" class="ex_show" onclick="excerpt(this);return false;" id="ainstr"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+<b>Introduction:</b> <div class="ellips" id="ellipsisassign_instr">...</div><br />
+$!{assignment.instructions}
+</div><!-- End assignment instructions -->
+#end
+
+
+<table border="0" cellspacing="0" cellpadding="0" class="glprog"><!-- Begin Guided Lesson progress -->
+	<tr>
+		<td colspan="2" style="padding-bottom:3px;"><b>Guided Lesson Progress:</b></td>
+	</tr>
+	<tr valign="middle">
+		<td>Question $!{questionNumber} of $!{assignment.NumberOfQuestions}</td>
+
+	#if ((!$thisAssignmentResponse) || ($thisAssignmentResponse && $thisAssignmentResponse.status != 1))
+	
+    
+        #set($totalQuestionsWidth = 600)
+		#set($totalQuestions = $assignment.NumberOfQuestions)
+        #set($oneQuestionWidth = $totalQuestionsWidth /$totalQuestions)
+		#set($currentQuestion = $questionNumber)
+		#set($completedQuestions = $currentQuestion - 1)
+		#set($completedQuestionsWidth = $oneQuestionWidth * $completedQuestions)
+		#set($incompleteQuestions = $totalQuestions - $completedQuestions)
+		#set($incompleteQuestionsWidth = $oneQuestionWidth * $incompleteQuestions)
+		
+		
+		
+		<td>
+			<div class="glprogbar" style="${totalQuestionsWidth}px">
+
+			#if ($completedQuestionsWidth > 0)
+			<div class="glprogbar_complete" style="width:${completedQuestionsWidth}px;"></div>
+			#end
+
+			#if (false)
+			<div class="glprogbar_current" style="width:${oneQuestionWidth}px"></div>
+			#end
+
+			#if ($incompleteQuestionsWidth > 0)
+			<div class="glprogbar_incomplete" style="width:${incompleteQuestionsWidth}px;"></div>
+			#end
+			
+			</div>
+		</td>
+	#end
+    </tr>
+</table><!-- End Guided Lesson progress -->
+
+#if ($questionNumber > 1)
+<div>
+    <form>
+        <input class="regButton" id="preview_edit_button" type="button" name="form.button.preview" onclick="review();" value="Review My Submitted Answers" />
+        <br />&nbsp;
+    </form>
+</div>
+#end
+
+<div class="dotteddivider"></div>
+
+<br />
+
+
+<div class="glq_instructions"><!-- Begin GL assignment instructions -->
+	<b>Question $!{questionNumber} Instructions:</b><br />
+	$!{question.text}
+<br />
+<br />
+</div><!-- End GLassignment instructions -->
+
+
+<div id="binderbox"><!-- Begin binderbox -->
+<div id="noteside"><!-- Begin left side of page, materials, notes, instructions, feedback, id=noteside -->
+
+
+    <div id="notesidetables"><!-- Begin notes and materials tables, id="notesidetables" -->
+    	<div class="notetabscontainer"><!--  Begin class="notetabscontainer" -->
+    	<ul class="notesidetabs"><!-- Begin the tab -->
+    		<li class="tab-1 active" id="tab1"><div style="font-weight: bold; color: #fff;">Question $!{questionNumber} Videos</div></li>
+    	</ul><!-- End the tab -->
+ 		</div><!--  End class="notetabscontainer" -->
+    	
+    	
+    	<div class="divbox-1 divbox-gl" id="am"><a name="am"></a> <!-- Begin area for ASSIGNMENT MATERIALS TAB -->
+    		<div class="divboxcontent">
+    			<table border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+    					<td class="col1">Thumbnail</td>
+    					<td class="col2 col2gl">Title</td>
+     				</tr>
+                #set($qm = $question.sortedMaterials)
+   				#if ($qm)
+        				#foreach($questionmaterial in $qm)
+        				<tr valign="top">
+        				    <td class="col_thumbnail">
+        				    <a title="View this video" class="thumbnail" 
+        				    style="float:none; margin: auto; background-image:url(#if(${questionmaterial.thumbUrl}) '$!{questionmaterial.thumbUrl}'  
+                                                                                   #else 'images/thumbnail.gif' 
+                                                                                   #end)"
+                                    href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=viewonly&amp;id=${questionmaterial.id}','480','400','no','no','videoviewer${questionmaterial.id}')"></a>
+        				    </td>
+        				    <td class="col_title col_title_gl">
+        				        <h2>
+            				    <a title="Edit clips for this asset."
+          						href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=viewonly&amp;id=${questionmaterial.id}','480','400','no','no','videoviewer${questionmaterial.id}')">$!{questionmaterial.title}</a>
+          						</h2>
+        				    </td>       				    
+        				</tr>
+        				#end
+        			#else
+        				<tr valign="top">
+        				    <td class="col_title col_title_gl" colspan="2" style="border-top:1px solid #999;">
+							<p style="padding: 10px 10px 0 10px; color: #999; font-style: italic;">There are no video materials for this question.</p>
+        				    </td>       				    
+        				</tr>
+        			#end
+    			</table>
+            </div>
+    	</div> <!-- End area for ASSIGNMENT MATERIALS TAB -->
+
+     </div><!-- End notes and materials tables, id="notesidetables" -->
+
+</div><!-- End left side of page, materials, notes, instructions, feedback, id=noteside -->
+
+
+
+
+
+<div id="wrkspcside"><!-- Begin right side of page, for essay workspace form area -->
+
+	#if ($action == "display" && $assignment.status == 1)
+		<select name="other_student_select"  onchange="gotoSelected(this)" class="generic" style="float: right;">
+			<option value="0" >View another student's assignment:
+			#foreach ($otherAssignmentResponse in $assignment.responses)
+				#if ( $otherAssignmentResponse.status == 1 && $otherAssignmentResponse.id != $thisAssignmentResponse.id)
+					<option value="response.smvc?action=display&entity=assignmentResponse&id=${otherAssignmentResponse.id}">
+					$!{otherAssignmentResponse.participant.user.fullNameReversed}
+					</option>
+				#end
+			#end
+		</select>
+		<h2>My Answer</h2>
+	#else
+		<h2>My Answer</h2>
+	#end
+
+
+    <div class="txtboxarea">
+    	
+	#if ($action == "new")
+	<div  class="txtboxarea_new"><!--  Begin class="txtboxarea_new" -->
+			<form name="essay_edit" method="post" action="response.smvc">
+			<input type="hidden" name="action" value="insert" />
+			<input type="hidden" name="entity" value="assignmentResponse" />
+			<input type="hidden" name="type" value="gl" />
+			<input type="hidden" name="assignmentId" value="$!{assignment.id}" />
+			<input type="hidden" name="participantId" value="$!{participant.id}" />
+			<input type="hidden" name="questionId" value="$!{question.id}" />
+			<input type="hidden" name="status" value="0" id="hidden_status" />
+        		<div id="essaybox" class="gltextarea">
+					<input name="note_text_format" value="text/html" type="hidden" />
+					<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+					<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"> </script>
+					
+					<textarea cols="10" rows="10" tabindex="0" name="text" mce_editable="true" id="note"></textarea>
+	  		 </div>
+	
+
+			<div class="wrkspcsidetable">
+				<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;margin: 5px 0 0 0;">
+					<tr valign="middle">
+						<td>
+						#if ($questionNumber == $assignment.NumberOfQuestions)
+							<input class="regButton" type="submit"  onclick="return confirmSubmit()" name="form.button.submit" value="Submit" />
+						#else 
+                            <input class="regButton" type="submit" onclick="return checkLock()" name="form.button.submit" value="Submit and Continue" />
+						#end
+					</tr>
+				</table>
+				</div><!--  End class="wrkspcsidetable" -->
+			</form>
+	</div><!--  End class="txtboxarea_new" -->
+	#end
+
+
+
+#if ($action == "display")
+    #springBind("responseCommand.status")
+	#if ($status.value == 0)
+			<!-- Assignment has not been submitted. -->
+	<div  class="txtboxarea_new"><!--  Begin class="txtboxarea_new" -->
+				<form name="essay_edit" method="post" action="response.smvc">
+				<input type="hidden" name="action" value="update" />
+				<input type="hidden" name="entity" value="assignmentResponse" />
+				<input type="hidden" name="type" value="gl" />
+				#springBind("responseCommand.id")
+				<input type="hidden" name="id" value="${status.value}" />
+				<input type="hidden" name="assignmentId" value="$!{assignment.id}" />
+				<input type="hidden" name="participantId" value="$!{participant.id}" />
+				<input type="hidden" name="questionId" value="$!{question.id}" />
+				<input type="hidden" name="status" value="0" id="hidden_status" />
+					
+        		<div id="essaybox" class="gltextarea">
+					<input name="note_text_format" value="text/html" type="hidden" />
+			  		<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+			  		<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"> </script>
+			  		<textarea cols="10" rows="10" tabindex="0" name="text" mce_editable="true" id="note"></textarea>
+			  	</div>
+			  	
+			<div class="wrkspcsidetable">
+				<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;margin: 5px 0 0 0;">
+					<tr valign="middle">
+						<td>
+					#if ($questionNumber == $assignment.NumberOfQuestions)
+						<input class="regButton" type="submit"  onclick="return confirmSubmit()" name="form.button.submit" value="Submit" />
+					#else 
+                        <input class="regButton" type="submit" onclick="return checkLock()" name="form.button.submit" value="Submit and Continue" />
+					#end
+						
+						</td>
+					</tr>
+				</table>
+				</div><!--  End class="wrkspcsidetable" -->
+			</form>
+	</div><!--  End class="txtboxarea_new" -->
+	  #else
+			<!-- Assignment has been submitted. -->
+			<div class="essay_view" id="sticky_question_view">
+			#springBind("responseCommand.text")
+				${status.value}
+			</div>
+	#end
+#end
+	
+	</div><!-- end class txtboxarea -->
+
+</div><!-- End right side of page, for essay workspace form area -->
+
+</div><!-- End binderbox -->
+    
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")

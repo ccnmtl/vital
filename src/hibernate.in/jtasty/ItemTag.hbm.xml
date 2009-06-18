@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.jtasty">
+
+    <class name="ItemTag" table="TASTY_ITEM_TAGS">
+        
+        <meta attribute="class-description">
+	        An association between an item and a tag.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ITEM_TAG_ID">
+            <generator class="native"/>
+        </id>
+
+
+         <many-to-one name="item" class="Item"  lazy="false">
+            <meta attribute="field-description">The Item</meta>
+            <column name="ITEM_ID" unique-key="ONE_ITEM_TAG_PER_ITEM_PER_TAG" ></column>
+        </many-to-one>
+
+         <many-to-one name="tag" class="Tag"  lazy="false">
+            <meta attribute="field-description">The Tag</meta>
+            <column name="TAG_ID" unique-key="ONE_ITEM_TAG_PER_ITEM_PER_TAG" ></column>
+        </many-to-one>
+
+    </class>
+</hibernate-mapping>

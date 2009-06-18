@@ -1,0 +1,111 @@
+#set($section = "myCourses")
+#set($title = "My Courses")
+#parse("header.vm")
+
+	<!-- For sorting the table -->
+	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+<h2>My Courses</h2>
+
+#if($admin)
+    <a href="basicAdmin.smvc?action=new&entity=worksite">Create New Course</a><br>
+    <a href="listing.smvc?mode=user">Global User Management</a><br><hr>
+#end
+
+<p>
+<form name="form1">
+<b>Change view:</b> 
+<select class="generic" name="select" onchange="if (options[selectedIndex].value) { document.location.href = options[selectedIndex].value;reset() }" size="1">
+    <option value="myCourses.smvc?viewBy=term" #if($viewBy == "term") "selected" #end> View only this term</option>
+    <option value="myCourses.smvc?viewBy=academicyear" #if($viewBy == "academicyear") "selected" #end> View only this academic year (Fall 2008 - Summer 2009)</option>
+    <option value="myCourses.smvc?viewBy=calendaryear" #if($viewBy == "calendaryear") "selected" #end> View only this calendar year</option>
+    <option value="myCourses.smvc?viewBy=all" #if($viewBy == "all") "selected" #end> View all my courses</option>
+</select>
+</form>
+</p>
+
+#if($viewBy == "term")
+    <div class="mycourseslisting">This Term</div>
+#elseif($viewBy == "academicyear")
+    <div class="mycourseslisting">This Academic Year</div>
+#elseif($viewBy == "calendaryear")
+    <div class="mycourseslisting">This Calendar Year</div>
+#end
+
+	    
+
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" onclick="sortColumn(event)">
+	<thead>
+		<tr>
+			<th class="navOut DefaultSort" style="width: 22%">Course Title</th>
+			<th class="navOut Semester" style="width: 10%">Term</th>
+			<th class="navOut" style="width: 32%">Description</th>
+			<th class="navOut" style="width: 16%">Faculty</th>
+			<th class="navOut" style="width: 12%">Access Level</th>
+			<th style="width: 8%">Actions</th>
+		</tr>
+	</thead>
+
+	<tbody>
+	#foreach ($worksite in $worksites)
+	    
+        ##set($accessLevel = $currentUser.getAccessLevelLabelForWorksite($worksite))
+        #set($accessLevel = $currentUser.getAccessLevelForWorksite($worksite))
+        #set($accessLevelLabel = $currentUser.getAccessLevelLabelForWorksite($worksite))
+        #set ($names = "")
+        #set ($names = $instructorNames.get($worksite.worksiteIdString))
+        
+        <tr>
+            <td>
+            #if ($worksite.title)
+            	<a href="courseHome.smvc?worksiteId=${worksite.id}">${worksite.title}</a>
+            #else
+           		&nbsp;
+            #end
+            </td>
+
+            <!--${worksite.id}-->
+            <td>
+            #if ($worksite.term.name)
+            	$!{worksite.term.name}
+            #else
+           		&nbsp;
+            #end
+            </td>
+
+            <td>
+            #if ($worksite.announcement)
+            	$!{worksite.announcement}
+            #else
+           		&nbsp;
+            #end
+            </td>
+
+            <td>
+
+            #if ($names)
+            	$!{names}
+            #else
+           		&nbsp;
+            #end
+            
+            </td>
+
+            <td>
+                ${accessLevelLabel}
+            </td>
+            <td>
+                <a  class="boxy" href="courseHome.smvc?worksiteId=${worksite.id}">View</a>&#160;
+                #if ($accessLevel >= $TA_ACCESS)
+                    &#160;<a class="boxy" href="import.smvc?worksiteId=${worksite.id}">Import</a>
+                #end
+            </td>
+        </tr>
+	#end
+	</tbody>
+</table>
+</div><!-- End content area, class="documentContentMain" -->
+#parse("footer.vm")

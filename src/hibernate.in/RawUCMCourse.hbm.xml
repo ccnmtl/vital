@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3.ucm">
+
+    <class name="RawUCMCourse" table="UCM_COURSES">
+        
+        <meta attribute="class-description">
+            This class represents a course offered at an institution. It is used
+            exclusively within the UCM package.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UCM_COURSE_ID">
+            <generator class="native"/>
+        </id>
+        
+        <property name="courseIdString" type="string" column="COURSE_ID_STRING">
+            <meta attribute="field-description">The institution-unique id string for this course. Should be identical to or uniquely
+            and easily derivable from course id strings which come in from the registrar feed.</meta>
+		</property>
+        
+        <set name="worksiteAffils" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">The affiliations which signify that members of this course are allowed access to
+            a particular worksite.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UCM_COURSE_ID"/>
+            <one-to-many class="RawUCMCourseWorksiteAffil"/>
+        </set>
+                        
+        
+
+    </class>
+
+</hibernate-mapping>

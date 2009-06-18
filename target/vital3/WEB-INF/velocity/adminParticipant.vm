@@ -1,0 +1,288 @@
+#set($section = "roster")
+
+#if($action == "display")
+#set($title = "Administration: Change User Access Level")
+#else
+#set($title = "Administration: Add New User to Roster")
+#end
+
+#parse("header.vm")
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+#if($action == "new")
+<script language="javascript">
+
+function checkAuthMethod() {
+    
+    authMethodBoxes = document.forms["adminForm"].authMethod;
+    if (authMethodBoxes[1].checked == true) {
+        enablePassword();
+    } else {
+        disablePassword();
+    }
+}
+
+function disablePassword() {
+    document.forms["adminForm"].password.disabled = true;
+    document.forms["adminForm"].email.disabled = true;
+    document.getElementById('uni_username').innerHTML="UNI:";
+    document.getElementById('pswd_field').style.color="#999";
+    document.getElementById('email_field').style.color="#999";
+}
+
+function enablePassword() {
+    document.forms["adminForm"].password.disabled = false;
+    document.forms["adminForm"].email.disabled = false;
+    document.getElementById('uni_username').innerHTML="Username:";
+    document.getElementById('pswd_field').style.color="#000";
+    document.getElementById('email_field').style.color="#000";
+}
+
+</script>
+#end
+
+<h1>
+#if($action == "display")
+Change Access Level for 
+#springBind("basicAdminCommand.user.fullName")
+${status.value}
+#else
+Add New User to Roster
+#end
+</h1>
+
+#macro(fieldError)
+    #if(${status.errorMessage}  != "") <div class="error">${status.errorMessage}</div> #end
+#end
+
+
+#springBind("basicAdminCommand.*")
+#foreach($error in $status.errorMessages)
+    #set($hasErrors = "1")
+#end
+  
+<div id="admincontent">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div>
+		</div>
+
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
+
+#if ($action == "display")
+    ## display "delete" form
+    <tr><td colspan="2" align="center">
+    <form action="basicAdmin.smvc" method="POST" style="padding: 0 5px 5px 0; margin: 0; float: right;">
+        #springBind("basicAdminCommand.id")
+        <input type="hidden" name="id" value="$!{status.value}">
+        <input type="hidden" name="entity" value="participant">
+        <input type="hidden" name="action" value="delete">
+        <input type="submit" value="Remove this user" class="regButton" />
+    </form>
+    </td></tr>
+#end
+
+<form action="basicAdmin.smvc" method="post" name="adminForm">
+<input type="hidden" name="entity" value="participant">
+
+#if($action == "display")
+    ## id-related stuff
+    #springBind("basicAdminCommand.id")
+    <input type="hidden" name="id" value="$!{status.value}">
+#end
+
+######## Begin properties #########
+
+
+#springBind("basicAdminCommand.worksiteId")
+<tr><th align="right" style="width: 200px !important;">Course name:</th><td style="width: 530px !important;"><input type="hidden" name="worksiteId" value="$!{status.value}">
+#springBind("basicAdminCommand.worksite.title")
+<b>$!{status.value}</b></td></tr>
+
+
+#springBind("basicAdminCommand.userId")
+<tr><th align="right" style="vertical-align: top;">Existing user:
+#fieldError()
+</th>
+<td>
+Pick a user by typing a couple of letters of their name and selecting them from the dropdown menu, OR create a new one below.<br />
+#if($action == "display")
+    <span class="alert">WARNING: changing a user will  transfer all of the previous user's work to the new user!</span>
+    <br />
+#end
+
+#if($action == "new")
+<script language="javascript">
+var default_val = -1;
+function toggleNewUserForm(menuItemValue) {
+    if (menuItemValue != "") {
+        if (menuItemValue != -1) hideElement($('createnewuser'));
+        else showElement($('createnewuser'));
+    }   
+}
+</script>
+#end
+
+
+<input id="searchString" type="text" value="" maxlength="8" size="8" name="searchString"/>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+<script language = "javascript">
+    
+    var createNewOption = "";
+    #if($action == "new")
+        createNewOption ='<option value="-1" selected="true">Create New</option>';
+    #end
+    #if($action == "display")
+        createNewOption ='<option value="${basicAdminCommand.user.id}" selected="true">$!{basicAdminCommand.user.fullName} (${basicAdminCommand.user.userIdString})</option>';
+    #end
+    
+    function getParticipants () {
+        var searchString = $('searchString').value
+        if (searchString.length < 3) return;
+        var url = "participantSearch.smvc?searchString=" + searchString;
+        var d = loadJSONDoc(url);
+        var selectString  = createNewOption;
+        var gotUsers = function (users) {
+            map (
+            function (a) {
+                selectString += '<option value ="' + a['id'] + '" >' + a['firstName'] + ' ' + a['lastName']  + ' (' + a['userIdString'] + ')</option>';
+            },
+            users);
+            $("userIdSelect").innerHTML = selectString;
+        };
+        var userFetchFailed = function (err) {
+          alert("Fetch failed.");
+        };
+        d.addCallbacks(gotUsers, userFetchFailed);
+    }
+    connect('searchString', 'onblur', getParticipants);
+</script>
+
+#springBind("basicAdminCommand.user.id")
+<select id = "userIdSelect" name="userId" #if($action == "new") onchange="toggleNewUserForm(this.options[selectedIndex].value);" #end>
+#if($action == "new")
+    <option value="-1" selected="true">Create New</option>
+#end
+#if($action == "display")
+    <option value="${basicAdminCommand.user.id}" selected="true">$!{basicAdminCommand.user.fullName} (${basicAdminCommand.user.userIdString})</option>
+#end
+</select>
+
+
+
+
+
+
+</td></tr>
+
+#springBind("basicAdminCommand.accessLevel")
+<tr><th align="right" nowrap="nowrap">User access level:
+#fieldError()
+</th><td>
+<select name="accessLevel">
+#if($action == "new")
+    <option value="" selected="true">Choose...</option>
+#end
+    <option value="10" #if($status.value == 10) selected="true" #end >Student</option>
+    <option value="20" #if($status.value == 20) selected="true" #end >Guest</option>
+    <option value="30" #if($status.value == 30) selected="true" #end >T.A.</option>
+    <option value="40" #if($status.value == 40) selected="true" #end >Instructor</option>
+    <option value="100" #if($status.value == 100) selected="true" #end >Administrator</option>
+</select>
+</td></tr>
+
+
+#if($action == "new")
+
+<tr><td colspan="2" style="padding: 0; border:0;">
+		<table border="0" cellspacing="0" cellpadding="0" id="createnewuser" style="padding: 0; margin: 0; border: 0; width:730px !important;">
+			<tr><th colspan="2" style="background-color: #efefef; border-left: 1px #999 solid; border-right: 1px #999 solid; text-align: left;">New user information</th></tr>
+			
+			<tr>
+				#springBind("basicAdminCommand.firstName")
+				<th align="right">First name:
+				#fieldError()</th>
+				<td><input type="text" name="firstName" value="$!{status.value}"></td>
+			</tr>
+			<tr>
+				#springBind("basicAdminCommand.lastName")
+				<th align="right">Last name:
+				#fieldError()</th>
+				<td><input type="text" name="lastName" value="$!{status.value}"></td>
+			</tr>
+			<tr>
+				#springBind("basicAdminCommand.authMethod")
+				<th align="right">Login method:
+				#fieldError()</th>
+				<td>
+				<input type="radio" name="authMethod" value="external" #if($basicAdminCommand.authMethod && $basicAdminCommand.authMethod != "vital") checked="true" #end onClick="disablePassword()" /> Institutional authentication <br />
+				<input type="radio" name="authMethod" value="vital" #if(!($basicAdminCommand.authMethod) || $basicAdminCommand.authMethod == "vital") checked="true" #end onClick="enablePassword()" /> Built-in VITAL-only authentication
+				</td>
+			</tr>
+			<tr>
+				#springBind("basicAdminCommand.userIdString")
+				<th align="right" style="width: 200px !important;"><span id="uni_username">UNI:</span>
+				#fieldError()</th>
+				<td style="width: 530px !important;"><input type="text" name="userIdString" value="$!{status.value}"></td>
+			</tr>
+			<tr>
+				#springBind("basicAdminCommand.password")
+				<th align="right"><span id="pswd_field">Password:<br />(only for non-Columbia users)</span>
+				#fieldError()</th>
+				<td><input type="password" name="password" value="$!{status.value}" size="30"></td>
+			</tr>
+			<tr>
+				#springBind("basicAdminCommand.email")
+				<th align="right"><span id="email_field">E-mail address:</span>
+				#fieldError()</th>
+				<td><input type="text" name="email" value="$!{status.value}"></td>
+			</tr>
+		</table>
+</td>
+</tr>
+#end
+
+######### End Properties #########
+
+<tr><td colspan="2" align="center">
+#if($action == "display")
+    ## display "update" stuff
+    <input type="hidden" name="action" value="update">
+    <input type="submit" value="Update" class="regButton" />
+#else
+    <input type="hidden" name="action" value="insert">
+    <input type="submit" value="Add User" class="regButton">
+#end
+</td></tr>
+
+</form>
+
+</table>
+
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+
+
+##springBind("basicAdminCommand.*")
+##springShowErrors("<br />" "")
+
+#if($action == "new")
+<script language="javascript">
+    checkAuthMethod();
+</script>
+#end
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

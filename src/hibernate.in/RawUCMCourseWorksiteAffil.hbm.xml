@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3.ucm">
+
+    <class name="RawUCMCourseWorksiteAffil" table="UCM_COURSE_WORKSITE_AFFILS">
+        
+        <meta attribute="class-description">
+            This class represents that a worksite is open to access from members of the associated course.
+            It is used exclusively within the UCM package.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UCM_COURSE_WORKSITE_AFFIL_ID">
+            <generator class="native"/>
+        </id>
+                                
+        <many-to-one name="course" lazy="false" class="RawUCMCourse" column="UCM_COURSE_ID">
+            <meta attribute="field-description">The course which is allowed access to the associated worksite.</meta>
+        </many-to-one>
+        
+        <many-to-one name="worksite" lazy="false" class="RawUCMWorksite" column="UCM_WORKSITE_ID">
+            <meta attribute="field-description">The worksite which is open to the associated course's members.</meta>
+        </many-to-one>
+
+    </class>
+
+</hibernate-mapping>

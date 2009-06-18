@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="Assignment" table="ASSIGNMENTS">
+        
+        <meta attribute="class-description">
+			Like, an assignment.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ASSIGNMENT_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="unit" lazy="false" class="Unit" column="UNIT_ID">
+            <meta attribute="field-description">The Worksite in which this material is used.</meta>
+        </many-to-one>
+        
+        <property name="customType" type="string" column="CUSTOM_TYPE">
+            <meta attribute="field-description">This field will hold exotic assignment types - ones that are neither guided lessons nor essays.</meta>
+		</property>
+
+        <property name="dateDue" type="timestamp" column="DATE_DUE">
+            <meta attribute="field-description">When this assignment is due.</meta>
+		</property>
+
+        <property name="instructions" type="text">
+            <meta attribute="field-description">Tell students how to complete the assignment.</meta>
+		</property>
+
+        <property name="ordinalValue" type="integer" column="ORDINAL_VALUE">
+            <meta attribute="field-description">Used to ordering assignments for display.</meta>
+		</property>
+
+        <property name="title" type="string">
+            <meta attribute="field-description">Title of the assignments</meta>
+		</property>
+
+        <property name="type" type="string">
+            <meta attribute="field-description">The type of the assignment (essay or guided lesson.) </meta>
+		</property>
+
+		<set name="materialAssociations" lazy="true" cascade="delete" inverse="true" batch-size="3">
+            <meta attribute="field-description">Materials associated for this Assignment.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="ASSIGNMENT_ID"/>
+            <one-to-many class="AssignmentMaterialAssoc"/>
+        </set>
+
+		<set name="questions" lazy="true" inverse="true" order-by="ORDINAL_VALUE" cascade="delete" batch-size="3">
+            <meta attribute="field-description">Questions in this Assignment. (Only used if this is a guided lesson.)</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="ASSIGNMENT_ID"/>
+            <one-to-many class="Question"/>
+        </set>
+		
+		<set name="responses" lazy="true" inverse="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">Responses to the assignment. (If this is a guided lesson, each response will contain a set of answers to the questions in the assignment)</meta>
+            <key column="ASSIGNMENT_ID"/>
+            <one-to-many class="AssignmentResponse"/>
+        </set>        
+
+    </class>
+
+</hibernate-mapping>

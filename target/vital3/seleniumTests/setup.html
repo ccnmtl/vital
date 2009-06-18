@@ -1,0 +1,286 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>setup</title> 
+</head>
+
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+	<thead>
+		<tr>
+			<td rowspan="1" colspan="3">setup</td>
+		</tr>
+	</thead>
+	<tbody>
+<tr>
+    <td>setTimeout</td>
+    <td>120000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>store</td>
+    <td>javascript{(new Date()).getTime()}</td>
+    <td>uniqueIdString</td>
+</tr>
+<tr>
+    <td>store</td>
+    <td>Selenium Test Worksite ${uniqueIdString}</td>
+    <td>worksiteTitle</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>seleniumStudent${uniqueIdString}</td>
+	<td>studentUsername</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>seleniumInstructor${uniqueIdString}</td>
+	<td>instructorUsername</td>
+</tr>
+<tr>
+	<td>saveStoredVars</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>../login.smvc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>selenium_test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create New Course</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>termId</td>
+	<td>label=Fall 2006</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>announcement</td>
+	<td>this is an announcement</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>${worksiteTitle}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>courseIdString</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Create']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Global User Management</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userIdString</td>
+	<td>${studentUsername}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>firstName</td>
+	<td>Selenium</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lastName</td>
+	<td>Student</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.newUserForm.authMethod[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addUser</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userIdString</td>
+	<td>${instructorUsername}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>firstName</td>
+	<td>Selenium</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lastName</td>
+	<td>Instructor</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.newUserForm.authMethod[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addUser</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My VITAL Courses</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=${worksiteTitle}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Roster Management</td>
+	<td></td>
+</tr>
+
+
+
+<tr>
+	<td>clickAndWait</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>searchString</td>
+	<td>${studentUsername}</td>
+</tr>
+<tr>
+	<td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>accessLevel</td>
+	<td>label=Student</td>
+</tr>
+<tr>
+	<td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>userId</td>
+	<!--
+	<td>label=Selenium Student (${studentUsername})</td>
+    -->
+    <td>index=1</td>
+</tr>
+<tr>
+	<td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add User']</td>
+	<td></td>
+</tr>
+
+
+<tr>
+	<td>clickAndWait</td>
+	<td>addButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>searchString</td>
+	<td>${instructorUsername}</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>accessLevel</td>
+	<td>label=Instructor</td>
+</tr>
+<tr>
+	<td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>userId</td>
+	<!--
+	<td>label=Selenium Instructor (${instructorUsername})</td>
+    -->
+    <td>index=1</td>
+</tr>
+<tr>
+	<td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add User']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+    <td>2000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+
+</tbody>
+</table>
+</body>
+</html>

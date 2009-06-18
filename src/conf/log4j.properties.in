@@ -1,0 +1,59 @@
+# Log4J config file for Vital 3
+
+log4j.rootLogger=<LOG_LEVEL_ROOT>, everything_log
+
+log4j.logger.ccnmtl.vital3=<LOG_LEVEL_VITAL>, vital_log
+log4j.logger.org.springframework=<LOG_LEVEL_SPRING>, spring_log
+log4j.logger.org.apache.velocity=<LOG_LEVEL_VELOCITY>, velocity_log
+log4j.logger.org.hibernate=<LOG_LEVEL_HIBERNATE>, hibernate_log
+log4j.logger.com.opensymphony.oscache=<LOG_LEVEL_CACHE>, cache_log
+log4j.logger.org.jgroups=<LOG_LEVEL_JGROUPS>, cache_log
+
+#Don't output to stdout.
+#log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+#log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+#log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - <%m>%n
+
+
+log4j.appender.everything_log=org.apache.log4j.RollingFileAppender
+#log4j.appender.everything_log.File=${catalina.home}/logs/vital3.log
+log4j.appender.everything_log.File=<PATH_TO_LOG_DIR>/logs/everything.log
+log4j.appender.everything_log.MaxFileSize=512KB
+log4j.appender.everything_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.everything_log.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.everything_log.MaxBackupIndex=0
+
+log4j.appender.vital_log=org.apache.log4j.RollingFileAppender
+log4j.appender.vital_log.File=<PATH_TO_LOG_DIR>/logs/vital.log
+log4j.appender.vital_log.MaxFileSize=512KB
+log4j.appender.vital_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.vital_log.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.vital_log.MaxBackupIndex=0
+
+log4j.appender.spring_log=org.apache.log4j.RollingFileAppender
+log4j.appender.spring_log.File=<PATH_TO_LOG_DIR>/logs/spring.log
+log4j.appender.spring_log.MaxFileSize=512KB
+log4j.appender.spring_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.spring_log.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.spring_log.MaxBackupIndex=0
+
+log4j.appender.velocity_log=org.apache.log4j.RollingFileAppender
+log4j.appender.velocity_log.File=<PATH_TO_LOG_DIR>/logs/velocity.log
+log4j.appender.velocity_log.MaxFileSize=512KB
+log4j.appender.velocity_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.velocity_log.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.velocity_log.MaxBackupIndex=0
+
+log4j.appender.hibernate_log=org.apache.log4j.RollingFileAppender
+log4j.appender.hibernate_log.File=<PATH_TO_LOG_DIR>/logs/hibernate.log
+log4j.appender.hibernate_log.MaxFileSize=512KB
+log4j.appender.hibernate_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.hibernate_log.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.hibernate_log.MaxBackupIndex=0
+
+log4j.appender.cache_log=org.apache.log4j.RollingFileAppender
+log4j.appender.cache_log.File=<PATH_TO_LOG_DIR>/logs/cache.log
+log4j.appender.cache_log.MaxFileSize=512KB
+log4j.appender.cache_log.layout=org.apache.log4j.PatternLayout
+log4j.appender.cache_log.layout.ConversionPattern=%d %p [%c] - %m%n
+log4j.appender.cache_log.MaxBackupIndex=0

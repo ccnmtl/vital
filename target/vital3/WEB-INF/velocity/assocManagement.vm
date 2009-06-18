@@ -1,0 +1,123 @@
+#set($section = "courseHome")
+
+#if ($mode == "amAssoc")
+    #set($title = "Administration: Videos for Assignment")
+#elseif ($mode == "qmAssoc")
+    #set($title = "Administration: Videos for Question")
+#else
+    #set($title = "Administration: Videos for Topic")
+#end
+
+#parse("header.vm")
+
+
+	<!-- For sorting the table -->
+	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+<!-- styles and javascript exclusively for this page: -->
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+
+
+#if ($mode == "amAssoc")
+    <h1>Associated Videos for Assignment "$!{assignment.title}"</h1>
+#elseif ($mode == "qmAssoc")
+    <h1>Associated Videos for Question $!{question.ordinalValue} in Guided Lesson "$!{question.assignment.title}"</h1>
+#else
+    <h1>Associated Videos for Topic "$!{unit.title}"</h1>
+#end
+
+<p>Click the checkboxes in the left column to associate the videos with
+#if ($mode == "amAssoc")
+    assignment "$!{assignment.title}",
+#elseif ($mode == "qmAssoc")
+    question $!{question.ordinalValue} in guided lesson "$!{question.assignment.id}",
+#else
+    topic "$!{unit.title}",
+#end
+then click "Apply changes" at the bottom of the list.
+<br />
+Uncheck the boxes to dissociate the video, and then click "Apply changes".
+</p>
+
+#if ($mode == "qmAssoc")
+<p>
+<a href="listing.smvc?mode=glQuestions&id=$!{question.assignment.id}" class="regButton">Return to question list</a>
+</p>
+#end
+
+
+
+#if ($materials.size() == 0)
+
+<p>There are no videos in this worksite. <a href="basicAdmin.smvc?action=new&entity=material&worksiteId=${worksite.id}">Click here to add a video</a></p>
+
+#else
+
+    <form name="materialsForm" action="assoc.smvc" method="POST">
+
+    #if ($mode == "amAssoc")
+        <input type="hidden" name="id" value="${assignment.id}">
+        <input type="hidden" name="entity" value="assignment">
+    #elseif ($mode == "qmAssoc")
+        <input type="hidden" name="id" value="${question.id}">
+        <input type="hidden" name="entity" value="question">
+    #else
+        <input type="hidden" name="id" value="${unit.id}">
+        <input type="hidden" name="entity" value="unit">
+    #end
+
+    <input type="hidden" name="worksiteId" value="${worksite.id}">
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:895px;" onclick="sortColumn(event)">
+	<thead>
+    <tr>
+        <th style="width: 80px;">Associate</th>
+        <th class="navOut" style="width: 110px;">Associated ?</th>
+		<th class="thumbnail-col">Thumbnail</th>
+        <th class="navOut DefaultSort" style="width: 250px;">Title</th>
+        <th class="navOut" style="width: 250px;">Description</th>
+        <th class="navOut" style="width: 130px;">Date Modified</th>
+    </tr>
+	</thead>
+
+	<tbody>
+    #foreach ($materialMap in $materials)
+        
+        #set($material = $materialMap.material)
+        <tr>
+            <td><input type="checkbox" name="ids" value="${material.id}" #if($materialMap.isAssoc) checked="true" #end></td>
+            <td>#if($materialMap.isAssoc) Y #else N #end</td>
+		<td class="thumbnail-col"><a class="thumbnail" style="background-image:url(#if(${material.thumbUrl}) '$!{material.thumbUrl}'  
+                                                                                   #else 'images/thumbnail.gif' 
+                                                                                   #end)"
+                                    href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&amp;id=${material.id}','1000','700','no','no','videoviewer')"></a></td>
+            <td>$!{material.title}</td>
+            <td>$!{material.text}</td>
+            <td>$!{material.dateModified}</td>
+        </tr>
+        
+    #end
+	</tbody>
+    </table>
+
+<div style="border: 1px solid #999; border-top: 0;width: 889px; padding: 2px;">
+<input type="submit" name="apply" value="Apply changes" class="regButton"></div>
+
+    </form>
+
+#end
+
+</div><!-- End content area, class="documentContentMain" -->
+
+#parse("footer.vm")

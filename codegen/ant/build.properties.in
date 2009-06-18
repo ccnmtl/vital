@@ -1,0 +1,22 @@
+
+# tomcat application home
+tomcat.home=<TOMCAT_HOME>
+
+# tomcat context (i.e. "/emattes/vital3")
+context.name=<CONTEXT_NAME>
+
+# vital3.build should be the webapp directory named 'vital3' which was freshly built from source
+vital3.build=target/vital3
+
+# tomcat manager properties
+tomcat.manager.url=<BASE_URL>/manager
+tomcat.manager.username=admin
+tomcat.manager.password=5ohfiv
+
+# hibernate mapping files in this directory
+hibernate=src/hibernate
+
+# classes and jars for ant in these directories
+classes=codegen/ant/classes
+lib=codegen/ant/lib
+	

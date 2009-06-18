@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="autodetect">
+
+    <!-- Allows placeholders (e.g. ${context.name} ) to be used in bean definitions. -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:spring.properties" />
+    </bean>
+
+    <!-- this baseUrl bean allows the value to be accessible from within the application -->
+    <bean id="baseUrl" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="${app.base.url}" />
+    </bean>
+	
+    <!-- TastyClient bean for the Tasty Client -->
+    <!-- Moving this out of the applicationContext and into Vital3-servlet.xml, since we now need wire in a tastyBean. -->
+    <!--
+    <bean id="tastyClient" class="ccnmtl.utils.TastyClient">
+        <constructor-arg index="0" type="java.lang.String" value="${tasty.url}" />
+        <constructor-arg index="1" type="java.lang.String" value="${tasty.servicename}" />
+    </bean>
+    -->
+</beans>

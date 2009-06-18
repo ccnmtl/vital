@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app PUBLIC
+	"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	"http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  
+<description>Vital 3</description>
+
+<!-- Set this to true when the application has scheduled downtime. -->
+<context-param>
+	<param-name>downtime</param-name>
+	<param-value>false</param-value>
+</context-param>
+<!-- Log4j logging -->
+<context-param>
+	<param-name>log4jConfigLocation</param-name>
+	<param-value>/WEB-INF/classes/log4j.properties</param-value>
+</context-param>
+<context-param>
+	<param-name>indexPath</param-name>
+	<param-value>/WEB-INF/lucene/index</param-value>
+</context-param>
+<context-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>/WEB-INF/classes/applicationContext.xml</param-value>
+</context-param>
+<!-- this parameter will make it so "springBind" automatically html-escapes the "$status.value" variable -->
+<context-param>
+  <param-name>defaultHtmlEscape</param-name>
+  <param-value>true</param-value>
+</context-param>
+
+
+<listener>
+  <listener-class>ccnmtl.vital3.utils.Vital3SessionListener</listener-class>
+</listener>
+
+<listener>
+  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+</listener>
+
+  <!-- Servlet Class Declarations -->
+  <servlet>
+    <servlet-name>Vital3</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:Vital3-servlet.xml
+        </param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  
+  <!-- Servlet URL Mappings --> 
+  <servlet-mapping>
+    <servlet-name>Vital3</servlet-name>
+    <url-pattern>*.smvc</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>
+      index.html
+    </welcome-file>
+  </welcome-file-list>
+
+</web-app>

@@ -1,0 +1,88 @@
+#if($action == "noteQuery")<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"><body>#end
+<div id="noteList" class="notebindervv"><!-- Begin Div that binds all the notes: parents and children together (mothership) -->
+	
+    #if($groupList.size() == 0)
+    
+    <p class="blanknote" style="padding: 10px;">There are no clips to display.</p>
+    
+    #end
+    
+    #foreach($group in $groupList)
+    
+    <!-- Begin a parent group of notes/clips, class="noteGrouping" -->
+    
+	<!-- begin header -->
+	
+    #if($groupBy != "materialTitle")
+    
+	    <h3 class="noteGrouping">
+            <a class="hs-control hs-control-show" href="#grp${group.groupId}" onclick="return false;">
+                <img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+            <span>${group.groupTitle}</span>
+        </h3>
+	#end
+        
+	<!-- end header -->
+
+	
+	  <div id="grp${group.groupId}">
+      
+        <!-- Begin each note, need id for shrinking and expanding the information, class="noteclip" -->
+        
+        #foreach($annotation in $group.notes)
+        
+        <div class="noteset" name="${annotation.id}" id="FullNote_grp${group.groupId}_note${annotation.id}">
+            <!-- Begin a note -->
+        
+			<div class="actionicons">
+				<a class="deleteicon" title="Delete this note." href="javascript:deleteNote('${annotation.id}','${group.groupId}')"></a>
+			</div>
+            
+			<h3 style="padding: 0 0 0 16px;"><a class="hs-control" title="Click to expand or collapse"
+            href="#grp${group.groupId}_note${annotation.id}" onclick="return false;"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+			<a class="expandtitle" title="Edit this note." href="javascript:editNote('${annotation.id}','${group.groupId}')">$!{textFormatter.escapeForHTML($annotation.title)}</a>
+			<span class="moddate">(<b>Modified:</b> ${textFormatter.dateToString($annotation.dateModified)})</span></h3>
+			
+			<div class="note-details" id="grp${group.groupId}_note${annotation.id}">
+                <p><b>Clip Time:</b>
+                     <span>${annotation.clipBegin}</span> - <span>${annotation.clipEnd}</span>
+                </p>
+                <p><b>Tags:</b>
+                    <span class="notetags">$!{annotation.getTagsAsString(${tagMap})}</span>
+                </p>
+                ## no need to HTML escape annotation.text since it's stored as HTML.
+                <div><b>Note Content:</b> <span class="notehtml">$!{annotation.text}</span></div>
+                <script language="JavaScript" type="text/javascript">
+                    if ( !('${annotation.id}' in myNoteDetails) ) {
+                        myNoteDetails['${annotation.id}']={
+                            ## The title needs to be escaped twice on the way in from the DB:
+                            ## the first escape allows the title, as XML, to pass through the Ajax call,
+                            ## and the second makes sure it doesn't break the Javascript eval function to which it will be passed in function
+                            ## replaceNoteList in manage_notes.js .
+                            
+                            'title': unescape_from_xml('${textFormatter.doubleEscapeForXML($annotation.title)}'),
+                            'clipType':'Clip',
+                            'clipBegin':'${annotation.clipBegin}',
+                            'clipEnd':'${annotation.clipEnd}',
+                            'someGroup':'${group.groupId}'
+                        };
+                    }
+                </script>
+			</div>
+
+		</div><!-- End a note -->
+        
+        #end
+	    
+    </div><!-- End a group -->
+	
+
+#end
+##end foreach group in groupList
+  
+</div><!-- End Div that binds all the notes: parents and children together (mothership) -->
+    
+#if($action == "noteQuery")
+</body>
+</html>#end

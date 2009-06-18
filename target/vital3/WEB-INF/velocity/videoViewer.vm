@@ -1,0 +1,487 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>VITAL: Video Viewer - ${material.title}</title>
+                    
+	<style type="text/css" media="all"><!-- @import url('style/tacky_portlet.css'); --></style>
+
+	<style type="text/css" media="all"><!-- @import url('style/general.css'); --></style>
+	
+	<style type="text/css" media="all"><!-- @import url('style/tagbox.css'); --></style>
+	
+	<!-- Below is IE css adjustments, don't delete! --> 
+	<!--[if IE]><style type="text/css" title="text/css">@import url('style/IEfixes.css');</style><![endif]-->
+	<!--[if IE 7]><style type="text/css" title="text/css">@import url('style/IE7fixes.css');</style><![endif]-->
+
+
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/Base.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/Iter.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/DOM.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/Logging.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/LoggingPane.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/Async.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/hs.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/ac_quicktime.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/tagbox.js"></script><!-- script for the tagging box -->
+<script type="text/javascript" language="javascript" src="scripts/notetaking.js"></script>
+
+
+<script type="text/javascript" language="javascript" src="scripts/videoclipping.js"></script>
+
+
+<script type="text/javascript" language="javascript" src="scripts/manage_notes.js"></script> 
+
+
+<script type="text/javascript" language="javascript" >
+// MochiKit.LoggingPane.createLoggingPane();
+
+
+function openvideodetail() {
+	var detailboxdiv = document.getElementById('vv-video-detail');
+	detailboxdiv.style.visibility = 'visible';
+	detailboxdiv.style.display = 'block';
+
+}
+
+function closevideodetail() {
+	var detailboxdiv = document.getElementById('vv-video-detail');
+	detailboxdiv.style.visibility = 'hidden';
+	detailboxdiv.style.display = 'none';
+}
+
+</script>
+
+
+</head>
+
+<body>
+<div id="visual-portal-wrapper"><!-- Begin div id="visual-portal-wrapper" -->
+
+
+<div class="vv-top"><!-- Begin div for top label -->
+
+	<div class="vv-top-shadeL"><!-- Begin div for top label  class="vv-header-caseleft" -->
+	<div class="vv-top-shadeR"><!-- Begin div for top label  class="vv-header-caseright" -->
+	<h1>${material.title}</h1>
+	</div><!-- End div for top label  class="vv-header-caseright" -->
+	</div><!-- End div for top label  class="vv-header-caseleft" -->
+
+</div><!-- End div for top label -->
+
+<div id="vv-video-detail"><!-- Begin div for video detail -->
+<h2>Video Detail</h2>
+
+<div id="vv-video-detail_content">
+
+<b>Title:</b>${material.title}<br />
+
+#foreach ($b in $material.CustomFieldsAndValues)
+    <b>$b.name</b>:$b.value<br />
+#end
+<hr>
+
+#set ($relatedUnits = $material.getUnits())
+#if ($relatedUnits.size() > 0)
+    <b>Related Units: </b><br>
+    #foreach ($unit in $relatedUnits)
+        * $unit.title <br />
+    #end
+    <hr>
+#end
+
+#set ($relatedAssignments = $material.getAssignments())
+#if ($relatedAssignments.size() > 0)
+    <b>Related Assignments: </b><br>
+    #foreach ($assignment in $relatedAssignments)
+        * $assignment.title <br />
+    #end
+    <hr>
+#end
+
+</div>
+<input type="button" onclick="closevideodetail()" class="regButton" value="Close" style="margin-left: 5px;" />
+</div><!-- End div for video detail -->
+
+
+#if($mode != "viewonly")  ## Display in edit mode, hide in view only (coming from submitted or preview essay)
+<form method="post" name="videonoteform" action="javascript:verifyIntegrity('videonoteform');">
+
+
+<div id="clipping_boxarea"><!-- ************ BEGIN CLIPPING FORM AREA ************ -->
+
+
+    ######
+    ## the javascript inserts this input field automatically when needed! (i.e. when opening a note)
+    ## Kept here for reference...
+    ##<input type="hidden" name="uid" value="-1" />
+    ######
+    <input type="hidden" name="action" value="submitNote" />
+    ## THIS WORKSITEID MUST BE HERE OR ELSE JAVASCRIPT THINKS THIS IS THE PLONE VERSION
+    <input type="hidden" name="worksiteId" value="${worksite.id}" />
+    ##
+    <input type="hidden" name="materialId" value="${material.id}" />
+	<input type="hidden" name="form.submitted" value="1" />
+
+	<div id="clippingtype" style="display:none"><!-- display:none for hiding clips in VITAL 3.00000 -->
+
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td style="padding-right: 10px;"><b>Type:</b></td>
+				<td><input type="radio" name="clipType" id="Clipbutton"
+               value="Clip" onclick="updatemyform(this);"
+               style="border:none;" checked="checked" /></td><td style="padding-right: 10px;">Clip</td>
+				<td><input type="radio" name="clipType"
+               id="Markerbutton" value="Marker"
+               onclick="updatemyform(this);"
+               style="border:none;" /></td><td>Marker</td>
+			</tr>
+		</table>
+
+	</div>
+	
+	<div id="clipcontrols">
+	
+<!-- 
+	<table border="0" cellspacing="0" cellpadding="0" class="clippingtable">
+		<tr>
+			<th>Clip<br />time:</th>
+			<td class="cliptimebox">
+			</td>
+		</tr>
+	</table>
+ -->
+<div class="cliptimeboxtable" style="width: 320px;">
+	<table border="0" cellspacing="0" cellpadding="0">
+	<tr>
+	<td style="padding: 2px;"><input type="button" onclick="InMovieTime()" class="regButton" style="width: 70px" value="Set start:" /></td>
+	<td style="padding: 2px 10px 2px 2px; border-right: 1px dotted #999;">
+	<input type="text" class="timecode" name="clipBegin" value="00:00:00" /></td><!-- Don't change the name 'clipBegin' -->
+	<td style="padding: 2px 2px 2px 7px;"><input type="button" onclick="OutMovieTime()" class="regButton" style="width: 70px" value="Set end:" /></td>
+	<td style="padding: 2px;">
+	<input type="text" class="timecode" name="clipEnd" value="00:00:00" /></td><!-- Don't change the name 'clipEnd' -->
+			</tr>
+	</table>
+</div>
+	
+	
+	<table border="0" cellspacing="0" cellpadding="0" class="notetakingform">
+		<tr>
+			<th>Title:</th>
+			<td><input type="text" class="titlefield" name="title" value="" /></td>
+		</tr>
+		<tr>
+			<th>Note:</th>
+			<td>
+			  <input name="note_text_format" value="text/html" type="hidden" />
+			  <!-- wysiwyg essay, with buttons, etc. -->
+   <div class="cliptextarea">
+
+  <script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+  <script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"> </script>
+    <script type="text/javascript" charset="iso-8859-1">
+       //tinyMCE.settings['height']='150';
+       tinyMCE.settings['theme_advanced_buttons1']='';
+       tinyMCE.settings['theme_advanced_toolbar_location']='';
+    </script>
+    <textarea tabindex="0" name="note" mce_editable="true" id="note"></textarea>
+
+<!--  <textarea tabindex="0" name="note" id="note"></textarea>
+-->
+</div>
+
+			</td>
+		</tr>
+		<tr>
+			<th>Tags:</th>
+			<td class="taggedItem" name="protoItem">
+				<div id="noteTagsList" class="tagListForItem"></div>
+				<a href="javascript:opentagbox();">Add/Remove tags</a>
+
+			</td>
+
+		</tr>
+		<tr>
+			<th style="padding-top: 0; padding-bottom: 0;">&nbsp;</th>
+			<td style="text-align:right; white-space: nowrap; padding-top: 0; padding-bottom: 0;"><div id="submitNoteStatus" class="statusalert">Your clip has been saved...</div>
+			
+			<input type="button"
+			id="newclipbutton" class="regButton" onclick="clearNote()" value="New"
+			#if($mode == "new")  ## Display in new mode, from the raw, source material
+			style="visibility:hidden;"
+			#end
+			/>
+			&nbsp;
+			<input id="submitNote" type="button" class="regButton" onclick="verifyIntegrity('videonoteform')" value="Save" /></td>
+		</tr>
+	</table>
+	
+
+	</div>
+
+
+</div><!-- ************ END CLIPPING FORM AREA ************ -->
+
+
+
+
+
+<div id="tags_box_id" class="tags_box"><!-- ************ BEGIN THE BOX FOR ADD/REMOVE TAGS ************ -->
+
+	<h2>Add/Remove Tags</h2>
+	
+	<div class="tags_box_content">
+
+		<h3>Add new tags (comma separated)... [<a href="javascript:openhelptagbox()">what are tags?</a>]</h3>
+		
+
+
+			<input type="text" id="newtagsfield" class="newtagsfield" />
+			<input type="button" class="regButton" value="Add" onclick="addTags()" />
+
+		<div id="whataretags">
+			<div style="text-align:right; padding:0; margin:0 0 2px 0;"><a href="javascript:closehelptagbox()">[ close ]</a></div>
+			<p style="padding:0; margin:0;"><!-- Definition of "tags goes here" -->
+
+			A "tag" is like a keyword or category label. Tags help you find clips which have something in common. You can assign as many tags as you wish to each clip.
+			</p>
+		</div>
+		
+		<br />
+		<div class="tags_box_divider"></div>
+
+
+		<div class="taglistarea">
+		     <!-- Begin div that contains the box for list of tags -->
+			<table border="0" cellspacing="0" cellpadding="0"> 
+				<tr valign="top">
+
+					
+					<td><!-- Begin area for existing tags selection -->
+					<h3>Your available tags...</h3>
+					<select id="existingTagsList" multiple="multiple" class="existingTagsList"> <!-- List of all the available, unassigned tags -->
+					  
+                      #foreach($tag in $availableTags)
+						<option value="${tag}">${tag}</option>
+					  #end
+					  
+					</select>
+
+					</td><!-- Begin area for existing tags selection -->
+					
+					<!-- Begin area for arrows to remove and add -->
+					<td style="vertical-align:middle">
+					<input type="button" name="add_selected" class="assign_the_tag regButton" value="assign &#62;&#62;" onclick="assignTags()" /><!-- the assign button -->
+					<br />
+					<input type="button" name="remove_selected" class="remove_the_tag regButton" value="&#60;&#60; remove" onclick="removeTags()" /><!-- the delete button -->
+					</td>
+
+					
+					<!-- Begin area for assigned tags selction -->
+					<td>
+					<h3>This clip's tags...</h3>
+					<select id="assignedTagsList" multiple="multiple" class="assignedTagsList" name="stickytags"> <!-- List of all the tags assigned to this clip -->
+                    ## this is set in the javascript once delivered to the client.
+					</select>
+					</td>
+				</tr>
+			</table>
+		<div class="tags_box_divider"></div><input type="button" onclick="closetagbox()" class="regButton" value="Close" style="margin-left: 145px; width: 80px;" />
+		</div> <!-- End div that contains the box for list of tags  class="taglistarea"  -->
+
+		
+	</div>
+
+</div><!-- ************ END THE BOX FOR ADD/REMOVE TAGS ************ -->
+
+
+</form> 
+#end  ## End conditional for edit/preview modes
+
+
+
+
+
+
+
+#if($mode == "new")  ## Display in new mode, from the raw, source material
+<div id="video_boxarea"><!-- ************ BEGIN VIDEO CLIP AREA ************ -->
+	
+	<div class="vv_action_create"><!-- This appear in creation mode -->
+	<h2 id="vvheaderbanner">CREATE CLIP</h2>
+	</div>
+#elseif($mode == "edit")  ## Display in edit mode, from the clipped material
+<div id="video_boxarea"><!-- ************ BEGIN VIDEO CLIP AREA ************ -->
+	
+	<div class="vv_action_edit">
+	<h2 id="vvheaderbanner">EDIT CLIP</h2>
+	</div>
+#else
+<div id="video_boxarea" style="border-bottom: 1px solid #999; padding-bottom: 10px;"><!-- ************ BEGIN VIDEO CLIP AREA ************ -->
+	
+	<div class="vv_action_view"><!-- This appear in creation mode -->
+	<h2 id="vvheaderbanner">VIEW CLIP</h2>
+	</div>
+#end  ## End conditional for new/edit/preview modes
+
+<!-- This appear in edit mode
+ -->
+
+	<div id="videoclipbox" style="width: 322px;"><!-- width changes here too if video size changes -->
+		<div id="videoclip">
+		<script language="JavaScript" type="text/javascript">
+			var args = ['images/poster.gif',
+			  '320', '256', '',
+			  'name','movie1',
+			  'href','$!{material.url}',
+			  'target','myself',
+			  'type','image/x-quicktime',
+			  'bgcolor','#ffffff',
+			  'enablejavascript','true',
+			  'controller','false',
+			  'autoplay','true',
+			  'autohref','true',
+			  'kioskmode','true',
+			  'pluginspage','http://www.apple.com/quicktime/download/',
+			  'classid','clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B',
+			  'codebase','http://www.apple.com/qtactivex/qtplugin.cab'];
+			/*Safari 3: does not do autohref successfully. why does it suck? */
+			if (/Macintosh.*3[.0-9]+ Safari/.test(navigator.userAgent)) {
+			   args[0] = args[7];
+			   args[11] = 'video/quicktime';
+			   args[17] = 'true'; /*controller = true*/
+			   args[21] = 'false'; /*autohref=false*/
+			   args.splice(6,2); /*remove href*/
+			}
+			QT_WriteOBJECT_XHTML.apply(this,args);
+		</script>
+		</div>
+		<div id="clipStrip"><div id="clipStripLabel"><!-- nothing --></div><div id="clipStripTrack"><div id="clipStripStart" class="clipSlider" onmouseover="return escape('Go to note start time')" onclick="jumpToStartTime()" style="display:none"></div><div id="clipStripRange" class="clipStripRange" onclick="jumpToStartTime(true)" onmouseover="return escape('Play note')" style="display:none"></div><div id="clipStripEnd" class="noteStripEnd" onmouseover="return escape('Go to note end time')" onclick="jumpToEndTime()" style="display:none"></div></div></div>
+<!-- 
+		<div style="height: 254px; width:320px; background-color: #000;border: 1px solid #999"></div>
+ -->
+		<script language="JavaScript" type="text/javascript">
+	    #if ($note)
+                refresh_mymovie('${note.clipBegin}','${note.clipEnd}','Clip');
+            #else
+                refresh_mymovie();
+            #end
+			
+            //new Control.Slider('clipSlider','clipStripTrack');
+			</script>
+
+		<div id="videotimecode"><!-- Begin div id="videotimecode" -->
+<!-- Disabled for now
+			<div id="doublespeed"><a href="#" onmouseover="return escape('Play at double speed')">&#160;2X <img src="images/scan.gif" alt="" width="11" height="8" border="0" />&#160;</a></div>
+			<div id="halfspeed"><a href="#" onmouseover="return escape('Play at normal speed')">&#160;1X <img src="images/scan.gif" alt="" width="11" height="8" border="0" />&#160;</a></div>
+			<div id="halfspeed"><a href="#" onmouseover="return escape('Play at half speed')">&#160;1/2 X <img src="images/scan.gif" alt="" width="11" height="8" border="0" />&#160;</a></div>
+-->
+			<div id="playzero" style="display:none"><a href="#" onmouseover="return escape('Play clip from the beginning')" onclick="refresh_mymovie()">&#160;<img src="images/playbeginning.gif" alt="" width="10" height="8" border="0" />&#160;</a></div>
+			<!-- 
+			<div id="advancedcontrols">
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+							<td style="padding-right: 5px;border-right: 1px solid #999;"></td>
+							<td style="padding-right: 5px;border-right: 1px solid #999;""><a href="#">1/2 X <img src="images/scan.gif" alt="" width="11" height="8" border="0" /></a></td>
+							<td style="padding-right: 5px;"><img src="images/playbeginning.gif" alt="" width="10" height="8" border="0" /></a></td>
+				</tr>
+			</table>
+			</div>
+			-->
+			<div id="clipStripTitle"></div>
+			<form name="videoviewer" style="display:inline;">
+			  <div id="text">
+			  <!-- E.R. changing this July 29 2008. For whatever reason this input breaks firefox 3 for mac. -->
+			  <!--
+			  <input id="currtime" name="currtime" type="text" class="jstimecode" value="00:00:00" />
+			  -->
+			  <span id="currtime" class="jstimecode" >00:00:00</span>
+			  <b> / <span id="totalcliplength">00:00:00</span></b> 
+			#if($mode != "viewonly")  ## Display in new mode, from the raw, source material
+			 <div id="vv-video-dprompt"><a href="javascript:openvideodetail();" style="display: inline;">Video detail</a></div>
+			#end
+			  </div></form>
+			  
+		</div><!-- End div id="videotimecode" -->
+
+	</div><!-- Begin div id="videoclipbox" -->
+
+</div><!-- ************ END VIDEO CLIP AREA ************ -->
+
+
+
+
+
+
+
+
+
+#if($mode != "viewonly")  ## Display in edit mode, hide in view only (coming from submitted or preview essay)
+<div id="notes_boxarea"><!-- ************ BEGIN EXISTING NOTES AREA ************ -->
+
+	<!--HIDDEN FOR USABILITY TESTING PMT#32573
+	<div id="expandcollapse">Expand All | Collapse All</div>
+	-->
+	<h2>My Clips</h2>
+	
+	<div id="dropdownmenu">
+	<form name="noteDisplay" method="get" action="javascript:updateNoteList('noteDisplay')">
+      <input type="hidden" name="action" value="noteQuery" />
+      ## THIS WORKSITEID MUST BE HERE OR ELSE JAVASCRIPT THINKS THIS IS THE PLONE VERSION
+      <input type="hidden" name="worksiteId" value="${worksite.id}" />
+      ##
+	  <input type="hidden" name="template" value="assetPopup" />
+	  <input type="hidden" name="limitBy" value="materialId_${material.id}" />
+      
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+
+			<td style="padding: 0 5px;">Show:</td>
+			<td>
+			<select name="recent" class="viewmenu" onchange="this.form.submit()" style="width: 180px;">
+				<option value="">All clips for this video</option>
+				<option value="today">Today's clips for this video</option>
+			</select>
+			</td>
+
+            <td style="padding: 0 5px 0 15px;">Group by:</td>
+			<td>
+			<select name="groupBy" class="viewmenu" onchange="this.form.submit()">
+			  <!-- this is 'note title' since there is only one target material in this context-->
+			  <option value="modificationDate">Date Modified</option>
+			  <option value="noteTitle">Clip Title</option>
+			  <option value="tag">Tag</option>
+			</select>
+			</td>
+
+		</tr>
+	</table>
+	</form>
+
+	</div>
+
+
+        #parse("notesMini_assetPopup.vm")
+	
+	
+    #if ($note)
+        <script language="JavaScript" type="text/javascript">editNote('${note.id}',myNoteDetails['${note.id}'].someGroup);</script>
+        <script language="JavaScript" type="text/javascript">refreshEnvironment();</script>
+    #end
+    
+
+</div>
+#end  ## End conditional for edit/preview modes
+
+
+<div id="tapemeasure"></div>
+
+</div><!-- End div id="visual-portal-wrapper" -->
+    
+    
+    
+<script type="text/javascript"
+        src="scripts/wz_tooltip.js"></script>
+</body>
+</html>
+

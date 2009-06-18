@@ -1,0 +1,87 @@
+#set($section = "courseHome")
+#set($helptopic = "guidedlesson")
+#set ($assignment = ${assignmentResponse.assignment})
+#set($title = "$worksite.title : $assignment.title")
+
+#parse("header.vm")
+
+
+#set ($responder = $assignmentResponse.participant)
+
+#parse("assignmentSubheader.vm")
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+<br />
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+#if ($assignment.instructions)
+    <b>Introduction:</b> 
+    $!{assignment.instructions}
+#end
+
+#set($totalQuestions = $assignment.NumberOfQuestions)
+
+<div id="binderbox"><!-- Begin binderbox -->
+    #if ($assignmentResponse.status == 1 )
+        #if ($responder.id != $participant.id)
+             <br />
+             <h2>Assignment submitted by $!{responder.user.fullName}</h2>
+        #else
+            <br />
+            <h2>My assignment</h2>
+        #end
+    #end
+    
+    <br /><hr>
+
+    #set($questionNumber=1)
+    #foreach ($question in $assignment.questions) 
+        #if ( $question.getAnswer($responder))
+        <!-- FOR EACH QUESTION -->
+            
+            <div class="dotteddivider" style="padding-top: 10px; margin-bottom:10px; clear:both;"></div>
+            
+            <!-- START QUESTION: --->
+            <b>Question ${questionNumber} Instructions:</b><br />
+            $!{question.text}
+            <br /><br />                      
+            <!-- END QUESTION: --->
+
+            <!-- START ANSWER: --->
+            #if (!$admin)
+            <b>My Answer:</b>
+            #else
+            <b>Answer:</b>
+            #end
+                    
+            #set ($answer = $question.getAnswer($responder))
+            <p>$!answer.text</p>          
+            <!-- END ANSWER: --->              
+              
+            #set($questionNumber = $questionNumber + 1)
+                    
+       <!--END FOR EACH QUESTION -->
+       #end
+    #end
+
+</div><!-- End binderbox -->
+
+<br /><hr> 
+<form style="margin-top: 5px;" class="returnview">
+    <input class="regButton" type="button" onclick="window.location.href='reviewGuidedLesson.smvc?id=${assignmentResponse.id}'" value="Return to the Response List" />
+</form>
+    
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+<br /><br />
+    
+
+#parse("footer.vm")

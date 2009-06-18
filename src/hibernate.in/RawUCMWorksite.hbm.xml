@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3.ucm">
+
+    <class name="RawUCMWorksite" table="UCM_WORKSITES">
+        
+        <meta attribute="class-description">
+            This class represents the raw essentials of a worksite, outside of any specific context of use. It is used
+            exclusively within the UCM package.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UCM_WORKSITE_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="term" lazy="false" class="RawUCMTerm" column="UCM_TERM_ID">
+            <meta attribute="field-description">The term during which this worksite takes place.</meta>
+        </many-to-one>
+        
+        <property name="worksiteIdString" type="string" column="WORKSITE_ID_STRING">
+            <meta attribute="field-description">A string which uniquely identifies this worksite.</meta>
+		</property>
+        
+        <property name="title" type="string">
+            <meta attribute="field-description">The title of this worksite.</meta>
+		</property>
+        
+        
+        <set name="courseAffils" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Affiliations to courses whose members are allowed access to this Worksite.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UCM_WORKSITE_ID"/>
+            <one-to-many class="RawUCMCourseWorksiteAffil"/>
+        </set>
+        
+        <set name="participants" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Participants for this Worksite.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UCM_WORKSITE_ID"/>
+            <one-to-many class="RawUCMParticipant"/>
+        </set>
+                
+        
+
+    </class>
+
+</hibernate-mapping>

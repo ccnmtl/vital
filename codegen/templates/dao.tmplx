@@ -1,0 +1,23 @@
+package ccnmtl.vital3.dao;
+
+import java.util.Collection;
+import java.util.List;
+import org.springframework.dao.DataRetrievalFailureException;
+
+import ccnmtl.vital3.<TMPL_VAR class>;
+
+public interface <TMPL_VAR class>DAO {
+    
+    public void save(<TMPL_VAR class> <TMPL_VAR lcclass>);
+    
+    public void delete(<TMPL_VAR class> <TMPL_VAR lcclass>);
+
+    public <TMPL_VAR class> findById(Long id);
+
+<TMPL_LOOP props>
+    public List findBy<TMPL_VAR ucprop>(<TMPL_VAR type> <TMPL_VAR prop>);
+
+</TMPL_LOOP>
+    public List findAll();
+
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="Material" table="MATERIALS">
+        
+        <meta attribute="class-description">
+            Something used within a particular Worksite. Data relating to this particular
+            contextual relationship such as custom field values, annotations, tags, etc. are stored as properties on this Material.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="MATERIAL_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="worksite" lazy="false" class="VitalWorksite" column="WORKSITE_ID">
+            <meta attribute="field-description">The Worksite in which this material is used.</meta>
+        </many-to-one>
+        
+        <property name="accessLevel" type="integer" column="ACCESS_LEVEL">
+            <meta attribute="field-description">The minimum "access key" level required for access to this Material. 0 means unrestricted.</meta>
+		</property>
+        
+        <property name="dateModified" type="timestamp" column="DATE_MODIFIED">
+            <meta attribute="field-description">When this Material was last updated.</meta>
+		</property>
+        
+        <property name="text" type="text">
+            <meta attribute="field-description">A brief description of the material.</meta>
+		</property>
+        
+        <property name="thumbUrl" type="string" column="THUMB_URL">
+            <meta attribute="field-description">a URL for the thumbnail image. Must be local.</meta>
+		</property>
+        
+        <property name="title" type="string">
+            <meta attribute="field-description">A title for the material.</meta>
+		</property>
+        
+        <property name="type" type="string">
+            <meta attribute="field-description">"video": A video material. (more types to follow)</meta>
+		</property>
+        
+        <property name="url" type="string">
+            <meta attribute="field-description">A URL for accessing the Material.</meta>
+		</property>
+        
+        <set name="annotations" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Annotations on this Material.</meta>
+            <key column="MATERIAL_ID"/>
+            <one-to-many class="Annotation"/>
+        </set>
+        
+        <set name="assignmentAssociations" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">The Assignments with which this Material is associated.</meta>
+            <key column="MATERIAL_ID"/>
+            <one-to-many class="AssignmentMaterialAssoc"/>
+        </set>
+        
+        <set name="customFieldValues" lazy="true" inverse="true" order-by="ORDINAL_VALUE" cascade="delete" batch-size="3">
+            <meta attribute="field-description">Custom field values given to this Material.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="MATERIAL_ID"/>
+            <one-to-many class="CustomFieldValue"/>
+        </set>
+        
+        <set name="questionAssociations" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">The Questions with which this Material is associated.</meta>
+            <key column="MATERIAL_ID"/>
+            <one-to-many class="QuestionMaterialAssoc"/>
+        </set>
+
+        <set name="unitAssociations" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">The Units with which this Material is associated.</meta>
+            <key column="MATERIAL_ID"/>
+            <one-to-many class="UnitMaterialAssoc"/>
+        </set>
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,9 @@
+
+public HashMap toHashMap() {
+	HashMap map = new HashMap();
+	<TMPL_LOOP props>
+	map.put("<TMPL_VAR prop>", <TMPL_VAR prop>);
+	</TMPL_LOOP>
+	map.put("id", id);
+	return map;
+}

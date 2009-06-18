@@ -1,0 +1,15 @@
+.cliptextarea textarea#note
+{
+	height: 120px !important;
+}
+
+.tags_box
+{
+	height: 260px !important;
+}
+
+.tags_box_content
+{
+	height: 220px;
+}
+

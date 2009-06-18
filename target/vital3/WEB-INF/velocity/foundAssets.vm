@@ -1,0 +1,22 @@
+<html>
+<head><title>Digital Library Admin</title>
+</head>
+<body>
+
+<h1>Digital Library Admin</h1>
+<h3>Found Assets</h3>
+
+
+<table border="1">
+<tr><th align="center" colspan="3">Search string ${searchString}</th></tr>
+<tr><th>ID</th><th>Title</th>  <th>Score</th> </tr>
+#foreach ($searchResult in $searchResults)
+<tr><td>${searchResult.id}</td><td>${searchResult.title}</td> <td>${searchResult.score}</td></tr>
+#end
+
+</table>
+
+
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="ccnmtl.jtasty">
+
+    <class name="Tag" table="TASTY_TAGS">
+        
+        <meta attribute="class-description">
+            A tag.
+            @author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="TAG_ID">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" type="string">
+            <meta attribute="field-description">The string used to identify the tag in the client application.</meta>
+	    </property>
+
+        <many-to-one name="service" class="Service" column="SERVICE_ID"  lazy="false">
+            <meta attribute="field-description">The Service to which this UserItemTag belongs.</meta>
+        </many-to-one>
+
+        <set name="userTags" lazy="true" inverse="true" batch-size="3">
+            <meta attribute="field-description">A set of associations with users.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="USER_TAG_ID"/>
+            <one-to-many class="UserTag"/>
+        </set>
+
+        <set name="itemTags" lazy="true" inverse="true" batch-size="3">
+            <meta attribute="field-description">A set of associations with items.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="ITEM_TAG_ID"/>
+            <one-to-many class="ItemTag"/>
+        </set>
+    </class>
+</hibernate-mapping>

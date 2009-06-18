@@ -1,0 +1,24 @@
+
+<hr class="hiddenStructure" />
+#if ($assignment.unit.startDate && $assignment.unit.endDate)
+<div class="unittitledue"><span class="hiddenStructure">Dates:</span>
+  ${textFormatter.dateToDateOnlyString($assignment.unit.startDate)} - ${textFormatter.dateToDateOnlyString($assignment.unit.endDate)}
+</div>
+#end
+<h1 class="assignpageunit">TOPIC: ${assignment.unit.title}</h1>
+<div class="assigntitledue"><span class="hiddenStructure">Assignment </span>
+#if($assignment.dateDue)
+	Due: $!{textFormatter.dateToDateOnlyString($assignment.dateDue)}
+#else
+	<span style="color: #666; font-style: italic;">No due date</span>
+#end
+#if ($responder && (!$assignment.isDiscussion()))
+    &#160;|&#160;
+    Status: $!{assignment.getStatus($responder)}
+#end
+</div>
+<h1 class="assignpagetitle">ASSIGNMENT: ${assignment.title} &#160;
+#if($admin && !$assignment.isDiscussion())
+( <a href="reviewResponses.smvc?id=${assignment.id}&sortOrder=lastName&ascending=true&viewBy=all">View all responses</a> )
+#end
+</h1>

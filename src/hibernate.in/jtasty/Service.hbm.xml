@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.jtasty">
+
+    <class name="Service" table="TASTY_SERVICES">
+        
+        <meta attribute="class-description">
+            A self-contained set of users, items, tags, and the associations between them.
+	    @author Eddie Rubeiz
+	</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="SERVICE_ID">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" type="string">
+            <meta attribute="field-description">The string used to identify the service.</meta>
+	</property>
+
+        <set name="users" lazy="true" inverse="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">A set users.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="USER_ID"/>
+            <one-to-many class="User"/>
+        </set>
+
+        <set name="items" lazy="true" inverse="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">A set of items.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="ITEM_ID"/>
+            <one-to-many class="Item"/>
+        </set>
+
+        <set name="tags" lazy="true" inverse="true" cascade="delete" batch-size="3">
+            <meta attribute="field-description">A set of tags.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="TAG_ID"/>
+            <one-to-many class="Tag"/>
+        </set>
+
+    </class>
+</hibernate-mapping>

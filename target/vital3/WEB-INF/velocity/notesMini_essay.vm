@@ -1,0 +1,93 @@
+#if($action == "noteQuery")<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"><body>#end
+<div id="noteList" class="notebinder"><!-- Begin Div that binds all the notes: parents and children together (mothership) -->
+
+    #if($groupList.size() == 0)
+    
+    <p class="blanknote" style="padding: 10px;">There are no clips to display.</p>
+    
+    #end
+  #foreach($group in $groupList)
+  <!-- ****** Begin a parent group of notes/clips ****** -->     
+    
+    #if ($group.groupId.startsWith("mId-"))
+        #set($mid = $group.groupId.replaceAll("mId-",""))
+    #end
+	<!-- begin header -->
+	  <h2 class="noteGrouping"><!-- Heading for grouping, i.e. Date, Tag or Title -->
+		<a class="hs-control" href="#grp${group.groupId}" onclick="return false;"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+		#if ($group.groupId.startsWith("mId-"))
+            <a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?id=${mid}&amp;mode=edit&amp;','1000','700','no','no','videoviewer')">$!{textFormatter.escapeForHTML($group.groupTitle)}</a>
+        #else
+            $!{textFormatter.escapeForHTML($group.groupTitle)}
+        #end
+      </h2>
+	<!-- end header -->	
+    
+	  <div class="notesInGroup hs-show" id="grp${group.groupId}">     
+        <!-- Begin note clips grouping for this parent, need this for hiding and showing of the materials under the grouping title, class="notesInGroup" -->
+               
+            <!-- Begin each note -->
+			#foreach($note in $group.notes)
+                <div class="noteclip" id="grp${group.groupId}_${note.id}">
+                    
+        			<table border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="nc_info"><!-- column 1 -->
+                              <div>
+                              <a class="ex_hide" onclick="excerpt(this);return false;" href="#grp${group.groupId}_${note.id}"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+
+                               <a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?id=${note.material.id}&amp;mode=edit&amp;annotationId=${note.id}','1000','700','no','no','videoviewer')">$!{textFormatter.escapeForHTML($note.title)}</a>
+                                <p>
+                                    <b>Modified: </b> <span class="noteModified">$!{note.dateModified}</span> 
+                                    <br />
+                                    <b>Tags: </b> 
+                                    
+                                    #set($tagString = "")
+                                    ## this next line will fail to do anything if it returns null:
+                                    #set($tagString = ${note.getTagsAsString($tagMap)})
+									#if($tagString == "")
+										<span style="color: #999; font-style: italic;">No tags associated.</span>
+									#else
+                                        ${tagString}
+                                    #end
+                                    <br />
+                                    
+                                    <b>Timecode: </b>
+                                    <span>$!{note.clipBegin}-$!{note.clipEnd}</span>
+                                </p>
+                                
+                              </div>
+                            </td>
+                            
+                            <td class="nc_content"><!-- column 2, clip note content -->
+                                <div>#if ($note.text) ${note.text} 
+								#else
+								&#160;									
+								#end
+								</div>
+                            </td>
+                            
+                            <td class="nc_add"><!-- column a, add graphics -->
+                               #if(!$preview || $preview != "true")
+                              <div class="citationTemplate"><img class="materialCitation" alt="" src="images/icon_clipping.gif" width="24" height="15" border="0" onclick="addMaterialCitation(event)" title="$!{textFormatter.escapeForHTML($note.title)} $!{note.clipBegin}-$!{note.clipEnd}" name="videoViewer.smvc?id=${note.material.id}&amp;mode=viewonly&amp;annotationId=${note.id}" /></div>
+                               #end
+                            </td>
+                        </tr>
+                                           
+                  </table>  
+                  
+              </div>	
+           #end
+
+     </div>  
+  #end
+
+  <!-- ****** End a parent group of notes/clips ****** -->     
+  ##end foreach group in groupList
+
+</div><!-- End Div that binds all the notes: parents and children together (mothership) -->
+
+#if($action == "noteQuery")
+</body>
+</html>#end

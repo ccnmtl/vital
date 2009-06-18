@@ -1,0 +1,162 @@
+#if($action == "display")
+    #set($section = "courseHome")
+#else
+    #set($section = "myCourses")
+#end
+
+#if($action == "new")
+#set($title = "Administration: Create New Course")
+#else
+#set($title = "Administration: Edit Course Details")
+#end
+
+
+#parse("header.vm")
+
+<script LANGUAGE="JavaScript">
+<!--
+function confirmSubmit()
+{
+var agree=confirm("Really delete this course?");
+if (agree)
+	return true ;
+else
+	return false ;
+}
+// -->
+</script>
+
+
+#macro(fieldError)
+    #if(${status.errorMessage}  != "") <div class="error">${status.errorMessage}</div> #end
+#end
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+<h1>
+#if($action == "new")
+Create New Course
+#else
+Edit Course Details:
+#springBind("basicAdminCommand.title")
+${status.value}
+#end
+</h1>
+
+<div id="admincontent">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div>
+		</div>
+
+#if ($action == "display")
+    ## display "delete" form
+    <form action="basicAdmin.smvc" method="POST" style="padding: 0 10px 0 0; margin: 0; float: right;">
+        #springBind("basicAdminCommand.id")
+        <input type="hidden" name="id" value="$!{status.value}">
+        <input type="hidden" name="entity" value="worksite">
+        <input type="hidden" name="action" value="delete">
+        <input type="submit" value="Delete this course" class="regButton" onClick="return confirmSubmit()">
+    </form>
+    <br clear="all" />
+#end
+
+
+#springBind("basicAdminCommand.*")
+#foreach($error in $status.errorMessages)
+    #set($hasErrors = "1")
+#end
+  
+<form action="basicAdmin.smvc" method="post">
+<input type="hidden" name="entity" value="worksite">
+
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable">
+
+#if($action == "display")
+    ## id-related stuff
+    #springBind("basicAdminCommand.id")
+    <input type="hidden" name="id" value="$!{status.value}">
+#end
+
+
+######## Begin properties #########
+
+#springBind("basicAdminCommand.termId")
+<tr><td align="right"><b>Term:</b>
+#fieldError()
+</td><td>
+<select name="termId">
+#if($action == "new")
+    <option value="" selected="true">Choose...</option>
+#end
+#springBind("basicAdminCommand.term.id")
+#foreach ($term in $allTerms)
+    <option value="${term.id}" #if($status.value == $term.id) selected="true" #end >${term.name}</option>
+#end
+</select>
+</td></tr>
+
+
+#springBind("basicAdminCommand.title")
+<tr><td align="right"><b>Course name:</b>
+#fieldError()
+</td><td><input type="text" name="title" value="$!{status.value}" size="40"></td></tr>
+
+#springBind("basicAdminCommand.announcement")
+<tr><td align="right" style="vertical-align: top;"><b>Course description:</b>
+#fieldError()
+</td><td><textarea name="announcement" rows="5" cols="50">$!{status.value}</textarea></td></tr>
+
+
+<tr><td colspan="2" style="border: 0;"> Complete the course section key or affiliation string below to add students automatically to a course. Search the <a href="http://www.columbia.edu/cu/bulletin/uwb/home.html" target="_blank">Directory of Classes</a> to find the section key.  You can always add users to your course roster in the <a href="listing.smvc?mode=roster&id=${worksite.id}">Roster Management</a> section.
+</td></tr>
+
+#springBind("basicAdminCommand.courseIdStringDisplay")
+<tr><td align="right"><b>Course section key<br />(will be converted into affiliation string):</b>
+#fieldError()
+</td><td><i>(e.g. "20063ITAL1201V003")</i><br /><input type="text" name="courseIdStringDisplay" value="$!{status.value}" size="50"></td></tr>
+
+#springBind("basicAdminCommand.courseIdString")
+<tr><td align="right"><b>Affiliation string:</b>
+</td><td><i>(e.g. "t3.y2006.s003.cv1201.ital.st.course:columbia.edu")</i><br /><input type="text" name="courseIdString" value="$!{status.value}" size="50"></td></tr>
+
+
+######### End Properties #########
+
+<tr><td colspan="2" align="center" style="border: 0;">
+#if($action == "display")
+    ## display "update" stuff
+    <input type="hidden" name="action" value="update">
+    <input type="submit" value="Update" class="regButton">
+#else
+    <input type="hidden" name="action" value="insert">
+    <input type="submit" value="Create" class="regButton">
+#end
+</td></tr>
+
+</form>
+
+</table>
+
+
+##springBind("basicAdminCommand.*")
+##springShowErrors("<br />" "")
+
+
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

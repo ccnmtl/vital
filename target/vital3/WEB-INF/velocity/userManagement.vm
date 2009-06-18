@@ -1,0 +1,148 @@
+#set($section = "myCourses")
+#set($title = "Administration: Global User Management")
+
+#parse("header.vm")
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+	<!-- For sorting the table -->
+	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+
+
+<script language="javascript">
+
+
+function disablePassword() {
+    document.forms["newUserForm"].password.disabled = true;
+    document.forms["newUserForm"].email.disabled = true;
+    document.getElementById('uni_username').innerHTML="UNI:";
+    document.getElementById('pswd_field').style.color="#999";
+    document.getElementById('email_field').style.color="#999";
+}
+
+function enablePassword() {
+    document.forms["newUserForm"].password.disabled = false;
+    document.forms["newUserForm"].email.disabled = false;
+    document.getElementById('uni_username').innerHTML="Username:";
+    document.getElementById('pswd_field').style.color="#000";
+    document.getElementById('email_field').style.color="#000";
+}
+
+addLoadEvent(disablePassword);
+
+</script>
+
+<script type="text/javascript" language="javascript">
+function hidebutton() {
+	document.getElementById('adduserbutton').style.visibility="hidden";
+}
+function showbutton() {
+	document.getElementById('adduserbutton').style.visibility="visible";
+}
+</script>
+
+<h1>Global User Management</h1>
+
+
+#if ($message)
+	<p class="message">$!{message}</p>
+#end
+
+<input type="button" name="addButton" value="Add a New User" onClick="javascript:showElement($('addUserForm'));hidebutton()" class="regButton" id="adduserbutton"><br />
+<div id="addUserForm" style="display:none">
+<div id="admincontent" style="width: 600px">
+	<div id="admincontent-inner">
+		<div id="admincontent-top">
+		<div id="admincontent-top-inner">
+			<div id="admincontent-top-body"></div>
+		</div>
+		</div>
+
+<form name="newUserForm" action="basicAdmin.smvc" method="POST">
+<table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
+        <tr><th style="text-align: right;">First name:</th>
+            <td><input type="text" name="firstName" value="" size="30"></td></tr>
+        <tr><th style="text-align: right;">Last name:</th>
+            <td><input type="text" name="lastName" value="" size="30"></td></tr>
+        <tr>
+        <th style="text-align: right;vertical-align: top;">Login method:</th>
+        <td>
+        <input type="radio" name="authMethod" value="external" checked="true" onClick="disablePassword()" /> Institutional authentication <br />
+        <input type="radio" name="authMethod" value="vital" onClick="enablePassword()" /> Built-in VITAL-only authentication
+        </td>
+    </tr>
+    
+        <tr><th style="text-align: right;"><span id="uni_username">UNI:</span></th>
+            <td><input type="text" name="userIdString" value="" size="30"></td></tr>
+    <tr>
+        <th style="text-align: right;"><span id="pswd_field">Password:<br />(only for non-Columbia users)</span></th>
+        <td><input type="password" name="password" size="30"></td>
+    </tr>
+        <tr>
+        <th style="text-align: right;"><span id="email_field">E-mail address:</span></th>
+            <td><input type="text" name="email" value="" size="30"></td>
+        </tr>
+        <tr><th style="text-align: right;">Global access level</th>
+            <td><select name="accessLevel">
+                    <option value="0" selected="true">Regular</option>
+                    <option value="100">Administrator</option>
+                </select></td>
+        </tr>
+        <tr><td colspan="2" align="center"><input type="submit" name="addUser" value="Submit" class="regButton" /> or <input type="reset" value="Cancel" onClick="javascript:hideElement($('addUserForm'));showbutton();" class="regButton" />
+                <input type="hidden" name="entity" value="user" class="regButton" />
+                <input type="hidden" name="action" value="insert" class="regButton" /></td></tr>
+    </table>
+</form>
+
+
+		<div id="admincontent-bottom">
+		<div id="admincontent-bottom-inner">
+			<div id="admincontent-bottom-body"></div>
+		</div>
+		</div>
+	</div><!-- End id="admincontent-inner" -->
+</div><!-- End id="admincontent" -->
+<br />
+</div>
+
+#if($users)
+<form>
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:710px;" onclick="sortColumn(event)">
+	<thead>
+		<tr>
+			<th class="navOut DefaultSort" style="width: 180px;">Last Name</th>
+			<th class="navOut" style="width: 180px;">First Name</th>
+			<th class="navOut" style="width: 110px;">Username / UNI</th>
+			<th class="navOut" style="width: 200px;">Global Access Level</th>
+			<th style="width: 40px;">&#160;</th>
+		</tr>
+	</thead>
+        
+	<tbody>
+        #foreach($user in $users)
+        <tr>
+            <td>$!{user.getLastName()} &#160;</td>
+            <td>$!{user.getFirstName()} &#160;</td>
+            <td>$!{user.userIdString} &#160;</td>
+            <td>
+            <script type="text/javascript" language="javascript">
+			var levelnum = $!{user.accessLevel};
+			if (levelnum == 100) {document.write('Administrator');}
+			else {document.write('Regular');}
+			</script>
+            &#160; </td>
+            <td><input type=button name="edit" value="Edit" id="$!{user.userIdString}" onclick="document.location.href='basicAdmin.smvc?action=display&entity=user&id=$user.id'" class="regButton" /></td>
+        </tr>
+        #end
+	</tbody>
+    </table>
+</form>
+#else
+    No user exists yet.
+#end
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+
+#parse("footer.vm")
+

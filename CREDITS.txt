@@ -1,0 +1,11 @@
+The VITAL project represents the culmination of many iterations, and the contributions and devotion of too many people to mention. Here are some of the key contributors. 
+
+Debbie Marcus, Rae Brosnan, Michael Preston  -- Project Management
+Eric Mattes, Eddie Rubeiz, Gordon Campbell   -- Primary Developers
+Sky Duveen, Anders Pearson, Jonah Bossewitch -- Ideas, Requirements, Use Cases, JS/CSS
+Elizabeth Day, Zarina Mustapha, Marc Raymond -- Design, CSS
+Frank Moretti, Maurice Matiz, Ryan Kelsey, Peter Sommer, Ted Bongiovanni, Herb Ginsberg -- Support and Encouragement
+
+And especially CCNMTL <ccnmtl.columbia.edu>, Columbia University, and the National Science Foundation for supporting 
+the devlopment of this product. 
+

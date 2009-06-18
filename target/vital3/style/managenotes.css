@@ -1,0 +1,134 @@
+/*
+.notesInGroup a:link,
+.notesInGroup a:active,
+.notesInGroup a:hover,
+.notesInGroup a:visited
+{
+	display: inline !important;
+	margin: 0 !important;
+	border: 0 !important;
+	padding: 3px 0 !important;
+	font-weight: normal !important;
+	font-size: 11px !important;
+	color: #369 !important;
+	text-decoration: underline;
+}
+
+*/
+.notesInGroup table td.nc_delete,
+.notesInGroup table td.nc_title,
+.notesInGroup table td.nc_modified,
+.notesInGroup table td.nc_material,
+.notesInGroup table td.nc_link,
+.notesInGroup table td.nc_notes,
+.notesInGroup table td.nc_tags,
+.notesInGroup table td.nc_content,
+.notesInGroup table td.nc_notes div,
+.notesInGroup table td.nc_content div,
+.notesInGroup table td.nc_notes div p,
+.notesInGroup table td.nc_content div p,
+.notesInGroup table td.nc_add
+{
+	margin: 0;
+	padding: 1px 2px;
+	border: 0;
+	border-bottom: 1px solid #999;
+	text-align: left;
+	vertical-align: top;
+	font-weight: normal;
+	font-size: 11px;
+	color: #000;
+	line-height: 2em;
+	border-bottom: 1px solid #999;
+	border-right: 1px solid #999 !important;
+	background-color: #fff;
+}
+
+.notesInGroup table td.nc_delete
+{
+	width: 21px;
+}
+
+.notesInGroup table td.nc_title
+{
+	width: 136px;
+}
+
+.notesInGroup table td.nc_modified
+{
+	width: 106px;
+}
+
+.notesInGroup table td.nc_material
+{
+	width: 136px;
+}
+
+.notesInGroup table td.nc_link
+{
+	width: 136px;
+}
+
+.notesInGroup table td.nc_notes
+{
+}
+
+.notesInGroup table td.nc_tags
+{
+	width: 136px;
+	border-right: 0 !important;
+}
+
+.notesInGroup table td.nc_notes div
+{
+	margin: 0;
+	padding: 0;
+	border: 0 !important;
+}
+
+.notesInGroup table td.nc_notes div p
+{
+	margin: 0;
+	padding: 0;
+	border: 0 !important;
+	font-weight: normal;
+	font-size: 11px;
+	line-height: 1.2em;
+	color: #000;
+}
+
+.notesInGroup table td.nc_content div
+{
+	margin: 2px;
+	padding: 0;
+	border: 0;
+}
+
+.managenotes_table
+{
+	width: 100%;
+}
+
+.details
+{
+	margin: 0 0 0 22px;
+}
+
+
+
+.greyedout
+{
+	font-weight: bold;
+	color: #999;
+}
+
+p.no_content
+{
+	padding: 5px;
+	font: normal 12px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+}
+
+
+
+
+

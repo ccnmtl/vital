@@ -1,0 +1,26 @@
+# This file is used to allow for variables to be used in spring's bean config files which
+# differ from one environment to another.
+
+# full URL to application root directory (include trailing slash)
+app.base.url=<APP_BASE_URL>
+
+# full URL to tasty server, if one is used
+#blank indicates use jtasty (the internal tagging service)
+#tasty.url=
+#otherwise use the url of a tasty service:
+#tasty.url=http://tasty.ccnmtl.columbia.edu
+tasty.url=<TASTY_URL>
+
+# tasty servicename (e.g. "vital3_dev", "vital3_prod")
+tasty.servicename=<TASTY_SERVICENAME>
+
+# DBCP (database connection pool) settings:
+dbcp.maxActive=<DBCP_MAXACTIVE>
+dbcp.maxIdle=<DBCP_MAXIDLE>
+
+# database username
+database.hibernate.dialect=<DATABASE_HIBERNATE_DIALECT>
+database.driverclassname=<DATABASE_DRIVER_CLASS_NAME>
+database.url=<DATABASE_URL>
+database.username=<DATABASE_USERNAME>
+database.password=<DATABASE_PASSWORD>

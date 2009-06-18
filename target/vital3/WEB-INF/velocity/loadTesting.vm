@@ -1,0 +1,32 @@
+#set($section = "userProfile")
+#set($title = "My Profile")
+#parse("header.vm")
+
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+    
+<h1>Load Testing Setup / Teardown</h1>
+    
+    #if ($message)
+    <p class="message">$!{textFormatter.escapeForHTML($message)}</p>
+    #end
+
+    #if ($action && $action == "status") 
+        
+        foundUsers : $foundUsers<br />
+        foundRawUsers : $foundRawUsers<br />
+        
+        foundParticipants : $foundParticipants<br />
+        foundRawParticipants : $foundRawParticipants<br />
+    
+        foundWorksitesCount : $foundWorksitesCount<br />
+        foundRawWorksitesCount : $foundWorksitesCount<br />
+    #end
+    
+    
+<br />
+<div class="divider" style="margin-bottom: 10px;"></div>
+</div><!-- End content area, class="documentContentMain" -->
+#parse("footer.vm")

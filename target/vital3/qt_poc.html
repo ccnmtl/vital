@@ -1,0 +1,143 @@
+
+
+
+
+
+
+
+  
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	
+	<script type="text/javascript" language="JavaScript">
+	
+	theMovie = null;
+
+	function grabTime() {
+	
+		iotime = theMovie.GetTime();
+	  	// alert("time is: " + iotime);
+	  	document.forms[0].startmin.value = 0;
+	  	document.forms[0].starthrs.value = 0;
+	  	iotime = Math.round(iotime/600);
+	  	if (iotime >= 3600) {
+			sec = iotime % 60;
+			totmin = (iotime -sec)/60;
+			min = totmin % 60;
+			hr = (totmin - min)/60;
+			document.forms[0].startsec.value = sec;
+			document.forms[0].startmin.value = min;
+			document.forms[0].starthrs.value = hr;
+		} else if (iotime >= 60) {
+			sec = iotime % 60;
+			min = (iotime - sec)/60; 
+			document.forms[0].startsec.value = sec;
+			document.forms[0].startmin.value = min;
+		} else {
+			document.forms[0].startsec.value = iotime;
+		}
+	  
+		setTimeout("grabTime()", 500);
+	}
+	
+	function prepareGrabber() {
+		
+		theMovie = document.docMovie;
+		
+		if (theMovie != null) {
+			try {
+				theMovie.GetTime();
+				// if we get past it, it worked and it's ready.
+				grabTime();
+			} catch(err) {
+				setTimeout("prepareGrabber()", 1000);
+			}
+			
+		} else {
+			setTimeout("prepareGrabber()", 1000);
+		}
+		
+	}
+	
+	</script>
+
+	<title>VITAL - Video Viewer</title>
+	
+
+</head>
+
+<body onload="prepareGrabber()">
+
+<h2>Quicktime with Javascript Timecode Display</h2>
+
+<object id="docMovie" classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" width="322" height="274" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
+                 <param name="src" value="http://newmedia.cc.columbia.edu/projects/soa/dmc/paulmiller/lecture.mov" />
+                 
+                 <param name="autoplay" value="true" />
+                 <param name="controller" value="true" />
+                 <param name="kioskmode" value="true" />
+                <param name="bgcolor" value="#cccccc" />
+
+                 <embed  name="docMovie"
+                         width="322" height="274"
+                         bgcolor="#cccccc"
+                         src="http://newmedia.cc.columbia.edu/projects/soa/dmc/paulmiller/lecture.mov"
+                         type="video/quicktime"
+                         autoplay="true"
+                         controller="true"
+                         kioskmode="true"
+                         pluginspage="http://www.apple.com/quicktime/download/">
+
+                 </embed>
+         </object>
+
+
+<!-- TIMECODE -->
+
+<form>
+
+<table border="0" cellspacing="0" cellpadding="0" class="timecode">
+
+	<tr valign="top">
+		<td width="50" align="center">Hr</td>
+		<td width="50" align="center">Min</td>
+		<td width="50" align="center">Sec</td>
+
+	</tr>
+	<tr valign="top">
+		<td width="50" align="center"><input name="starthrs" type="text" size="3" maxlength="2" value="00" /></td>
+		<td width="50" align="center"><input name="startmin" type="text" size="3" maxlength="2" value="00" /></td>
+		<td width="50" align="center"><input name="startsec" type="text" size="3" maxlength="2" value="00" /></td>
+		
+	</tr>
+</table>
+<!-- END TIMECODE -->
+
+</form>
+
+
+
+</body>
+
+</html>

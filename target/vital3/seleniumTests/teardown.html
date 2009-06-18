@@ -1,0 +1,130 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>teardown</title> 
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+	<thead>
+		<tr>
+			<td rowspan="1" colspan="3">teardown</td>
+		</tr>
+	</thead>
+	<tbody>
+	
+<tr>
+    <td>setTimeout</td>
+    <td>120000</td>
+    <td></td>
+</tr>
+<tr>
+	<td>loadStoredVars</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>../login.smvc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>selenium_test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>xyz</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='customLogin']</td>
+	<td></td>
+</tr>
+
+<tr>
+	<td>selectAndWait</td>
+	<td>select</td>
+	<td>label=View all my courses</td>
+</tr>
+
+
+<tr>
+	<td>clickAndWait</td>
+	<td>link=${worksiteTitle}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Edit Course Details']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Delete this course']</td>
+	<td></td>
+</tr>
+
+
+<tr>
+	<td>verifyConfirmation</td>
+	<td>Really delete this course?</td>
+	<td></td>
+</tr>
+
+
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Global User Management</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=${studentUsername}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>deleteUser</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=${instructorUsername}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>deleteUser</td>
+	<td></td>
+</tr>
+<!--<tr>
+	<td>clickAndWait</td>
+	<td>link=My VITAL Courses</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage Users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=new_instructor</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>deleteUser</td>
+	<td></td>
+</tr>-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log out</td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

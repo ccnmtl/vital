@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project name="Vital 3" default="help" basedir="../..">
+
+<!-- !!!!!!!IMPORTANT!!!!!! Note that basedir is "../.." -->
+
+	<!-- adjust this file so it is correct for your environment -->
+	<property file="codegen/ant/build.properties"/>
+
+	
+	<path id="project.classpath">
+		<pathelement location="${classes}"/>
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask">
+        	<classpath>
+            		<path location="${tomcat.home}/server/lib/catalina-ant.jar"/>
+        	</classpath>
+    	</taskdef>
+	
+
+	<target name="reload" description="reload the web app without restarting the whole server. note that memory leaks will eventually clog up the JVM">
+		<reload url="${tomcat.manager.url}"
+                 username="${tomcat.manager.username}"
+                 password="${tomcat.manager.password}"
+                 path="${context.name}"/>
+	</target>
+
+	<target name="clean" description="will delete all compiled classes in the 'target' directory.">
+		<delete dir="target/classes"/>
+		<delete dir="target/test-classes"/>
+		<delete dir="target/test-reports"/>
+		<delete dir="target/vital3/WEB-INF/classes"/>
+		<delete dir="target/vital3/WEB-INF/lib"/>
+	</target>
+
+	<target name="codegen" description="generates java classes from the mapping file, overwriting the old ones!">
+		<taskdef name="hbm2java" classname="org.hibernate.tool.hbm2java.Hbm2JavaTask" classpathref="project.classpath"/>
+
+		<hbm2java output="${hibernate}">
+			<fileset dir="${hibernate}">
+				<include name="**/*.hbm.xml"/>
+			</fileset>
+		</hbm2java>
+	</target>
+	
+		
+
+</project>

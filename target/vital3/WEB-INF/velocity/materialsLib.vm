@@ -1,0 +1,221 @@
+#set($section = "materials")
+#set($helptopic = "courselibrary")
+
+#if($admin == true)
+    #set($title = "$worksite.title : Course Library Admin")
+#else
+    #set($title = "$worksite.title : Course Library")
+#end
+
+#parse("header.vm")
+
+<!-- styles and javascript exclusively for this page: -->
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+
+<script type="text/javascript" language="javascript">
+function formgoto(mymenu) {
+	var newIndex = mymenu.options.selectedIndex;
+	var myurl = mymenu.options[newIndex].value;
+	var destination = 'materialsLib.smvc?worksiteId=${worksite.id}';
+	if (myurl != 0) {
+		document.location.href=destination+myurl;
+	}
+	else {
+		document.location.href=destination;
+	}
+}
+</script>
+
+	<!-- For sorting the table -->
+    <script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+	
+#set ($numCols = 4 + $worksite.numCustomFields)
+
+#set ($numColsCustom = $worksite.numCustomFields)
+
+
+	<script language="javascript">
+		function cellwidth () {
+			getElementsByTagAndClassName("TABLE", "ml-list")[0].style.width="100%";
+			var table_width = document.getElementById('tablelist').offsetWidth;
+			var td_width_int =  parseInt((table_width - 155)/${numColsCustom});
+			var td_width = parseInt((table_width - 155)/${numColsCustom})+"px";
+			var table_td = getElementsByTagAndClassName("TD", "list_cols");
+			var table_td_length = getElementsByTagAndClassName("TD", "list_cols").length;
+			for (i=0; i < table_td_length; i++) {
+				if (td_width_int < 160) {
+					var t_l = (${numColsCustom} * 160) + 155;
+					table_td[i].style.width= "160px";
+					getElementsByTagAndClassName("TABLE", "ml-list")[0].style.width=t_l+"px";
+				}
+				else {
+					table_td[i].style.width=td_width;
+				}
+			}
+		}
+		addLoadEvent(cellwidth);
+		window.onresize = cellwidth;
+    </script>
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+<h1>Course Library</h1>
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+
+#if ($admin)
+    <p><a href="basicAdmin.smvc?action=new&entity=material&worksiteId=${worksite.id}">Add new video for this course</a><br />
+    <a href="listing.smvc?mode=customField&id=${worksite.id}">Manage the video categories for this course</a></p>
+#end
+
+
+
+
+<!-- 
+<table border="1">
+<tr>
+	<th align="center" colspan="${numCols}">${worksite.term.name}:
+    ${worksite.title} (id = ${worksite.id}, worksiteIdString= ${worksite.worksiteIdString})</th>
+</tr>
+
+<tr><td align="center" colspan="${numCols}"><b>Announcement:</b> $!{worksite.announcement}</td></tr>
+</table>
+ -->
+
+<br />
+
+<p>
+Click video titles to view and make clips. Click column headings to sort.
+</p>
+
+
+<p>
+<!--
+<form method="get">
+<b>Show:</b> 
+<select class="generic">
+	<option value="">All videos</option>
+</select>
+</form>
+
+-->
+<div id="pullmenu" class="pullmenustyle">
+<!-- Begin area for pulldown menu -->
+                    
+    <form name="materialDisplay">
+    <input type="hidden" name="worksiteId" value="${worksite.id}" />
+    <table border="0" cellspacing="0" cellpadding="0" style="padding: 8px 0 0 5px;">
+        <tr>
+            <td style="text-align: left; white-space: nowrap; padding: 0 5px 0 0;">Show:</td>
+            <td>
+                <select name="limitBy" class="generic" onchange="formgoto(this)">                    
+                    <option value="0"
+                    #if ( !$id && !$limitBy)
+                        SELECTED
+                    #end
+                    >All Videos</option>                    
+                    #foreach($unit in $worksite.units)
+                        <option value="&limitby=unit&id=${unit.id}"
+                         #if ( $id && $id == $unit.id && $limitBy == "unit")
+                            SELECTED
+                        #end
+                        
+                        >All assignments in topic ${unit.title}</option>
+                        #foreach($assignment in $unit.assignments)
+                            <option value="&limitby=assignment&id=${assignment.id}"
+                             #if ( $id && $id == $assignment.id && $limitBy == "assignment")
+                                SELECTED
+                            #end
+                            >-${assignment.customTypeOrType}: ${assignment.title}</option>
+                        #end
+                    #end
+                </select>
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+
+
+</p>
+
+<form method="get">
+<!-- this form is here just so the input buttons can show up correctly -->
+
+<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" onclick="sortColumn(event)">
+	<thead>
+	    
+		<tr>
+			<th class="thumbnail-col">Thumbnail</th>
+			<th class="navOut DefaultSort">Title</th>
+			#foreach ($customFieldName in $worksite.customFieldNames)
+			<th class="navOut">${textFormatter.escapeForHTML($customFieldName)}</th>
+            #end
+            <th class="clips-col" class="navOut">Clip(s)</th>
+		</tr>
+	</thead>
+
+    <tbody>
+    #foreach ($material in $materials)
+	
+	<tr>
+		<td class="thumbnail-col"><a class="thumbnail" style="background-image:url(#if(${material.thumbUrl}) '$!{material.thumbUrl}'  
+                                                                                   #else 'images/thumbnail.gif' 
+                                                                                   #end)"
+                                    href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&amp;id=${material.id}','1000','700','no','no','videoviewer')"></a></td>
+				
+        #if ($admin)
+        	<td class="list_cols"><a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&amp;id=${material.id}','1000','700','no','no','videoviewer')">${material.title}</a>
+            
+            #if ($material.isUnlisted())
+                (unlisted)
+            #end
+            <br>
+                                <input type="button" class="regButton" value="Edit" id="edit_${velocityCount}" onclick="document.location.href='basicAdmin.smvc?action=display&entity=material&id=${material.id}'" /></td>
+		#else
+        	<td class="list_cols"><a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&amp;id=${material.id}','1000','700','no','no','videoviewer')">${material.title}</a></td>
+		#end
+            
+        
+        #foreach ($customFieldValue in $material.customFieldValues)
+            #set($loopIndex = ${velocityCount} - 1)
+            #springBind("material.customFieldValues[${loopIndex}].value")
+            <td class="list_cols">
+            ###if ($status.value) $!{textFormatter.escapeForHTML($status.value)}
+            #if ($status.value) $!{status.value}
+            #else &nbsp;
+            #end
+            </td>
+        #end
+        <td class="clips-col">
+            #if ($materialsWithAnnotations.contains($material.id))
+                Yes
+            #else
+                No
+            #end
+        </td>
+        
+	</tr>
+        
+#end
+	</tbody>
+</table>
+
+</form>
+
+  #if($materials.size() == 0)
+    
+    <p class="blanknote" style="padding: 10px; background-color: #fff; border-bottom: 1px solid #999;">There are no videos in this library.</p>
+    
+    #end
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+#parse("footer.vm")

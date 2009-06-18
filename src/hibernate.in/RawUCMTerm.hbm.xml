@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3.ucm">
+
+    <class name="RawUCMTerm" table="UCM_TERMS">
+        
+        <meta attribute="class-description">
+            This class represents a study term at an institution. It is used
+            exclusively within the UCM package.
+			@author Eric Mattes
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UCM_TERM_ID">
+            <generator class="native"/>
+        </id>
+        
+        <property name="endDate" type="timestamp" column="END_DATE">
+            <meta attribute="field-description">The date at which the term ends.</meta>
+		</property>
+        
+        <property name="name" type="string">
+            <meta attribute="field-description">The name of this term, e.g. "Fall 2006".</meta>
+		</property>
+        
+        <property name="startDate" type="timestamp" column="START_DATE">
+            <meta attribute="field-description">The date at which the term starts.</meta>
+		</property>
+        
+        <set name="worksites" lazy="true" inverse="true">
+            <meta attribute="field-description">The worksites which take place during this term.</meta>
+            <cache usage="nonstrict-read-write"/>
+            <key column="UCM_TERM_ID"/>
+            <one-to-many class="RawUCMWorksite"/>
+        </set>
+                        
+        
+
+    </class>
+
+</hibernate-mapping>

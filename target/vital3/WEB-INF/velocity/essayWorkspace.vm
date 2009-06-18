@@ -1,0 +1,587 @@
+#set($section = "courseHome")
+#set($helptopic = "essayworkspace")
+#set($title = "$worksite.title : $assignment.title")
+#if ($export && $export == "true" )
+  #parse("essayWorkspaceExport.vm")
+#else  ## the end for this else is at the end of the template...
+#parse("header.vm")
+
+
+<!-- styles and javascript exclusively for this page: -->
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/assigntab.js"></script>
+
+    #if ($commentsform && $commentsform == "true")
+        ## special case: faculty is coming here from the "View Assignments page" and wants to enter feedback,
+        ## so wants to see the feedback. This preselects the feedback tab.
+        
+            <script type="text/javascript" language="javascript">
+    			addLoadEvent(inittabs_feedback);
+    		</script>
+      
+    #else
+        ## other cases:
+    	#if (!$isMyAssignment)
+    		<script type="text/javascript" language="javascript">
+    			addLoadEvent(inittabs_notmine);
+    		</script>
+    	#else
+    		<script type="text/javascript" language="javascript">
+    			addLoadEvent(inittabs);
+    		</script>
+    	#end
+    #end
+	<script type="text/javascript" language="javascript" src="scripts/resizeIE.js"></script>
+    <script type="text/javascript" language="javascript">
+        // used for opening videos from the essay body:
+        baseUrl = "${baseUrl}";
+    </script>
+    <script type="text/javascript" language="javascript"> // This script is to fix that horizontal scrolling issue in IE
+	function checkIEdiv() {
+		if (navigator.userAgent.indexOf('MSIE') != - 1) {
+			document.getElementById('materialsTable').style.width = "100%";
+			
+			var materialsTable_h = document.getElementById('materialsTable').offsetHeight;
+			var materialsTable_w = document.getElementById('materialsTable').offsetWidth;
+			if ( materialsTable_h > 305) {
+				var i = materialsTable_w -18;
+				document.getElementById('materialsTable').style.width = i + 'px';
+			}
+		}
+	}
+	addLoadEvent(checkIEdiv);
+    </script>
+
+<script language="JavaScript" type="text/javascript">
+    
+var locked = 0; // buttons only function when this is zero.
+
+
+
+function confirmSubmit()
+{
+
+    if (checkLock()) {
+    	var agree=confirm("Do you really want to submit this assignment to the instructor ?");
+    	if (agree) {
+            #if ((!$export || $export != "true" ) && (!$preview || $preview != "true" ))
+                ## this is only necessary in edit mode
+    		    document.essay_edit.hiddenStatus.value = 1;
+    	    #end
+    		return true ;
+    	} else {
+    		return false ;
+    	}
+    }
+    else return false;
+}
+
+function setExport()
+{
+    if (checkLock()) {
+       document.essay_edit.hiddenExport.value ='true';
+       return true;
+    }
+    else return false;
+}
+
+function unsetExport()
+{
+    if (checkLock()) {
+       document.essay_edit.hiddenExport.value = null;
+        return true;
+    }
+    else return false;
+}
+
+function setPreview()
+{
+    if (checkLock()) {
+        document.essay_edit.hiddenPreview.value = 'true';
+        return true;
+    }
+    else return false;
+}
+
+function unsetPreview()
+{       
+    if (checkLock()) {
+        document.essay_edit.hiddenPreview.value = null;
+        return true;
+    }
+    else return false;
+}
+
+
+function confirmCommentsSubmit()
+{
+    if (checkLock()) {
+    	var agree=confirm("Submit this feedback to the student ?");
+    	if (agree) {
+    		document.comment_form.hiddenStatus.value = 1;
+    		return true;
+    	} else {
+    		return false ;
+    	}
+    }
+    else return false;
+}
+
+function formgoto(mymenu) {
+	var newIndex = mymenu.options.selectedIndex;
+	var myurl = mymenu.options[newIndex].value;
+	if (myurl != 0) {
+		document.location.href=myurl;
+	}
+}
+
+function checkLock () {
+    if (locked == 1) return false;
+    else {
+        //locks the page for 20 seconds -- prevents repeated clicks from resulting in more than one submission.
+        locked = 1;
+        window.setTimeout('unlock()',20000);
+        return true;
+    }
+}
+
+function unlock() {
+    locked = 0;
+}
+
+
+</script>
+
+
+
+#parse("assignmentSubheader.vm")
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+<!-- ******** Begin binderbox, that  ties the left and the right side of the workspace ******** -->
+<div id="binderbox">
+
+<div id="noteside"><!-- Begin left side of page, materials, notes, instructions, feedback, id=noteside -->
+    #if ($assignment.instructions)
+	<div id="assign_instr" class="a_instructions"><!-- Begin assignment instructions -->
+            <a href="#assign_instr" class="ex_show" onclick="excerpt(this);return false;" id="ainstr"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+            <b>Instructions:</b> <div class="ellips" id="ellipsisassign_instr">...</div><br />
+			<span>$!{assignment.instructions}</span>
+	</div><!-- End assignment instructions -->
+	#else
+	<!-- Null instructions -->
+    #end
+
+    <!-- Feedback display  - for the student to view feedback. -->
+    
+    #if($hasSubmittedCommentsForParticipant && $hasSubmittedCommentsForParticipant == "true")
+    
+	<div id="faculty_feedback" class="fc_feedback"><!-- Begin faculty feedback -->
+			<a href="#faculty_feedback" class="ex_show" onclick="excerpt(this);return false;" id="f_feedback"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+			<b>Faculty Feedback:</b> <div class="ellips" id="ellipsisfaculty_feedback">...</div><br />
+        	    #foreach ($comment in $thisAssignmentResponse.comments)
+        	        #set ($commenter = $comment.participant.user)
+					#if ($comment.getStatus() == 1)
+						<div class="fc_comment">
+                        <span><i>From  $!{commenter.fullName}:</i></span><br />
+						<div class="fc_comment_content"> $!{comment.text}</div>
+						</div>
+					#end
+                #end
+	</div><!-- End faculty feedback -->
+     #end
+
+    <div id="notesidetables"><!-- Begin notes and materials tables, id="notesidetables" -->
+    	<div class="notetabscontainer"><!--  Begin class="notetabscontainer" -->
+    	<ul class="notesidetabs"><!-- Begin the tabs for the main three parts -->
+    		<li class="tab-1" id="tab1"><div><a href="#am" id="tab_am" onclick="accesstab(this);checkIEdiv();  return false;">Assignment Videos</a></div></li>
+    		<!-- <li class="tab-2" id="tab2"><div><a href="#um" onclick="accesstab(this); return false;">Topic Videos</a></div></li> -->		
+    		#if($isMyAssignment == true)
+    		<li class="tab-3" id="tab3"><div><a href="#mn" id="tab_mn" onclick="accesstab(this); return false;">My Clips</a></div></li>
+    		#end
+    		<!-- now putting faculty feedback in a tab. -->
+    		#if ($commentsform && $commentsform == "true")
+    		<li class="tab-4" id="tab4"><div><a href="#fb"  id="tab_fb"onclick="accesstab(this); return false;">Feedback</a></div></li>
+    		#end
+    	</ul><!-- End the tabs for the main three parts -->
+ 		</div><!--  End class="notetabscontainer" -->
+    	
+    	
+    	<div class="divbox-1" id="am"><a name="am"></a> <!-- Begin area for ASSIGNMENT MATERIALS TAB -->
+    		<div class="divboxcontent">
+    			<table border="0" cellspacing="0" cellpadding="0" id="materialsTable">
+    				<tr>
+    					<td class="col1">Thumbnail</td>
+    					<td class="col2">Title</td>
+    					<td class="col3">Clip(s)?</td>
+    				</tr>
+                    
+                    #set($assignmentMaterials = $assignment.getSortedMaterials())
+    				#if ($assignmentMaterials)
+        				#foreach($assignmentmaterial in $assignmentMaterials)
+        				<tr valign="top" id="${assignmentmaterial.id}">
+        				    <td class="col_thumbnail">
+        				    <a title="Edit clips for this asset." class="thumbnail" 
+        				    style="float:none; margin: auto; background-image:url(#if(${assignmentmaterial.thumbUrl}) '$!{assignmentmaterial.thumbUrl}'  
+                                                                                   #else 'images/thumbnail.gif' 
+                                                                                   #end)"
+                                    href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=edit&amp;id=${assignmentmaterial.id}','1000','700','no','no','videoviewer')"></a>
+        				    </td>
+        				    <td class="col_title">
+        				        <h2>
+                            #if ($assignmentmaterial.CustomFieldsAndValues.size() > 0)
+ 	                           <a class="hs-control" href="#extras${assignmentmaterial.id}"><img src="images/shim.gif" alt="" width="14" height="16" border="0" /></a>
+                            #else
+   	                         <img src="images/shim.gif" alt="" width="14" height="16" border="0" />
+                            #end
+            				    <a title="Edit clips for this asset."
+          						href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=edit&amp;id=${assignmentmaterial.id}','1000','700','no','no','videoviewer')">$!{assignmentmaterial.title}</a></h2>
+        				    <div class="details" id="extras${assignmentmaterial.id}"><!-- Begin details on this clip -->
+                            #foreach ($b in $assignmentmaterial.CustomFieldsAndValues)
+                                <b>$b.name</b>:$b.value<br />
+                            #end
+							</div><!-- End details on this clip -->
+        				    </td>       				    
+        				    <td class="col_notes">
+                                #if ( $materialsWithAnnotations.contains($assignmentmaterial.id))
+                                    <span style="color:#090; font-weight:bold;">Yes</span>
+                                #else
+                                    <span style="color:#999; font-weight:bold;">No</span>
+                                #end
+        				    </td>
+        				</tr>
+        				#end
+        			#end
+    			</table>
+            </div>
+    	</div> <!-- End area for ASSIGNMENT MATERIALS TAB -->
+    	
+    	
+    	
+    	
+
+    	
+    	
+        <div class="divbox-4" id="fb"><a name="fb"></a> <!-- Begin area for FEEDBACK TAB -->
+    		<div class="divboxcontent">
+    		<table border="0" cellspacing="0" cellpadding="0" id="materialsTable">
+            <tr>
+                <td class="feedbackcol">Faculty Feedback:</td>
+            </tr>
+    		<tr>
+    		    <td>
+        		<!-- Feedback form  - for the faculty to enter/edit feedback -->
+        		#if ($commentsform && $commentsform == "true")
+				<div class="feedback_view"><!-- Place for feedback class="feedback_view" -->                    
+                    #set($comment = $thisAssignmentResponse.getComment($participant))
+        			#if ( $comment && $comment.status == 1) ##there is feedback but already submitted.
+        				<h3>Your Feedback:</h3>
+        				<form name="comment_form" method="post" action="response.smvc">
+                            <input type="hidden" name="action" value="update" />
+                            <input type="hidden" name="id" value="${comment.id}" />
+        					<input type="hidden" name="entity" value="comment" />
+        					<input type="hidden" name="assignmentResponseId" value="$!{thisAssignmentResponse.id}" />
+        					<input type="hidden" name="participantId" value="$!{participant.id}" />
+                            
+        					<textarea cols="10" rows="5" tabindex="0" name="text" >$!{textFormatter.escapeForHTML($comment.text)}</textarea>
+        					<br />
+                            (Your feedback has been submitted and is now visible to the student.)
+                            <br />
+        					<input class="regButton" type="submit"  value="Edit submitted feedback" />
+        				</form>
+        			#else	##still editing the feedback
+        				#if($comment)
+        					<h3>Your Feedback (Draft):</h3>
+        				#else
+        					<h3>Your Feedback:</h3>
+        				#end
+        				<form name="comment_form" method="post" action="response.smvc">
+        					#if($comment)
+        						<input type="hidden" name="action" value="update" />
+        						<input type="hidden" name="id" value="${comment.id}" />
+        					#else
+        						<input type="hidden" name="action" value="insert" />
+        					#end
+        					<input type="hidden" name="entity" value="comment">
+        					<input type="hidden" name="assignmentResponseId" value="$!{thisAssignmentResponse.id}" />
+        					<input type="hidden" name="participantId" value="$!{participant.id}" />
+                            <input type="hidden" name="status" value="0" id="hiddenStatus">
+        					<textarea id="comment_form_textarea" cols="10" rows="5" tabindex="0" name="text">$!{textFormatter.escapeForHTML($comment.text)}</textarea>
+        					<br />
+                            #if($comment)
+                                (Your feedback has not yet been submitted to the student.)
+                            #else
+                                (You have not yet entered any feedback for this assignment.)
+                            #end
+                            <br />
+        					<input class="regButton"  onclick="return checkLock()" type="submit"  value="Save Feedback as Draft" />
+        					<input class="regButton"  onclick="return confirmCommentsSubmit()" type="submit"  value="Submit to student" />
+        				</form>
+        			#end ##if feedback is submitted
+        			
+        			<!-- NEW: display other faculty's feedback here as well. -->
+                    #foreach ($comment in $thisAssignmentResponse.commentsMostRecentFirst)
+            	        #set ($commenter = $comment.participant.user)
+        				#if ($comment.getStatus() == 1 && $commenter != $participant.user)
+                        	<tr>
+            					<td class="feedbackcol">$!{commenter.fullName}'s feedback</td>
+            				</tr>
+                			<tr>
+                			    <td>
+                					<div class="fc_comment">
+                					<div class="fc_comment_content"> $!{comment.text}</div>
+                					</div>
+                                </td>
+                			</tr>
+        				#end
+                    #end
+				</div>
+        		#end ## if commentsform is true
+                <!-- End place for feedback class="feedback_view" -->
+                
+    		        </td>
+                </tr>
+    		</table>
+            </div>
+    	</div> <!-- End area for FEEDBACK -->
+    	
+    	
+    	
+    	
+    	
+    	
+
+    	<div class="divbox-3" id="mn"><a name="mn"></a> <!-- Begin area for MY NOTES TAB -->
+    		<div id="pullmenu"> <!-- Begin area for pulldown menu -->
+    		  <form name="noteDisplay" action="javascript:updateNoteList('noteDisplay')">
+              
+                <input type="hidden" name="action" value="noteQuery" />
+    			<input type="hidden" name="template" value="essay" />
+                ## THIS WORKSITEID MUST BE HERE OR ELSE THE JAVASCRIPT THINKS ITS PLONE
+                <input type="hidden" name="worksiteId" value="${worksite.id}" />
+                ##
+                <table border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+    					<td style="padding: 0 5px;">Show:</td>
+    					<td><select name="limitBy" class="viewmenu" style="width: 185px" onchange="this.form.submit()">
+        						<option value="assignmentId_${assignment.id}">Clips for this assignment's videos</option>
+        						<option value="unitId_${assignment.unit.id}">Clips for all videos in this topic</option>
+        						<option value="today">Clips modified today for all videos</option>
+                                <option value="">All clips on all videos</option>
+        					</select></td>
+                    	<td style="padding: 0 5px 0 15px;">Group by:</td>
+    					<td >
+    					    <select name="groupBy" class="viewmenu" style="width: 110px" onchange="this.form.submit()">
+        						<option value="materialTitle">Title of video</option>
+        						<option value="modificationDate">Date modified</option>
+        						<option value="tag">Tag</option>
+        					</select>
+    					</td>
+    				</tr>
+    			</table>
+    		  </form>
+    		</div> <!-- End area for pulldown menu -->
+            <div class="divboxcontent">      
+                <table border="0" cellspacing="0" cellpadding="0" id="divbox-3_header">
+                    <tr>        
+                        <td class="col1">Clip Information</td>
+                        <td class="col2">Note</td>
+                        <td class="col3">Add to Essay</td>
+                    </tr>
+                </table>
+
+        	#if($isMyAssignment == true)
+            
+                #parse("notesMini_essay.vm")
+            
+            #end
+
+            </div><!-- End divboxcontent -->
+
+       </div> <!-- END area for MY NOTES TAB -->
+       
+
+     </div><!-- End notes and materials tables, id="notesidetables" -->
+
+</div><!-- End left side of page, materials, notes, instructions, feedback, id=noteside -->
+
+
+<div id="wrkspcside"><!-- Begin right side of page, for essay workspace form area -->
+    #springBind("responseCommand.status")
+	#if ($canViewOthers || ($action == "display" && $status.value == 1))
+		#if ($assignment.SubmittedResponseCount > 0)
+			<select name="other_student_select"  onchange="formgoto(this)" class="generic" style="float: right;">
+				<option value="0" >View other assignments:</option>
+				#foreach ($otherAssignmentResponse in $assignment.sortedResponses)
+                <!-- $otherAssignmentResponse.status ${otherAssignmentResponse.participant.user.fullName}
+                $otherAssignmentResponse.id $thisAssignmentResponse.id -->
+					#if ($otherAssignmentResponse.status == 1)
+                        #if ($action == "new" || ($action == "display" && $otherAssignmentResponse.id != $thisAssignmentResponse.id))
+						<option value="response.smvc?action=display&entity=assignmentResponse&id=${otherAssignmentResponse.id}">
+							#if ($otherAssignmentResponse.participant.id == $participant.id)
+								(Back to my assignment)
+							#else
+								${otherAssignmentResponse.participant.user.fullNameReversed}
+							#end
+						</option>
+                        #end
+					#end
+				#end
+                #if (!$isMyAssignment && $myAssignmentIsNull)
+                <option value="response.smvc?action=new&entity=assignmentResponse&assignmentId=${assignment.id}&type=essay&participantId=${participant.id}">
+                (Back to my assignment)</option>
+                #end
+			</select>
+        #end
+    #end
+    
+    #if ($isMyAssignment)
+        #springBind("responseCommand.status")
+        #if ($status && $status.value == 1)
+            <h2>My Submitted Assignment</h2>
+        #else
+            #if ($preview && $preview == "true" )
+                <h2>Preview</h2>
+            #else
+                <h2>My Assignment</h2> 
+            #end
+        #end
+    #else
+        <h2>$!{thisAssignmentResponse.participant.user.FullName}'s Assignment</h2>
+    #end
+
+
+    <div class="txtboxarea"><!-- begin class txtboxarea, area for either the editing space (Tiny MCE) or the preview/sumbitted space -->
+      approximate word count: <span id="wordcounter"></span>
+	    #if ($preview && $preview == "true" )  ## if in preview mode
+	   	<p>The content of your essay previewed here has been saved as draft.  To resume working on your assignment, click "Edit".</p>
+	    #end
+
+        #if ($action == "new")  ## Assignment has not been touched
+        <div  class="txtboxarea_new"><!--  Begin class="txtboxarea_new", Assignment has not been touched  -->
+        	<form name="essay_edit" method="post" action="response.smvc">
+        		<input type="hidden" name="action" value="insert" />
+        		<input type="hidden" name="entity" value="assignmentResponse" />
+                <input type="hidden" name="type" value="essay" />
+        		<input type="hidden" name="assignmentId" value="$!{assignment.id}" />
+        		<input type="hidden" name="participantId" value="$!{participant.id}" />
+                <input type="hidden" name="status" value="0" id="hiddenStatus">
+                <input type="hidden" name="export" value="" id="hiddenExport">
+                <input type="hidden" name="preview" value="" id="hiddenPreview">
+        		
+        		<div id="essaybox" class="essaytextarea">
+        			<input name="note_text_format" value="text/html" type="hidden" />  
+                    <script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+                    <script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"></script>
+            		<textarea tabindex="0" name="text" mce_editable="true" id="note"></textarea>
+        		</div>
+        
+        		<div class="wrkspcsidetable"><!--  Begin class="wrkspcsidetable" -->
+            		<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;margin: 5px 0 0 0;">
+            			<tr valign="middle">
+            				<td>
+            				<!--
+            				<input class="savebutton" type="submit" name="form.button.submit" value="Submit" />
+            				-->
+                            <input onclick="return confirmSubmit()" class="regButton" type="submit" name="form.button.submit" value="Submit" />
+                       		</td>
+                        	<td style="text-align:right;">
+                            #if ($export == "true"  || ($preview && $preview == "true"))
+                				<input name="form.button.draft" class="regButton" id="export_print_button" type="submit" value=" Edit from new" style="margin-top: 5px;" /> 
+                             #else
+                                <input onclick="return setExport();" class="regButton" id="export_print_button" type="submit"  name="form.button.submit" value="Print" /> 
+                                <input onclick="return setPreview();" class="regButton" id="preview_edit_button" type="submit" name="form.button.submit" value="Preview" /> 
+                            #end
+            				<input class="regButton" onclick="return checkLock()" type="submit" name="form.button.draft" value="Save Draft" />
+            				</td>
+            			</tr>
+            		</table>
+        		</div><!--  End class="wrkspcsidetable" -->
+        	</form>
+        </div><!--  End class="txtboxarea_new", Assignment has not been touched -->
+        #end  ## End "new"
+
+
+	#if ($action == "display") ## Assignment has been worked on
+	#if ($preview && $preview == "true" )  ## if in preview mode
+		#parse ("essayWorkspacePreview.vm")
+  	#else  ## if in normal mode
+    
+            #springBind("responseCommand.status")
+        	#if ($status.value == 0)  ## Assignment has not been submitted.
+			<div  class="txtboxarea_new"><!--  Begin class="txtboxarea_new", Assignment has not been submitted. -->
+					<form name="essay_edit" method="post" action="response.smvc">
+						<input type="hidden" name="action" value="update" />
+						<input type="hidden" name="entity" value="assignmentResponse" />
+						
+						#springBind("responseCommand.id")
+						<input type="hidden" name="id" value="${status.value}" />
+						<input type="hidden" name="assignmentId" value="$!{assignment.id}">
+						<input type="hidden" name="status" value="0" id="hiddenStatus">
+						<input type="hidden" name="export" value="0" id="hiddenExport">
+						<input type="hidden" name="preview" value="0" id="hiddenPreview">
+						
+						<div id="essaybox" class="essaytextarea"><input name="note_text_format" value="text/html" type="hidden" />
+							<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+							<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"> </script>
+							
+                            #springBind("responseCommand.text")
+                            <textarea tabindex="0" name="text" mce_editable="true" id="note">$!{status.value}</textarea>
+						</div>
+						
+						<div class="wrkspcsidetable"><!--  Begin class="wrkspcsidetable" -->
+							<table border="0" cellspacing="0" cellpadding="0" style="width: 100%; margin: 5px 0 0 0;">
+								<tr valign="middle">
+									<td>
+									<input onclick="return confirmSubmit()" class="regButton" type="submit" name="form.button.submit" value="Submit" />
+								</td>
+								<td style="text-align:right;">
+									#if ($export == "true"  || $preview == "true")
+										<input name="form.button.draft" class="regButton" id="export_print_button" type="submit" value=" Edit " style="margin-top: 5px;" /> 
+									#else
+										<input onclick="return setExport();" class="regButton" id="export_print_button" type="submit"  name="form.button.submit" value="Print" /> 
+										<input onclick="setPreview();" class="regButton" id="preview_edit_button" type="submit"name="form.button.submit" value="Preview" /> 
+									#end
+									<input class="regButton" onclick="return checkLock()" type="submit" name="form.button.draft" value="Save Draft" />
+									</td>
+								</tr>
+							</table>
+						</div><!--  End class="wrkspcsidetable" -->
+				   </form>
+			 </div><!--  End class="txtboxarea_new", Assignment has not been submitted. -->
+                   
+        	#else ## assignment has been submitted
+        		<!-- Assignment has been submitted. -->
+        		<div class="essay_view" id="sticky_question_view">
+                        $!{responseCommand.text}
+                </div>
+                <form style="margin-top: 5px;">
+                <input onclick="document.location.href='response.smvc?action=display&entity=assignmentResponse&id=${responseCommand.id}&export=true'" class="regButton" type="button" value="Print" /> 
+                #if ($commentsform && $commentsform == "true") ## allow faculty to reset the essay.
+                    <input onclick="document.location.href='specialActions.smvc?action=resetEssayResponse&assignmentResponseId=${responseCommand.id}&assignmentId=${thisAssignmentResponse.assignment.id}&participantId=${participant.id}'" class="regButton" type="button" value="Reset" />
+                #end
+                </form>
+                <!--FACULTY FEEDBACK FORM USED TO BE HERE. MOVING TO THE NEW TAB.-->
+	     #end ## if the assigment is submitted
+    #end ## checking preview/normal mode
+    #end ## if action is display
+    
+    </div><!-- end class txtboxarea, area for either the editing space (Tiny MCE) or the preview/submitted space -->
+</div><!-- End right side of page, for essay workspace form area -->
+
+</div><!-- ******** End binderbox, that  ties the left and the right side of the workspace ******** -->
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+#end  ## normal/export switch.
+#parse("footer.vm")

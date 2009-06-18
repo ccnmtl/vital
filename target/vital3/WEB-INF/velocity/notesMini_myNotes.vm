@@ -1,0 +1,103 @@
+#if($action == "noteQuery")<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"><body>#end
+<div id="noteList" class="notebinder"><!-- Begin Div that binds all the notes: parents and children together (mothership) -->
+ 
+  #if($groupList.size() == 0)
+    
+    <p class="blanknote" style="padding: 10px; background-color: #fff; border-bottom: 1px solid #999;">There are no clips to display.</p>
+    
+    #end
+  
+  #foreach($group in $groupList)
+  <!-- ****** Begin a parent group of notes/clips ****** -->     
+
+	<!-- begin header -->	
+	  <h2 class="noteGrouping"><!-- Heading for grouping, i.e. Date, Tag or Title -->
+		<a class="hs-control" href="#grp${group.groupId}" onclick="return false;"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+		${group.groupTitle}
+      </h2>
+	<!-- end header -->	
+    
+	  <div class="notesInGroup" id="grp${group.groupId}">     
+        <!-- Begin note clips grouping for this parent, need this for hiding and showing of the materials under the grouping title, class="notesInGroup" -->
+
+				<table border="0" cellspacing="0" cellpadding="0" class="managenotes_table"><!-- Begin table for the notes under this grouping -->
+				
+                    
+                    <!-- Begin each note -->
+					#foreach($note in $group.notes)
+										
+					<tr>
+					
+						<td class="nc_delete">
+                            <!-- delete checkbox -->
+                            <input type="checkbox" name="ids" value="${note.id}" />
+						</td>
+						
+						<td class="nc_title">
+                            <!-- clip title -->
+                            <a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=edit&amp;id=${note.material.id}&amp;annotationId=${note.id}','1000','700','no','no','videoviewer')">${note.title}</a>
+						</td>
+						
+						<td class="nc_modified">${textFormatter.dateToString($note.dateModified)}</td>
+						
+						<td class="nc_material">${note.material.title}</td>
+						
+						<td class="nc_link">
+                            <!-- link -->
+						  #if ($note.clipBegin)
+						    <span>${note.clipBegin}</span>
+						  #else
+						  	&#160;
+						  #end
+						  #if ($note.clipEnd)
+						    <span>-</span>
+						    <span>${note.clipEnd}</span>
+						  #else
+						  	&#160;
+						  #end
+						  
+						</td>
+						
+						<td class="nc_notes">
+                        <!-- note text -->
+						  
+                         #if ($note.text)
+                        <div id="notetext_grp${note.id}">
+						    	$!{note.text}
+                        </div>
+        	             #else
+        	               &#160;
+        	             #end
+						</td>
+						
+						<td class="nc_tags">
+                        <!-- column for tags -->
+						
+						<div id="tags_grp${note.id}">
+                            #set($tagString = "&#160;")
+                            ## this next line will fail to do anything if it returns null:
+							#set($tagString = ${note.getTagsAsString($tagMap)})
+							${tagString}
+							                                  	                
+						</div>
+						</td>
+					
+					</tr>
+					
+					#end
+					<!-- End each note -->
+                    
+				</table><!-- End table for the notes under this grouping -->
+
+		</div>
+	
+#end
+##end foreach group in groupList
+     
+  
+</div>
+
+#if($action == "noteQuery")
+</body>
+</html>#end

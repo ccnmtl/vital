@@ -1,0 +1,10 @@
+public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj instanceof <TMPL_VAR class> == false) return false;
+        <TMPL_VAR class> o = (<TMPL_VAR class>)obj;
+        return new EqualsBuilder()<TMPL_LOOP props>.append(<TMPL_VAR prop>, o.<TMPL_VAR prop>)</TMPL_LOOP>.isEquals();
+    }
+    
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)<TMPL_LOOP props>.append(<TMPL_VAR prop>)</TMPL_LOOP>.toHashCode();
+    }

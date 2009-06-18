@@ -1,0 +1,348 @@
+#set($section = "courseHome")
+#set($helptopic = "discussionworkspace")
+#set($title = "$worksite.title : $assignment.title")
+#parse("header.vm")
+
+	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
+    <script type="text/javascript" language="javascript" src="scripts/discussion.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/assigntab.js"></script>
+	<script type="text/javascript" language="javascript">
+		addLoadEvent(inittabs);
+	</script>
+	<script type="text/javascript" language="javascript" src="scripts/resizeIE.js"></script>
+    <script type="text/javascript" language="javascript">
+        // used for opening videos from the essay body:
+        baseUrl = "${baseUrl}";
+    </script>
+    <script type="text/javascript" language="javascript"> // This script is to fix that horizontal scrolling issue in IE
+	function checkIEdiv() {
+		if (navigator.userAgent.indexOf('MSIE') != - 1) {
+			document.getElementById('materialsTable').style.width = "100%";
+			
+			var materialsTable_h = document.getElementById('materialsTable').offsetHeight;
+			var materialsTable_w = document.getElementById('materialsTable').offsetWidth;
+			if ( materialsTable_h > 305) {
+				var i = materialsTable_w -18;
+				document.getElementById('materialsTable').style.width = i + 'px';
+			}
+		}
+	}
+	addLoadEvent(checkIEdiv);
+	
+	
+	var mce_char_limit_settings = {
+	    max_chars: 4000
+	    ,field_name: 'comment_text'
+	    , form_name: 'enter_discussion_entry'
+	    , feedback_div : 'mce_char_limit_feedback_div'
+	};
+	
+    
+	var participant_id = '$!{participant.id}';
+	var assignment_id = '$!{assignment.id}';
+	var assignment_response_id = '$!{thisAssignmentResponse.id}';
+
+
+	#set ( $number_of_discussion_entries = $assignment.getDiscussionEntries().size() )
+	#set ( $discussion_entries_index = 1 )
+	var all_discussion_entries = [
+	#foreach ($a  in $assignment.getDiscussionEntries())
+	    {
+	        "participant_id": '${a.participant.id}',
+	        "entry_date" : '${a.dateModified}',
+	        "entry_content" :"$!{textFormatter.escapeForJavascript($a.getText())}",
+	        "entry_id" :'${a.id}'
+	    #if ( $discussion_entries_index  < $number_of_discussion_entries)
+	    },
+	    #else
+	    }   ## don't add a comma to the last line - breaks IE.	
+	    #end    	
+	#set (  $discussion_entries_index  = $discussion_entries_index  + 1 )
+	#end
+	]
+	
+	#set ( $number_of_names = $assignment.sortedResponses.size() )
+	#set ( $names_index = 1 )
+	var names = {
+	#foreach ($a in $assignment.sortedResponses)
+		#if ( $names_index < $number_of_names )
+	      '${a.participant.id}':'${a.participant.user.fullName}',
+	    #else
+     	  '${a.participant.id}':'${a.participant.user.fullName}'
+     	  ## don't add a comma to the last line - breaks IE.
+     	#end
+        #set ( $names_index = $names_index + 1 ) 
+	#end
+	}
+    </script>
+
+#parse("assignmentSubheader.vm")
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+	<div style="visibility:hidden; display:none;"><span id="visual_version"></span></div><!-- Don't delete this!!! -->
+
+
+#if ($message)
+<p class="message">$!{message}</p>
+#end
+
+<!-- ******** Begin binderbox, that  ties the left and the right side of the workspace ******** -->
+<div id="binderbox">
+
+	<div id="noteside"><!-- Begin left side of page, id=noteside -->
+
+		#if ($assignment.instructions)
+		<div id="assign_instr" class="a_instructions"><!-- Begin assignment instructions -->
+				<a href="#assign_instr" class="ex_show" onclick="excerpt(this);return false;" id="ainstr"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+				<b>Instructions:</b> <div class="ellips" id="ellipsisassign_instr">...</div><br />
+				<span>$!{assignment.instructions}</span>
+		</div><!-- End assignment instructions -->
+		#else
+		<!-- Null instructions -->
+		#end
+		
+		<div id="notesidetables"><!-- Begin notes and materials tables, id="notesidetables" -->
+    	<div class="notetabscontainer"><!--  Begin class="notetabscontainer" -->
+    	<ul class="notesidetabs"><!-- Begin the tabs for the main three parts -->
+    		<li class="tab-1" id="tab1"><div><a href="#am" id="tab_am" onclick="accesstab(this);checkIEdiv();  return false;">Assignment Videos</a></div></li>		
+    		<li class="tab-3" id="tab3"><div><a href="#mn" id="tab_mn" onclick="accesstab(this); return false;">My Clips</a></div></li>
+    		
+    	</ul><!-- End the tabs for the main three parts -->
+ 		</div><!--  End class="notetabscontainer" -->
+    	
+    	
+    	<div class="divbox-1" id="am"><a name="am"></a> <!-- Begin area for ASSIGNMENT MATERIALS TAB -->
+    		<div class="divboxcontent">
+    			<table border="0" cellspacing="0" cellpadding="0" id="materialsTable">
+    				<tr>
+    					<td class="col1">Thumbnail</td>
+    					<td class="col2">Title</td>
+    					<td class="col3">Clip(s)?</td>
+    				</tr>
+                    
+                    #set($assignmentMaterials = $assignment.getSortedMaterials())
+    				#if ($assignmentMaterials)
+        				#foreach($assignmentmaterial in $assignmentMaterials)
+        				<tr valign="top" id="${assignmentmaterial.id}">
+        				    <td class="col_thumbnail">
+        				    <a title="Edit clips for this asset." class="thumbnail" 
+        				    style="float:none; margin: auto; background-image:url(#if(${assignmentmaterial.thumbUrl}) '$!{assignmentmaterial.thumbUrl}'  
+                                                                                   #else 'images/thumbnail.gif' 
+                                                                                   #end)"
+                                    href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=edit&amp;id=${assignmentmaterial.id}','1000','700','no','no','videoviewer')"></a>
+        				    </td>
+        				    <td class="col_title">
+        				        <h2>
+                            #if ($assignmentmaterial.CustomFieldsAndValues.size() > 0)
+ 	                           <a class="hs-control" href="#extras${assignmentmaterial.id}"><img src="images/shim.gif" alt="" width="14" height="16" border="0" /></a>
+                            #else
+   	                         <img src="images/shim.gif" alt="" width="14" height="16" border="0" />
+                            #end
+            				    <a title="Edit clips for this asset."
+          						href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=edit&amp;id=${assignmentmaterial.id}','1000','700','no','no','videoviewer')">$!{assignmentmaterial.title}</a></h2>
+        				    <div class="details" id="extras${assignmentmaterial.id}"><!-- Begin details on this clip -->
+                            #foreach ($b in $assignmentmaterial.CustomFieldsAndValues)
+                                <b>$b.name</b>:$b.value<br />
+                            #end
+							</div><!-- End details on this clip -->
+        				    </td>       				    
+        				    <td class="col_notes">
+                                #if ( $materialsWithAnnotations.contains($assignmentmaterial.id))
+                                    <span style="color:#090; font-weight:bold;">Yes</span>
+                                #else
+                                    <span style="color:#999; font-weight:bold;">No</span>
+                                #end
+        				    </td>
+        				</tr>
+        				#end
+        			#end
+    			</table>
+            </div>
+    	</div> <!-- End area for ASSIGNMENT MATERIALS TAB -->
+    	
+    	
+        <div class="divbox-4" id="fb">
+            Nothing goes here.
+    	</div>
+    	
+
+    	<div class="divbox-3" id="mn"><a name="mn"></a> <!-- Begin area for MY NOTES TAB -->
+    		<div id="pullmenu"> <!-- Begin area for pulldown menu -->
+    		  <form name="noteDisplay" action="javascript:updateNoteList('noteDisplay')">
+              
+                <input type="hidden" name="action" value="noteQuery" />
+    			<input type="hidden" name="template" value="essay" />
+                ## THIS WORKSITEID MUST BE HERE OR ELSE THE JAVASCRIPT THINKS ITS PLONE
+                <input type="hidden" name="worksiteId" value="${worksite.id}" />
+                ##
+                <table border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+    					<td style="padding: 0 5px;">Show:</td>
+    					<td><select name="limitBy" class="viewmenu" style="width: 185px" onchange="this.form.submit()">
+        						<option value="assignmentId_${assignment.id}">Clips for this assignment's videos</option>
+        						<option value="unitId_${assignment.unit.id}">Clips for all videos in this topic</option>
+        						<option value="today">Clips modified today for all videos</option>
+                                <option value="">All clips on all videos</option>
+        					</select></td>
+                    	<td style="padding: 0 5px 0 15px;">Group by:</td>
+    					<td >
+    					    <select name="groupBy" class="viewmenu" style="width: 110px" onchange="this.form.submit()">
+        						<option value="materialTitle">Title of video</option>
+        						<option value="modificationDate">Date modified</option>
+        						<option value="tag">Tag</option>
+        					</select>
+    					</td>
+    				</tr>
+    			</table>
+    		  </form>
+    		</div> <!-- End area for pulldown menu -->
+            <div class="divboxcontent">      
+                <table border="0" cellspacing="0" cellpadding="0" id="divbox-3_header">
+                    <tr>        
+                        <td class="col1">Clip Information</td>
+                        <td class="col2">Note</td>
+                        <td class="col3">Add to Essay</td>
+                    </tr>
+                </table>
+            
+                #parse("notesMini_essay.vm")
+
+            </div><!-- End divboxcontent -->
+
+       </div> <!-- END area for MY NOTES TAB -->
+       
+     </div><!-- End notes and materials tables, id="notesidetables" -->
+
+		<div id ="response_tinymce_textarea_div_title" class="title">
+			Add an entry to this discussion:
+		</div>
+		<div id = "mce_char_limit_feedback_div"></div>
+		
+		<div class="txtboxarea_new">
+			<form id="enter_discussion_entry" name="enter_discussion_entry" method="post" action="discussionEntry.smvc">
+				<input type="hidden" id="action" name="action" value="addDiscussionEntry" />
+				<input type="hidden" name="entity" value="assignmentResponse" />
+				<input type="hidden" name="type" value="discussion" />
+				<input type="hidden" id="text" name="text"  />
+				<input type="hidden" id="response_id_field"  name="id" value="$!{thisAssignmentResponse.id}" />
+				
+				
+				<input type="hidden" id="assignmentResponseId"  name="assignmentResponseId" value="$!{thisAssignmentResponse.id}" />
+				
+				<input type="hidden" name="assignmentId" value="$!{assignment.id}" />
+				<input type="hidden" name="participantId" value="$!{participant.id}" />
+				<input type="hidden" name="status" value="0" id="hiddenStatus">
+				<input type="hidden" name="export" value="" id="hiddenExport">
+				<input type="hidden" name="preview" value="" id="hiddenPreview">
+				
+				<div id="essaybox" class="discussiontextarea">
+				<input name="note_text_format" value="text/html" type="hidden" />  
+				<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+				<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_check_length.js"></script>
+				<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"></script>
+				<textarea tabindex="0" name="comment_text" mce_editable="true" id="note"></textarea>
+				</div>
+				
+				<div class="wrkspcsidetable"><!--  Begin class="wrkspcsidetable" -->
+				<table border="0" cellspacing="0" cellpadding="0" style="width: 100%;margin: 0px 0 0 0;">
+				<tr valign="middle">
+				<td>
+				
+				<button class="regButton" id ="submit_entry" >Post your Entry</button>
+				</td>
+				</tr>
+				</table>
+				</div><!--  End class="wrkspcsidetable" -->
+				
+			</form>
+		</div> <!-- End txtboxarea_new -->
+	
+	</div><!-- End left side of page, id=noteside -->
+	
+	
+	
+	
+	
+	<div id="wrkspcside"><!-- Begin right side of page, id=wrkspcside -->
+
+		<div id="discuss_notes_boxarea"><!-- ************ BEGIN EXISTING NOTES AREA ************ -->
+	
+			<h2>Discussion</h2>
+	
+			<div id="listing_summary">
+				<div id="recent_entries">Most recent: <span id="most_recent_responder"></span></div>
+				<div id="num_entries">Responses: <span id="number_of_entries"></span></div>
+			</div>
+		
+	
+			<div id="dropdownmenu">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td style="padding: 0 5px;">Show:</td>
+						<td>
+						<select id = "responses_to_show_select" name="recent" class="viewmenu" style="width: 180px;">
+							<option id="all">All Responses</option>
+							<option id="today">Responses posted Today</option>
+						</select>
+						</td>
+						<td style="padding: 0 5px 0 15px;">Group by:</td>
+						<td>
+						<select id = "group_by_select" name="groupBy" class="viewmenu">
+						  <!-- this is 'note title' since there is only one target material in this context-->
+							<option id="date_posted_asc">Date Posted (Old first)</option>
+							<option id="date_posted_desc">Date Posted (New first)</option>
+							<option id="author_asc">Author (A - Z)</option>
+							<option id="author_desc">Author (Z - A)</option>
+						</select>
+						</td>
+					</tr>
+				</table>
+			</div><!-- id=dropdownmenu -->
+	
+	
+			<div id="discussion_entries_div">
+				<span id="discussion_entries"></span>
+			</div>
+			
+			
+			<!-- Start group -->
+			<div id="fake_group_div" class="discussion_grouping">
+				<h3><span class="fake_group_title"><!-- Group title goes here --></span></h3>
+				
+				<!--start entries -->
+				<div class="fake_entry_div">
+					<div class="note-details">
+						<div class="author_and_date">
+							<div style="float:right;">
+							<form action="discussionEntry.smvc" method="post">
+								<input type="hidden" value="xyz" name="commentId" class="commentId" />
+								<input type="hidden" value="xyz" name="participantId" class="participantId" />
+								<input type="hidden" value="xyz" name="assignmentId" class="assignmentId" />
+								<input type="hidden" value="xyz" name="assignmentResponseId" class="assignmentResponseId" />
+								<input type="hidden" value="deleteDiscussionEntry" name="action" />
+								<input type="image" width="18" height="18" src="images/delete_on.gif" class="delete_entry_class" />
+							</form>
+							</div>
+							<span class="fake_entry_name"><!-- Name goes here. --></span><span class = "on_span"> on </span><span class="fake_entry_date"><!-- Date goes here. --></span>
+						</div><!-- End author_and_date -->
+						<span class="fake_entry_text"><!-- The actual text of the discussion entry goes here. goes here. --></span>
+					</div>
+				</div><!-- End class="fake_entry_div" -->
+				<!--end entries -->
+			</div><!-- end group of discussion entries id="fake_group_div" -->				
+		
+		</div> <!-- End discuss_notes_boxarea -->
+
+	</div><!-- End right side of page, id=wrkspcside -->
+
+</div><!-- ******** End binderbox, that  ties the left and the right side of the workspace ******** -->
+
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+<div id="tapemeasure"></div>
+#parse("footer.vm")

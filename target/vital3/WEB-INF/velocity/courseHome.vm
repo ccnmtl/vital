@@ -1,0 +1,242 @@
+#set($section = "courseHome")
+#set($helptopic = "coursehome")
+#set($title = ${worksite.title})
+
+#parse("header.vm")
+
+<script src="scripts/expand_collapse.js" type="text/javascript" language="JavaScript"></script>
+<script type="text/javascript" language="JavaScript">
+function checkwrapper()  {
+	var num_assignwrapper = getElementsByTagAndClassName("DIV", "assignment-division").length;
+	for (var i = 0; i < num_assignwrapper; i++) {
+		var iscontent = getElementsByTagAndClassName("DIV", "assignment-division")[i].innerHTML;
+		iscontent =iscontent + 1;
+		if (iscontent == 1 ) {
+			getElementsByTagAndClassName("DIV", "assignment-division")[i].style.border= "1px solid #f00";
+			getElementsByTagAndClassName("DIV", "assignment-division")[i].style.display= "none";
+			getElementsByTagAndClassName("DIV", "assignment-division")[i].style.visibility= "hidden";
+		}
+	}
+}
+addLoadEvent(checkwrapper);
+</script>
+
+
+<div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
+
+	<h1>Course Home</h1>
+#if ($message)
+	<p class="message">$!{message}</p>
+#end
+
+#if ($admin)
+	<div class="pageaction">
+	<form method="get">
+		<div style="float: right;">
+        <input type="button" class="regButton" value="Edit Course Details" id="editWorksite" onclick="document.location.href='basicAdmin.smvc?action=display&entity=worksite&id=${worksite.id}'" />
+        <input type="button" class="regButton" value="Import From Another Course" onclick="document.location.href='import.smvc?worksiteId=${worksite.id}'" />
+		<input type="button" class="regButton" value="Add Topic" id="addTopic" onclick="document.location.href='basicAdmin.smvc?action=new&entity=unit&worksiteId=${worksite.id}'" />
+		</div>
+		
+	</form>
+	</div>
+#end
+
+
+	<div class="course-description"><!-- Container for course description -->
+		
+		<p>$!{worksite.announcement}</p>
+		
+	</div><!-- End Container for course description -->
+
+	<form method="get" style="margin-bottom: 5px;">
+		<input type="button" class="regButton" id="menustat" value="Expand all" onclick="document.location.href='javascript:expand_all();'" />
+	</form>
+
+	<div class="divider"></div>
+	
+#foreach ($unit in  $units)
+    #if ($unit.visibility != 0 || $admin)
+	<div class="vital-unit"> <!-- Begin a unit -->
+	
+		<div class="unit-dates">
+			<span class="hiddenStructure"><b>Topic dates:</b></span>
+            
+		    #set($startDate = $textFormatter.dateToDateOnlyString($unit.startDate))
+		    #set($endDate = $textFormatter.dateToDateOnlyString($unit.endDate))
+            #if ($startDate && $endDate)
+    		    ${startDate} &ndash; ${endDate}
+    		#end
+		</div>
+		<h2><a class="hs-control" title="Click to expand or collapse" href="#unit${unit.id}"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a>
+		<span class="expandtitle">Topic: $!{unit.title}</span></h2>
+	
+
+	
+		<div class="unit-details hs-init-hide" id="unit${unit.id}"> <!-- Begin unit details -->
+		
+        #if ($admin)
+		<div class="pageaction">
+		<form method="get">
+			<div style="float: right;">
+			<input type="button" class="regButton" value="Edit Topic" id="editUnit_$!{textFormatter.escapeForHTML($unit.title)}" onclick="document.location.href='basicAdmin.smvc?action=display&entity=unit&id=${unit.id}'" />
+			<input type="button" class="regButton" value="Add Assignment" id="addAssignment_$!{textFormatter.escapeForHTML($unit.title)}" onclick="document.location.href='basicAdmin.smvc?action=new&entity=assignment&unitId=${unit.id}'" />
+			<input type="button" class="regButton" value="Associated Videos" id="unitAssocs_$!{textFormatter.escapeForHTML($unit.title)}" onclick="document.location.href='listing.smvc?mode=umAssoc&id=${unit.id}'" />
+			</div>
+		</form>
+		</div>
+		#end
+
+			<div class="unit-description"> <!-- Begin unit description -->
+				<p>
+				<span class="hiddenStructure"><b>Topic Description:</b></span> $!{unit.description}
+				</p>
+			</div> <!-- End unit description -->
+
+			<div class="assignment-division">
+	#foreach ($assignment in $unit.assignments)
+		#if($admin || !($assignment.type == "gl" && $assignment.questions.size() == 0 ))
+			<div class="unit-assignment"><!-- Begin an assignment -->
+                
+                #set($status = $assignment.getStatus($participant))
+				<!-- <div class="assignment-view"><a href="#">View</a></div> -->
+				#if (!$admin && !$assignment.isDiscussion())
+	    			<div class="assignment-status"><b>STATUS:</b> <span>${status}</span></div>
+				#end 
+                #if ($assignment.dateDue)
+				<div class="assignment-dates"><b>DUE:</b> $textFormatter.dateToDateOnlyString($assignment.dateDue)</div>
+				#end
+                #if ($assignment.type == "gl" && $assignment.questions.size() == 0 )
+                <div class="assignment-dates"><b>NOTE:</b> This guided lesson has no questions yet, so it is not visible to students.</div>
+                #end                
+				<h3><!-- <a class="hs-control" title="Click to expand or collapse" href="#unit${unit.id}_assign${assignment.id}"><img src="images/shim.gif" alt="" width="16" height="16" border="0" /></a> -->
+				<span class="expandtitle">
+                
+                ${assignment.customTypeOrType}:
+                #*
+				#if ($assignment.type == "essay")
+					ESSAY:
+				#end
+				#if ($assignment.type == "gl")
+					GUIDED LESSON:
+				#end
+				*#
+
+				#if ($status == "Not Started")
+                    <a href="response.smvc?action=new&entity=assignmentResponse&assignmentId=${assignment.id}&type=${assignment.type}&participantId=${participant.id}">${assignment.title}</a>
+                #else
+                    #set($arId = $assignment.getParticipantResponse($participant).id) 
+					#if ( $assignment.type == "essay" ||  $assignment.type == "discussion"  )
+                        <a href="response.smvc?action=display&entity=assignmentResponse&id=${arId}&participantId=${participant.id}">${assignment.title}</a>
+                        
+					#else
+						<a href="reviewGuidedLesson.smvc?id=$arId">${assignment.title}</a>
+					#end
+				#end
+				
+                #if ($assignment.isDiscussion())
+                    (${discussionEntryCounts.get($assignment.id)} entries)<br />
+                #end
+				</span></h3>
+				
+				<div class="assignment-details" id="unit${unit.id}_assign${assignment.id}"> <!-- Begin assignment details -->
+	
+				#if ($admin)
+				<div class="pageaction">
+				<form method="get">
+					<div style="float: right;">
+					<input type="button" class="regButton" value="Edit Assignment" id="editAssignment_$!{textFormatter.escapeForHTML($assignment.title)}" onclick="document.location.href='basicAdmin.smvc?action=display&entity=assignment&id=${assignment.id}'" />
+					
+					#if (!$assignment.isDiscussion())
+					    #if ($assignment.getSubmittedResponseCount() > 0)
+						    <input type="button" class="regButton" value="View Responses ($!{assignment.SubmittedResponseCount} so far) " id="viewResponses_$!{textFormatter.escapeForHTML($assignment.title)}" onclick="document.location.href='reviewResponses.smvc?id=$assignment.id&sortOrder=lastName&ascending=true&viewBy=all'" />
+					    #end
+					#else
+                        <!-- Don't show the "View Responses" button for discussion assignments. -->
+                    #end
+					#if ($assignment.type ||  $assignment.type == "discussion" )
+					<input type="button" class="regButton" value="Associated Videos" id="assignmentAssocs_$!{textFormatter.escapeForHTML($assignment.title)}" onclick="document.location.href='listing.smvc?mode=amAssoc&id=${assignment.id}'" />
+					#end
+					</div>
+				</form>
+				</div>
+				#end ## if admin
+				
+                    #if($assignment.instructions)
+					<div class="assignment-description"> <!-- Begin assignment description -->					
+						<p>
+						<!-- <b>Instructions:</b> -->
+						<span class="hiddenStructure"><b>Assignment Instructions:</b></span>
+						#if ($assignment.type == "essay")
+							<b>Instructions:</b> <br />
+						#end
+						#if ($assignment.type == "gl")
+							<b>Introduction:</b> <br />
+						#end
+						
+						$!{assignment.instructions}
+						</p>
+					</div> <!-- End assignment description -->
+					#end ## inststructions
+					
+					#if ( ($assignment.type == "essay"||  $assignment.type == "discussion") && $assignment.NumberOfMaterials > 0)
+					<div class="assignment-materials"> <!-- Begin assignment materials -->
+						<b>Assignment Videos:</b>
+						<div class="materials_area"> <!-- Begin scrolling assignment materials list area -->
+							<ul type="disc"> <!-- Begin assignment materials list  -->
+								#foreach ($assignmentMaterial in $assignment.sortedMaterials)
+								<li>
+								<a class="thumbnail"
+								style="background-image:url(#if(${assignmentMaterial.thumbUrl}) '$!{assignmentMaterial.thumbUrl}' 
+                                                            #else 'images/thumbnail.gif'
+                                                            #end)"
+								href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&id=${assignmentMaterial.id}','1000','700','no','no','videoviewer')"></a>
+								<a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&id=${assignmentMaterial.id}','1000','700','no','no','videoviewer')">${assignmentMaterial.title}</a> 
+								</li>
+								#end
+							</ul> <!-- End assignment materials list  -->
+							<hr class="hiddenStructure" />
+						</div> <!-- End scrolling assignment materials list area -->
+					<br clear="all" />
+					</div> <!-- End assignment materials -->
+					#end ## assignment materials.
+				
+				</div> <!-- End assignment details -->
+				
+			</div><!-- End an assignment -->
+			#end ##if the guided lesson has more than zero questions
+		#end ##foreach assignment
+			</div>
+
+			#if ( $unit.NumberOfMaterials > 0)
+                <div class="unit-materials" style="margin-top: 20px;"> <!-- Begin unit materials -->
+                    <b>Supplemental Videos:</b>
+                    <div class="materials_area"> <!-- Begin scrolling unit materials list area -->
+                        <ul type="disc"> <!-- Begin unit materials list  -->
+                            #foreach ($material in $unit.sortedMaterials)
+                            <li>
+                            <a class="thumbnail"
+                            style="background-image:url(#if(${material.thumbUrl}) '$!{material.thumbUrl}' 
+                                                        #else 'images/thumbnail.gif'
+                                                        #end)"
+                            href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&id=${material.id}','1000','700','no','no','videoviewer')"></a>
+                            <a href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=new&id=${material.id}','1000','700','no','no','videoviewer')">${material.title}</a> 
+                            </li>
+                            #end
+                        </ul> <!-- End unit materials list  -->
+                        <hr class="hiddenStructure" />
+                    </div> <!-- End scrolling unit materials list area -->
+                <br clear="all" />
+                </div> <!-- End unit materials -->
+			#end
+
+		</div> <!-- End unit details -->
+
+	</div><div class="divider"></div><!-- End a unit -->
+    #end ## end if visibility
+#end
+
+
+</div><!-- End content area, class="documentContentMain" -->
+
+#parse("footer.vm")

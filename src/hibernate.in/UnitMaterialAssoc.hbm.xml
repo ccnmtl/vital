@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+    <class name="UnitMaterialAssoc" table="UNIT_MATERIAL_ASSOCS">
+        <meta attribute="class-description">
+		Assigns a material to a particular unit. Typically created by the faculty member to designate certain materials as relevant to an entire unit,
+        rather than any particular assignment in that unit.
+		@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="UNIT_MATERIAL_ASSOC_ID">
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one name="material" lazy="false" class="Material" column="MATERIAL_ID">
+            <meta attribute="field-description">The Material</meta>
+        </many-to-one>
+
+        <many-to-one name="unit" lazy="false" class="Unit" column="UNIT_ID">
+            <meta attribute="field-description">The Unit the material is part of.</meta>
+        </many-to-one>
+
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="AssignmentResponse" table="ASSIGNMENT_RESPONSES">
+        
+        <meta attribute="class-description">
+			A student's response to an assignment. For now, this will take the form either of an essay, the text of which is to be stored in the 'text' field, or a guided lesson (in which case there will be at least an answer for each question in the guided lesson assignment.
+			@author Eddie Rubeiz
+		</meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ASSIGNMENT_RESPONSE_ID">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="assignment" lazy="false" class="Assignment" >
+            <meta attribute="field-description">The Assignment this is in response to.</meta>
+			<column name="ASSIGNMENT_ID" unique-key="ONE_RESPONSE_PER_ASSIGNMENT_PER_PARTICIPANT" ></column>
+        </many-to-one>
+
+		<many-to-one name="participant" lazy="false" class="VitalParticipant" >
+            <meta attribute="field-description">The participant who made the response.</meta>
+			<column name="PARTICIPANT_ID" unique-key="ONE_RESPONSE_PER_ASSIGNMENT_PER_PARTICIPANT" ></column>
+        </many-to-one>
+
+        <property name="dateSubmitted" type="timestamp" column="DATE_SUBMITTED">
+            <meta attribute="field-description">When this response was submitted.</meta>
+		</property>
+        
+        <property name="status" type="integer" column="STATUS">
+            <meta attribute="field-description">Whether the response has been submitted.</meta>
+		</property>
+
+		<property name="text0" type="text">
+            <meta attribute="field-description">Text, part 0.</meta>
+		</property>   
+        
+        <property name="text1" type="text">
+            <meta attribute="field-description">Text, part 1.</meta>
+		</property>              
+        
+        <property name="text2" type="text">
+            <meta attribute="field-description">Text, part 2.</meta>
+		</property>              
+        
+        <property name="text3" type="text">
+            <meta attribute="field-description">Text, part 3.</meta>
+		</property>              
+        
+        <property name="text4" type="text">
+            <meta attribute="field-description">Text, part 4.</meta>
+		</property>              
+        
+        <property name="text5" type="text">
+            <meta attribute="field-description">Text, part 5.</meta>
+		</property>              
+        
+        <property name="text6" type="text">
+            <meta attribute="field-description">Text, part 6.</meta>
+		</property>              
+        
+        <property name="text7" type="text">
+            <meta attribute="field-description">Text, part 7.</meta>
+		</property>              
+        
+        <property name="text8" type="text">
+            <meta attribute="field-description">Text, part 8.</meta>
+		</property>              
+        
+        <property name="text9" type="text">
+            <meta attribute="field-description">Text, part 9.</meta>
+		</property>
+		
+        <property name="text10" type="text">
+            <meta attribute="field-description">Text, part 10.</meta>
+		</property>    
+		
+        <property name="text11" type="text">
+            <meta attribute="field-description">Text, part 11.</meta>
+		</property>    
+		
+        <property name="text12" type="text">
+            <meta attribute="field-description">Text, part 12.</meta>
+		</property>    
+		
+        <property name="text13" type="text">
+            <meta attribute="field-description">Text, part 13.</meta>
+		</property>    
+		
+        <property name="text14" type="text">
+            <meta attribute="field-description">Text, part 14.</meta>
+		</property>    
+		
+        <property name="text15" type="text">
+            <meta attribute="field-description">Text, part 15.</meta>
+		</property>    
+		
+		
+
+		<set name="answers" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">If this is the response to a guided lesson, the set of answers.</meta>
+            <key column="ASSIGNMENT_RESPONSE_ID"/>
+			<one-to-many class="Answer"/>
+		</set>
+
+		<set name="comments" lazy="true" inverse="true" cascade="delete">
+            <meta attribute="field-description">Any comments other participants may have submitted in relation to this essay response.</meta>
+            <key column="ASSIGNMENT_RESPONSE_ID"/>
+			<one-to-many class="Comment"/>
+		</set>
+
+    </class>
+
+</hibernate-mapping>

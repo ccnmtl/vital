@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <!-- Define the notesMini views (because we need to override the default content-type)  -->
+    <!-- The "url" property has to be as the velocity view resolver expects it... -->
+    <bean name="notesMini_myNotes" class="org.springframework.web.servlet.view.velocity.VelocityView">
+        <property name="url" value="/notesMini_myNotes.vm" />
+        <property name="encoding" value="UTF-8" />
+        <property name="contentType" value="text/xml" />
+    </bean>
+    <bean name="notesMini_essay" class="org.springframework.web.servlet.view.velocity.VelocityView">
+        <property name="url" value="/notesMini_essay.vm" />
+        <property name="encoding" value="UTF-8" />
+        <property name="contentType" value="text/xml" />
+    </bean>
+    <bean name="notesMini_assetPopup" class="org.springframework.web.servlet.view.velocity.VelocityView">
+        <property name="url" value="/notesMini_assetPopup.vm" />
+        <property name="encoding" value="UTF-8" />
+        <property name="contentType" value="text/xml" />
+    </bean>
+    
+</beans>

@@ -1,0 +1,55 @@
+/* ----- tacky_portlet.css ----- */
+#tagChooser > td
+{
+	padding: 2px;
+	margin: 0px;
+	border: 1px solid #999;
+}
+
+
+#tagItemManager {border: 1px;border-collapse: collapse;}
+
+#tagChooser {font-size: 9px;position:absolute;left:0px;top:0px;background: #e8e8e8}
+
+#tagItemManager div {font-size: 9px;padding: 0px}
+#tagItemManager div.openTagChooser:hover {background: #BBDEFF;}
+
+#tagItemManager div.tagItem {border: 1px;}
+
+.tagListForItem {}
+
+#tagTypeInNew {font-size:9px;}
+.tagToChooseName {font-size:9px;}
+.tagToChoose {border:black solid thin;
+	padding-right:3px;
+	padding-left:3px;
+	padding-top:2px;
+	padding-bottom: 0px;
+	}
+#tagChooser .delTag {background:#BBDEFF;}
+
+#tagTypeInNew:before {content: "+ "}
+#tagChooser {width:100px;}
+#tagChooser .addTag:hover {background: #BBFFDE;}
+#tagChooser .delTag:hover {background: #FFBBDE;text-decoration:line-through}
+
+a.listofscripts
+{
+	margin: 0 5px 0 0;
+	padding: 2px;
+	border: 1px solid #996;
+	font: bold 11px/2em arial, verdana, lucida, helvetica, sans-serif;
+	color: #663;
+	text-align: center;
+	text-decoration: none;
+}
+
+.unlinkTag {font-size:65%;text-decoration:none;}
+
+a.listofscripts:hover
+{
+	background: #F0EEDC;
+	color: #060;
+}
+
+

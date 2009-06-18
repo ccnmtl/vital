@@ -1,0 +1,216 @@
+.tags_box
+{
+	position: absolute;
+	top: 390px;
+	left: 40px;
+	width: 420px;
+	height: 290px;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid #999;
+	border-right: 2px solid #999;
+	border-bottom: 2px solid #999;
+	border-left: 1px solid #999;
+	background-color: #fff;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+	z-index: 1000;
+	display: none;
+	visibility: hidden;
+}
+
+.tags_box h2
+{
+	margin: 0;
+	padding: 5px 0 5px 5px;
+	border: 0;
+	background-color: #016799;
+	font: bold 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+	color: #fff;
+}
+
+.tags_box .close_x
+{
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	text-align: center;
+}
+
+.tags_box .close_x a
+{
+	display: block;
+	width: 80px;
+	color: #000;
+	text-decoration: none;
+	margin: 0 0 0 140px;
+	padding: 2px 4px;
+	background-color: #e0e0e0;
+	border-top: 2px solid #fff;
+	border-left: 2px solid #fff;
+	border-right: 2px solid #666;
+	border-bottom: 2px solid #666;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+	cursor: pointer;
+}
+
+.tags_box .close_x a:active
+{
+	background-color: #ccc;
+	border-top: 2px solid #666;
+	border-left: 2px solid #666;
+	border-right: 2px solid #fff;
+	border-bottom: 2px solid #fff;
+}
+
+.tags_box_content
+{
+	margin: 0;
+	padding: 10px 5px 5px 5px;
+	border: 0;
+	height: 250px;
+	overflow: auto;
+}
+
+.tags_box_content h3
+{
+	margin: 0 0 10px 0;
+	padding: 0;
+	border: 0;
+	font: bold italic 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+	color: #000;
+}
+
+.tags_box_content h3 a.hstag-control
+{
+	color: #369 !important;
+}
+
+div.tags_box_divider
+{
+	display: block;
+	height: 2px;
+	margin: 10px 0 5px 0;
+	padding: 0;
+	border: 0;
+	border-top: 1px dotted #999;
+}
+
+.taglistarea
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.taglistarea table
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.taglistarea table td
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+select.existingTagsList,
+select.assignedTagsList
+{
+	width: 130px;
+	height: 110px;
+	margin: 0;
+	padding: 1px;
+	border: 1px solid #999;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+}
+
+.assign_the_tag,
+.remove_the_tag
+{
+	width: 80px;
+	margin: 10px 10px 0 15px !important;
+	padding: 1px;
+	border: 1px solid #369;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+	cursor: pointer;
+}
+
+
+div.to_add_icon a
+{
+	width: 14px;
+	height: 14px;
+	display: block;
+	padding: 0;
+	border: 0;
+	text-decoration: none;
+	text-align: center;
+	background: url('images/tag_add_off.gif') no-repeat center center;
+}
+
+div.to_add_icon a:hover
+{
+	text-decoration: none;
+	background: url('images/tag_add_over.gif') no-repeat center center;
+}
+
+div.to_remove_icon a
+{
+	width: 14px;
+	height: 14px;
+	display: block;
+	padding: 0;
+	border: 0;
+	text-decoration: none;
+	text-align: center;
+	background: url('images/tag_delete_off.gif') no-repeat center center;
+}
+
+div.to_remove_icon a:hover
+{
+	text-decoration: none;
+	background: url('images/tag_delete_over.gif') no-repeat center center;
+}
+
+input.newtagsfield
+{
+	width: 250px;
+	margin: 0 0 0 0;
+	padding: 2px;
+	border: 0;
+	border: 1px solid #999;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+}
+
+#whataretags
+{
+	display: none;
+	visibility: hidden;
+	margin: 0;
+	padding: 2px 2px 5px 2px;
+	border: 0;
+	background-color: #efefef;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+	z-index: 5000;
+}
+
+#whataretags p
+{
+	margin: 0;
+	padding: 10px 0 0 0;
+	border: 0;
+	font: normal 11px Arial, Helvetica, Verdana, "Lucida Grande", Lucida, sans-serif;
+}
+
+
+
+.hstag-control-show { background: #fff; color:#369; text-decoration:none;}
+.hstag-control-hide { background: #fff; color:#369; text-decoration:none;}
+.hstag-show { display: block; }
+.hstag-hide { display: none; }
+
+

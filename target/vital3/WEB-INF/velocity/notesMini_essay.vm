@@ -70,7 +70,7 @@
                             
                             <td class="nc_add"><!-- column a, add graphics -->
                                #if(!$preview || $preview != "true")
-                              <div class="citationTemplate"><img class="materialCitation" alt="" src="images/icon_clipping.gif" width="24" height="15" border="0" onclick="addMaterialCitation(event)" title="$!{textFormatter.escapeForHTML($note.title)} $!{note.clipBegin}-$!{note.clipEnd}" name="videoViewer.smvc?id=${note.material.id}&amp;mode=viewonly&amp;annotationId=${note.id}" /></div>
+                              <div class="citationTemplate"><img class="materialCitation" alt="" src="images/icon_clipping.gif" width="28" height="15" border="0" onclick="addMaterialCitation(event)" title="$!{textFormatter.escapeForHTML($note.title)} $!{note.clipBegin}-$!{note.clipEnd}" name="videoViewer.smvc?id=${note.material.id}&amp;mode=viewonly&amp;annotationId=${note.id}" /></div>
                                #end
                             </td>
                         </tr>

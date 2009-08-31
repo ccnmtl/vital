@@ -192,7 +192,12 @@ case "$TARGET" in
 
 esac
 
-
+if [ $USE_PROD_DATA = 1 ]; then
+    DBCP_MAXACTIVE=17
+    DBCP_MAXIDLE=9
+    ORACLE_DB_USERNAME=ccnmtl_vital3_prod
+    TASTY_SERVICENAME=vital3_prod
+fi
 
 #NOTE: for Oracle, 
 #ORACLE_DB_USERNAME depends on whether $USE_PROD_DATA  is 1 or 0
@@ -203,7 +208,7 @@ case "$DATABASE_TYPE" in
         DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
         DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
         DATABASE_USERNAME=${ORACLE_DB_USERNAME}
-        DATABASE_PASSWORD='oracle_database_password'
+	DATABASE_PASSWORD='oracle_database_password'
 	;;
 
     "postgres"  )
@@ -243,12 +248,7 @@ if [ $IS_CUIT = 1 ]; then
 #  else - # non-cuit config (kang, or local dev machines)
 fi
 
-if [ $USE_PROD_DATA = 1 ]; then
-    DBCP_MAXACTIVE=17
-    DBCP_MAXIDLE=9
-    ORACLE_DB_USERNAME=ccnmtl_vital3_prod
-    TASTY_SERVICENAME=vital3_prod
-fi
+
 
 # the JGROUPS var contains a single-line-comment delimeter by default,
 # and changes to an empty space if USE_JGROUPS is true

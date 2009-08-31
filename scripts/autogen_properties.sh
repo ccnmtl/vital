@@ -105,22 +105,9 @@ case "$TARGET" in
 	USE_JGROUPS=0
 	;;
 
-    #the old prod push. This should be deleted by, say, March 2009 as it is
-    #now obsolete. prod5 can be renamed prod, and the rollo settings
-    #updating in the same way.
+
+
     "prod" )
-	IS_CUIT=1;
-	USE_PROD_DATA=1
-	CONTEXT_NAME="ccnmtl\/app\/vital3"
-        BASE_URL="http:\/\/wwwapp.cc.columbia.edu"
-	# this path is local to each machine on the cluster
-	# not on the shared nsf drive
-	PATH_TO_LOG_DIR="\/var\/log\/tcat\/ccnmtl\/vital3"
-	JGROUPS_INITIAL_HOSTS="lingonberry.cc.columbia.edu[7800],huckleberry.cc.columbia.edu[7800]"
-	;;
-
-
-    "prod5" )
         IS_CUIT=1;
         USE_PROD_DATA=1
 	CONTEXT_NAME="ccnmtl\/vital3"

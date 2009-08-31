@@ -680,22 +680,22 @@ public class ColumbiaUCM extends UserCourseManager {
     
     
     public String currentTermName () {
-        return "Spring 2009";
+        return "Fall 2009";
     }
     
     public Set currentAcademicYearTermNames() {
         Set result = new HashSet();
-        result.add ("Fall 2008");
-        result.add ("Spring 2009");
-        result.add ("Summer 2009");
+        result.add ("Fall 2009");
+        result.add ("Spring 2010");
+        result.add ("Summer 2010");
         return result;
     }
 
     public Set currentCalendarYearTermNames() {
         Set result = new HashSet();
-        result.add ("Spring 2008");
-        result.add ("Summer 2008");
-        result.add ("Fall 2008");
+        result.add ("Spring 2009");
+        result.add ("Summer 2009");
+        result.add ("Fall 2009");
         return result;
     }
     
@@ -706,6 +706,7 @@ public class ColumbiaUCM extends UserCourseManager {
 2009');
     insert into ucm_terms (ucm_term_id, start_date, end_date, name  )values (14215, '11-MAY-09', '30-AUG-09', 'Summe\
 r 2009');
+   COMMIT;
     */
 
     //List of Vital worksites associated with a term:

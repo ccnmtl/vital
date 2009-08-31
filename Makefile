@@ -39,9 +39,6 @@ mark:
 prod:
 	scripts/autogen_properties.sh $@
 
-prod5:
-	scripts/autogen_properties.sh $@
-
 sky:
 	scripts/autogen_properties.sh $@
 

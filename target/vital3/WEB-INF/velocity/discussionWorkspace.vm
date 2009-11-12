@@ -8,6 +8,7 @@
 	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
     <script type="text/javascript" language="javascript" src="scripts/discussion.js"></script>
 	<script type="text/javascript" language="javascript" src="scripts/assigntab.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/notetaking.js"></script>
 	<script type="text/javascript" language="javascript">
 		addLoadEvent(inittabs);
 	</script>

@@ -55,14 +55,17 @@
                                     
                                     <b>Timecode: </b>
                                     <span>$!{note.clipBegin}-$!{note.clipEnd}</span>
+                                   
                                 </p>
                                 
                               </div>
                             </td>
                             
                             <td class="nc_content"><!-- column 2, clip note content -->
-                                <div>#if ($note.text) ${note.text} 
-								#else
+                                <div class="escaped_titles">
+                                #if ($note.text)
+                                    ${textFormatter.doubleEscapeForXML($note.text)}
+                                #else
 								&#160;									
 								#end
 								</div>
@@ -82,11 +85,14 @@
 
      </div>  
   #end
+  
+  
 
   <!-- ****** End a parent group of notes/clips ****** -->     
   ##end foreach group in groupList
 
 </div><!-- End Div that binds all the notes: parents and children together (mothership) -->
+
 
 #if($action == "noteQuery")
 </body>

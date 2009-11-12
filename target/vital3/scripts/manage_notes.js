@@ -88,7 +88,13 @@ function replaceNoteList(xmlhttp) {
 	    logDebug(resXML.parseError.line);
 	}
     }
+    
+    escaped_titles = getElementsByTagAndClassName('div', 'escaped_titles');
+    forEach (escaped_titles,  function (a) { 
+        a.innerHTML = unescape_from_xml(unescape_from_xml(a.innerHTML));
+    });
 }
+
 
 function failedNoteUpdate(err) {
     logDebug('FAILED NOTE UPDATE:');

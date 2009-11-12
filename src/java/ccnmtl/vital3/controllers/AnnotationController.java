@@ -406,20 +406,23 @@ public class AnnotationController extends Vital3CommandController {
                 // sort annotations by material title:
                 Collections.sort(annotations, noteMaterialComp);
                 
+                //Long idMin = new Long(170162);
+                //Long idMax = new Long(170270);
+                
+                
+                
                 Material currentMaterial = null;
                 // iterate through annotations:
                 Iterator annoIter = annotations.iterator();
                 while (annoIter.hasNext()) {
                     
                     Annotation note = (Annotation) annoIter.next();
-                    logger.debug ("----");
                     logger.debug (note);
-                    logger.debug (note.getDateModified());
                     
                     // see if this note's material is equal to the "current" material
                     Material noteMaterial = note.getMaterial();
                     if (!noteMaterial.equals(currentMaterial)) {
-                        logger.debug("AnnotationController: creating new group");
+                        //logger.debug("AnnotationController: creating new group");
                         // if this is not our current material, we're done with the current group (remember annotations are grouped by material title)
                         // we need to create a new groupMap, add it to the groupList, and update our references,
                         notes = new TreeSet();
@@ -429,7 +432,13 @@ public class AnnotationController extends Vital3CommandController {
                         groupList.add(groupMap);
                     }
                     // put this annotation into the groupMap.notes set:
-                    notes.add(note);
+                    //if (note.getId().compareTo(the_id_min) > 0  && note.getId().compareTo(idMax) < 0) {
+                    if (1 == 1) {
+                        notes.add(note);
+                    }
+                    else {
+                        logger.debug ("rejected");
+                    }
                 }
                 
             } else if (groupBy.equals("modificationDate")) {

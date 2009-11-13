@@ -14,18 +14,15 @@ fi
 set -x
 
 TARGET=$1
-
 CONF_DIR=src/conf
 ANT_DIR=codegen/ant
 KODOS_SANDBOXES='\/usr\/local\/share\/sandboxes'
-
 
 #defaults to using the internal tasty jar (jtasty.jar)
 TASTY_URL=''
 
 #to use an external tagging server:
 #TASTY_URL='http://tasty.ccnmtl.columbia.edu'
-
 
 #defaults to using an Oracle client
 DATABASE_TYPE='oracle'
@@ -203,8 +200,7 @@ esac
 # turn on debugging
 set -x 
 
-### spring.properties
-echo "autogenerating spring.properties..."
+echo "Generating spring.properties..."
 perl -p -e \
     "s#<APP_BASE_URL>#${BASE_URL}/${CONTEXT_NAME}/#g;
      s#<TASTY_SERVICENAME>#${TASTY_SERVICENAME}#g;
@@ -222,11 +218,8 @@ perl -p -e \
      " \
      ${CONF_DIR}/spring.properties.in >  ${CONF_DIR}/spring.properties
 
-
-#### "autogenerating log4j.properties
-echo "autogenerating log4j.properties...."
+echo "Generating log4j.properties...."
 echo "Log is going to ${CONF_DIR}"
-
 perl -p -e \
     "s#<PATH_TO_LOG_DIR>#${PATH_TO_LOG_DIR}#g;
      s#<LOG_LEVEL_ROOT>#${LOG_LEVEL_ROOT}#g;
@@ -239,13 +232,12 @@ perl -p -e \
      " \
      ${CONF_DIR}/log4j.properties.in >  ${CONF_DIR}/log4j.properties
 
-
 cp ${CONF_DIR}/log4j.properties target/vital3/WEB-INF/classes/
 cp ${CONF_DIR}/log4j.properties target/classes/
 
  
 #### build.properties (we only use this on dev for reloading tomcat)
-echo "autogenerating build.properties..."
+echo "Generating build.properties..."
 perl -p -e \
     "s#<TOMCAT_HOME>#${TOMCAT_HOME}#g;
      s#<CONTEXT_NAME>#/${TARGET}/vital3#g;
@@ -255,7 +247,7 @@ perl -p -e \
 
 
 #### oscache.properties
-echo "autogenerating oscache.properties..."
+echo "Generating oscache.properties..."
 perl -p -e \
      "s%<JGROUPS>%${JGROUPS}%g;
       s%<JGROUPS_INITIAL_HOSTS>%${JGROUPS_INITIAL_HOSTS}%g;
@@ -263,7 +255,7 @@ perl -p -e \
      ${CONF_DIR}/oscache.properties.in >  ${CONF_DIR}/oscache.properties
 
 #### hibernate files
-echo "autogenerating hibernate mapping files..."
+echo "Generating hibernate mapping files..."
 if [ ! -e src/hibernate ]; then
     mkdir src/hibernate
 fi
@@ -280,7 +272,7 @@ done
 
 #### jtasty hibernate files
 if [ ! -e src/hibernate/jtasty ]; then
-    echo "autogenerating hibernate mapping files (Jtasty) ..."
+    echo "Generating hibernate mapping files (Jtasty) ..."
     mkdir src/hibernate/jtasty
 fi
 for x in `ls -1 src/hibernate.in/jtasty`; do \
@@ -294,7 +286,7 @@ for x in `ls -1 src/hibernate.in/jtasty`; do \
 done
 
 #### hibernate.properties
-echo "autogenerating hibernate.properties..."
+echo "Generating hibernate.properties..."
 perl -p -e \
     "s#<DATABASE_HIBERNATE_DIALECT>#${DATABASE_HIBERNATE_DIALECT}#g;
      s#<DATABASE_DRIVER_CLASS_NAME>#${DATABASE_DRIVER_CLASS_NAME}#g;

@@ -17,13 +17,14 @@ TARGET=$1
 
 CONF_DIR=src/conf
 ANT_DIR=codegen/ant
-KANG_SANDBOXES='\/usr\/local\/share\/sandboxes'
+KODOS_SANDBOXES='\/usr\/local\/share\/sandboxes'
 
-#defaults to using a tasty server:
-#TASTY_URL='http://tasty.ccnmtl.columbia.edu'
 
 #defaults to using the internal tasty jar (jtasty.jar)
 TASTY_URL=''
+
+#to use an external tagging server:
+#TASTY_URL='http://tasty.ccnmtl.columbia.edu'
 
 
 #defaults to using an Oracle client
@@ -32,11 +33,11 @@ DATABASE_TYPE='oracle'
 #DATABASE_TYPE='postgres'
 #DATABASE_TYPE='mysql'
 
-# default base_url is for kang 4080 tomcat
-BASE_URL='http:\/\/kang.ccnmtl.columbia.edu:4080'
+# default base_url:
+BASE_URL='http:\/\/localhost:8080'
 
 #default tomcat_home is for kang 4080 tomcat
-TOMCAT_HOME='\/opt\/tomcat4'
+TOMCAT_HOME='\/usr\/local\/tomcat'
 
 # default tasty_service is for all dev servers...
 TASTY_SERVICENAME=vital3_dev
@@ -74,24 +75,17 @@ LOG_LEVEL_JGROUPS="DEBUG"
 CONTEXT_NAME="${TARGET}\/vital3"
 
 # default path to the PARENT DIRECTORY of the log directory:
-PATH_TO_LOG_DIR="${KANG_SANDBOXES}\/${TARGET}\/vital3"
+PATH_TO_LOG_DIR="${KODOS_SANDBOXES}\/${TARGET}\/vital3"
 
 # default "initial hosts" attribute for jgroups on development:
 # NO SPACES, COMMA-SEPARATED
-JGROUPS_INITIAL_HOSTS="kang.ccnmtl.columbia.edu[7800]"
-
-
-
-
-
+JGROUPS_INITIAL_HOSTS="kodos.ccnmtl.columbia.edu[7800]"
 
 case "$TARGET" in 
     "dev" )     
-
 	IS_CUIT=1; 
 	USE_PROD_DATA=1
-	CONTEXT_NAME="ccnmtl\/app\/vital3"
-	BASE_URL="http:\/\/wwwappdev.cc.columbia.edu"
+	BASE_URL='http:\/\/wwwappdev.cc.columbia.edu'
 	PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwappdev\/ccnmtl\/projects\/vital3"
 	USE_JGROUPS=0
 	;;
@@ -99,139 +93,50 @@ case "$TARGET" in
     "test" )
 	IS_CUIT=1; 
 	USE_PROD_DATA=1
-	CONTEXT_NAME="ccnmtl\/app\/vital3"
 	BASE_URL='http:\/\/wwwapptest.cc.columbia.edu'
 	PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwapptest\/ccnmtl\/projects\/vital3"
 	USE_JGROUPS=0
 	;;
 
-
-
     "prod" )
-        IS_CUIT=1;
-        USE_PROD_DATA=1
-	CONTEXT_NAME="ccnmtl\/vital3"
-	BASE_URL="http:\/\/vital.ccnmtl.columbia.edu"
-# this path is local to each machine on the cluster                     
-        # not on the shared nsf drive                                           
-        PATH_TO_LOG_DIR="\/var\/log\/tcat\/ccnmtl5"
+	IS_CUIT=1;
+	USE_PROD_DATA=1
+	BASE_URL='http:\/\/vital.ccnmtl.columbia.edu'
+	PATH_TO_LOG_DIR="\/var\/log\/tcat\/ccnmtl\/vital3"
 	JGROUPS_INITIAL_HOSTS="lingonberry.cc.columbia.edu[7800],huckleberry.cc.columbia.edu[7800]"
-        ;;
+	;;
 
-    "dev5" )
-        IS_CUIT=1;
-        USE_PROD_DATA=1
-        BASE_URL="http:\/\/wwwappdev.cc.columbia.edu\/ccnmtl\/vital3"
-	CONTEXT_NAME="ccnmtl\/vital3"
-# this path is local to each machine on the cluster                     
-        # not on the shared nsf drive                                           
-        PATH_TO_LOG_DIR="\/var\/log\/tcat\/ccnmtl5"
-	JGROUPS_INITIAL_HOSTS="lingonberry.cc.columbia.edu[7800],huckleberry.cc.columbia.edu[7800]"
-        ;;
-
-
+    #test setup on Mac OS:
     "platypus" )
-	IS_CUIT=0;
+	IS_CUIT=0
 	USE_PROD_DATA=0
 	BASE_URL='http:\/\/platypus.ccnmtl.columbia.edu:9006'
-	# this path is local to each machine on the cluster
-	# not on the shared nsf drive
 	PATH_TO_LOG_DIR="\/Library\/Webserver\/Documents\/vital\/vital3"
+	CONTEXT_NAME="/vital3"
 	USE_JGROUPS=0
 	TOMCAT_HOME='\/Library\/Tomcat/'
 	CONTEXT_NAME="vital3"
 	;;
 
-    "vitalrelease" )
+    #Eddie's development environment
+    "tiur_dev"  )
 	IS_CUIT=0;
-	USE_PROD_DATA=0
-	BASE_URL='http:\/\/128.59.157.252:8080'
-	# this path is local to each machine on the cluster
-	# not on the shared nsf drive
-        #/home/eddie/vital3
-	PATH_TO_LOG_DIR="\/home\/eddie\/vital3"
-	USE_JGROUPS=0
-	TOMCAT_HOME='\/usr\/local/tomcat'
-	CONTEXT_NAME="vital3"
-	DATABASE_TYPE="postgres"
-	;;
-
-
-
-    "emattes" )
-	BASE_URL='http:\/\/kang.ccnmtl.columbia.edu:4090'
-	TOMCAT_HOME='\/opt\/tomcat4_volatile'
-	DATABASE_TYPE='mysql'
-	;;
-
-
-    "eddie"  )
-	BASE_URL='http:\/\/kodos.ccnmtl.columbia.edu:4080'
-	TOMCAT_HOME='\/usr\/local\/tomcat\/'
-	DATABASE_TYPE='oracle'
 	USE_PROD_DATA=1
-	PATH_TO_LOG_DIR="\/usr\/local\/share\/sandboxes\/eddie\/vital3"
-	;;
-
-    "ejucovy"  )
-	BASE_URL='http:\/\/kodos.ccnmtl.columbia.edu:4080'
-	TOMCAT_HOME='\/usr\/local\/tomcat\/'
+	BASE_URL='http:\/\/tiur.ccnmtl.columbia.edu:8080'
+	TOMCAT_HOME='\/usr\/local\/tomcat\/webapps\/'
 	DATABASE_TYPE='oracle'
-	USE_PROD_DATA=0
-	PATH_TO_LOG_DIR="\/usr\/local\/share\/sandboxes\/ejucovy\/vital3"
-	;;
-
-
-    "mark"  )
-	PATH_TO_LOG_DIR="\/usr\/local\/share\/sandboxes\/jl797\/vital3"
+	PATH_TO_LOG_DIR="\/usr\/local\/tomcat\/webapps\/vd"
+	CONTEXT_NAME="/vd"
 	;;
 
     "common"  )
 	PATH_TO_LOG_DIR="\/usr\/local\/share\/sandboxes\/common\/tomcat4_4080\/vital3"
 	;;
-
 esac
-
-if [ $USE_PROD_DATA = 1 ]; then
-    DBCP_MAXACTIVE=17
-    DBCP_MAXIDLE=9
-    ORACLE_DB_USERNAME=ccnmtl_vital3_prod
-    TASTY_SERVICENAME=vital3_prod
-fi
-
-#NOTE: for Oracle, 
-#ORACLE_DB_USERNAME depends on whether $USE_PROD_DATA  is 1 or 0
-
-case "$DATABASE_TYPE" in 
-    "oracle" )     
-        DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.Oracle9Dialect'
-        DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
-        DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
-        DATABASE_USERNAME=${ORACLE_DB_USERNAME}
-	DATABASE_PASSWORD='oracle_database_password'
-	;;
-
-    "postgres"  )
-        DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.PostgreSQLDialect'
-        DATABASE_DRIVER_CLASS_NAME='org.postgresql.Driver'
-        DATABASE_URL='jdbc:postgresql://localhost/vital_db'
-        DATABASE_USERNAME='vital_db_user'
-        DATABASE_PASSWORD='vital_db_password'
-	;;
-
-    "mysql"  )
-        DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.MySQLInnoDBDialect'
-        DATABASE_DRIVER_CLASS_NAME='com.mysql.jdbc.Driver'
-        DATABASE_URL='jdbc:mysql://localhost/vital3?createDatabaseIfNotExist=false&amp;useUnicode=true&amp;characterEncoding=utf-8'
-        DATABASE_USERNAME='mysql_database_username'
-        DATABASE_PASSWORD='mysql_database_password'
-	;;
-esac
-
-
 
 
 if [ $IS_CUIT = 1 ]; then
+    CONTEXT_NAME="ccnmtl\/app\/vital3"
     LOG_LEVEL_ROOT="WARN"
     LOG_LEVEL_VITAL="WARN"
     LOG_LEVEL_SPRING="WARN"
@@ -242,13 +147,17 @@ if [ $IS_CUIT = 1 ]; then
     #LOG_LEVEL_HIBERNATE="DEBUG"
     #LOG_LEVEL_CACHE="DEBUG"
     #LOG_LEVEL_JGROUPS="DEBUG"
-    
     USE_CACHE=1
     
-#  else - # non-cuit config (kang, or local dev machines)
+#  else - # non-cuit config (kodos, or local dev machines)
 fi
 
-
+if [ $USE_PROD_DATA = 1 ]; then
+    DBCP_MAXACTIVE=17
+    DBCP_MAXIDLE=9
+    ORACLE_DB_USERNAME=ccnmtl_vital3_prod
+    TASTY_SERVICENAME=vital3_prod
+fi
 
 # the JGROUPS var contains a single-line-comment delimeter by default,
 # and changes to an empty space if USE_JGROUPS is true
@@ -262,6 +171,33 @@ if [ $USE_JGROUPS = 1 ]; then
     JGROUPS=
 fi
 
+#NOTE: for Oracle, 
+#ORACLE_DB_USERNAME depends on whether $USE_PROD_DATA  is 1 or 0
+case "$DATABASE_TYPE" in 
+    "oracle" )     
+        DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.Oracle9Dialect'
+        DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
+        DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
+        DATABASE_USERNAME=${ORACLE_DB_USERNAME}
+        DATABASE_PASSWORD='sf3tsD4BOM'
+	;;
+
+    "postgres"  )
+        DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.PostgreSQLDialect'
+        DATABASE_DRIVER_CLASS_NAME='org.postgresql.Driver'
+        DATABASE_URL='jdbc:postgresql://localhost/vital3'
+        DATABASE_USERNAME='postgres_username'
+        DATABASE_PASSWORD='postgres_passwd'
+	;;
+
+    "mysql"  )
+        DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.MySQLInnoDBDialect'
+        DATABASE_DRIVER_CLASS_NAME='com.mysql.jdbc.Driver'
+        DATABASE_URL='jdbc:mysql://localhost/vital3?createDatabaseIfNotExist=false&amp;useUnicode=true&amp;characterEncoding=utf-8'
+        DATABASE_USERNAME='msql_username'
+        DATABASE_PASSWORD='mysql_passwd'
+	;;
+esac
 
 
 # turn on debugging
@@ -288,7 +224,9 @@ perl -p -e \
 
 
 #### "autogenerating log4j.properties
-echo "autogenerating log4j.properties..."
+echo "autogenerating log4j.properties...."
+echo "Log is going to ${CONF_DIR}"
+
 perl -p -e \
     "s#<PATH_TO_LOG_DIR>#${PATH_TO_LOG_DIR}#g;
      s#<LOG_LEVEL_ROOT>#${LOG_LEVEL_ROOT}#g;
@@ -300,6 +238,10 @@ perl -p -e \
      s#<LOG_LEVEL_JGROUPS>#${LOG_LEVEL_JGROUPS}#g;
      " \
      ${CONF_DIR}/log4j.properties.in >  ${CONF_DIR}/log4j.properties
+
+
+cp ${CONF_DIR}/log4j.properties target/vital3/WEB-INF/classes/
+cp ${CONF_DIR}/log4j.properties target/classes/
 
  
 #### build.properties (we only use this on dev for reloading tomcat)
@@ -320,8 +262,6 @@ perl -p -e \
      " \
      ${CONF_DIR}/oscache.properties.in >  ${CONF_DIR}/oscache.properties
 
-pwd
-
 #### hibernate files
 echo "autogenerating hibernate mapping files..."
 if [ ! -e src/hibernate ]; then
@@ -338,6 +278,7 @@ for x in `ls -1 src/hibernate.in`; do \
     fi
 done
 
+#### jtasty hibernate files
 if [ ! -e src/hibernate/jtasty ]; then
     echo "autogenerating hibernate mapping files (Jtasty) ..."
     mkdir src/hibernate/jtasty
@@ -351,8 +292,6 @@ for x in `ls -1 src/hibernate.in/jtasty`; do \
 	    src/hibernate/jtasty/$x;
     fi
 done
-
-
 
 #### hibernate.properties
 echo "autogenerating hibernate.properties..."

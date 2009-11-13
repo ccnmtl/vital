@@ -15,6 +15,9 @@ bohagan:
 common: 
 	scripts/autogen_properties.sh $@
 
+tiur_dev:
+	scripts/autogen_properties.sh $@
+	
 dev:
 	scripts/autogen_properties.sh $@
 

@@ -11,6 +11,7 @@
 	<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
 	<script type="text/javascript" language="javascript" src="scripts/rounded_corners.js"></script>
 	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/xml_escape.js"></script>
 	<script type="text/javascript" language="javascript" src="scripts/assigntab.js"></script>
 
     #if ($commentsform && $commentsform == "true")

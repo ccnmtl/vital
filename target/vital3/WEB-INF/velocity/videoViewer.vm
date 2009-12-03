@@ -24,6 +24,7 @@
 <script type="text/javascript" language="javascript" src="scripts/hs.js"></script>
 <script type="text/javascript" language="javascript" src="scripts/ac_quicktime.js"></script>
 <script type="text/javascript" language="javascript" src="scripts/tagbox.js"></script><!-- script for the tagging box -->
+<script type="text/javascript" language="javascript" src="scripts/xml_escape.js"></script>
 <script type="text/javascript" language="javascript" src="scripts/notetaking.js"></script>
 
 

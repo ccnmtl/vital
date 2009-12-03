@@ -1,5 +1,5 @@
 function inittabs() {
-log('inittabs: hiding comments');
+//log('inittabs: hiding comments');
 document.getElementById('am').style.display = 'none';
 document.getElementById('am').style.visibility = 'hidden';
 //document.getElementById('um').style.display = 'none';
@@ -13,7 +13,7 @@ document.getElementById('fb').style.visibility = 'hidden';
 }
 
 function inittabs_notmine() {
-log('inittabs_notmine: hiding comments');
+//log('inittabs_notmine: hiding comments');
 document.getElementById('am').style.display = 'block';
 document.getElementById('am').style.visibility = 'visible';
 //document.getElementById('um').style.display = 'none';
@@ -27,7 +27,7 @@ document.getElementById('fb').style.visibility = 'hidden';
 }
 
 function inittabs_feedback() {
-log('inittabs_feedback: showing faculty feedback form.');
+//log('inittabs_feedback: showing faculty feedback form.');
 document.getElementById('am').style.display = 'none';
 document.getElementById('am').style.visibility = 'hidden';
 //document.getElementById('um').style.display = 'none';
@@ -47,7 +47,7 @@ function getURLID(a) {
 }
 
 function changetab(a) {
-    logDebug ("Change tab called with " + a.name);
+    //logDebug ("Change tab called with " + a.href);
 	var thistab = a.parentNode.parentNode.className;
 	temp = thistab.split(" ")[1];
 	if (temp == null) {
@@ -56,13 +56,13 @@ function changetab(a) {
 }
 
 function resettabs() {
-    log('Resettabs');
+    //log('Resettabs');
 	var assigntab = new Array();
 	var assigntabclass = new Array();
 	for (i=0; i<4; i++) {
 		if (i!=1) {
     		tabindex = "tab" + (i+1);
-            log('Tabindex: ' + tabindex);
+            //log('Tabindex: ' + tabindex);
             if (document.getElementById(tabindex)) { // sometimes the back-end decides to hide certain tabs.
     			assigntab[i] = document.getElementById(tabindex);
     			assigntabclass[i] = assigntab[i].className;
@@ -84,21 +84,21 @@ function resettabs() {
 	document.getElementById('fb').style.visibility = 'hidden';
 }
 
-function mynewfunc(a) {
-	var temp = new Array();
+
+function accesstab(a){
+    var temp = new Array();
+	resettabs();
+	changetab(a);	
 	temp = a.href.split("#")[1];
-	log ('temp is ' + temp);
+	//log ('temp is ' + temp);
 	if ((document.getElementById(temp).style.display == 'none')) {
 		document.getElementById(temp).style.visibility = 'visible';
 		document.getElementById(temp).style.display = 'block';
-	}
+    	}
+        escape_titles()
 }
 
-function accesstab(a){
-	resettabs();
-	changetab(a);
-	mynewfunc(a);
-}
+
 
 /*
 toggle preview mode for the assignment edit box
@@ -107,7 +107,6 @@ function toggleAssignmentView(){
 	 viewbox = document.getElementById('sticky_question_view');
 	 editbox = document.getElementById('essaybox');
 	 toggleButton  = document.getElementById('preview_edit_button');
-
 	 // if we are in view mode, switch to edit mode
 	 if (viewbox.style.display == 'block') {
 	    hideElement(viewbox);	 

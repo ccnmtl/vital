@@ -105,15 +105,6 @@ var noteFields={
 var myNoteDetails = {}; 
 
 
-function unescape_from_xml(s) {
-    s = s.replace(/&apos;/g,"'");
-    s = s.replace(/&amp;/g,"&");
-    s = s.replace(/&quote;/g,'"');
-    s = s.replace(/&lt;/g,"<");
-    s = s.replace(/&gt;/g,">");
-    return s;
-}
-
 function editNote(noteID,noteGrp,dontPlayClip) {
     
     

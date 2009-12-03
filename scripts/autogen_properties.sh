@@ -119,11 +119,11 @@ case "$TARGET" in
     "tiur_dev"  )
 	IS_CUIT=0;
 	USE_PROD_DATA=1
-	BASE_URL='http:\/\/tiur.ccnmtl.columbia.edu:8080'
+	BASE_URL='http:\/\/localhost:8080'
 	TOMCAT_HOME='\/usr\/local\/tomcat\/webapps\/'
 	DATABASE_TYPE='oracle'
 	PATH_TO_LOG_DIR="\/usr\/local\/tomcat\/webapps\/vd"
-	CONTEXT_NAME="/vd"
+	CONTEXT_NAME="vd" # no trailing slash.
 	;;
 
     "common"  )

@@ -176,7 +176,7 @@ case "$DATABASE_TYPE" in
         DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
         DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
         DATABASE_USERNAME=${ORACLE_DB_USERNAME}
-        DATABASE_PASSWORD='sf3tsD4BOM'
+        DATABASE_PASSWORD='oracle_database_password' 
 	;;
 
     "postgres"  )

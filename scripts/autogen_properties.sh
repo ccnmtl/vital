@@ -13,6 +13,7 @@ fi
 
 set -x
 
+
 TARGET=$1
 CONF_DIR=src/conf
 ANT_DIR=codegen/ant
@@ -83,17 +84,18 @@ case "$TARGET" in
 	IS_CUIT=1; 
 	USE_PROD_DATA=1
 	BASE_URL='http:\/\/wwwappdev.cc.columbia.edu'
+	#CONTEXT_NAME="/ccnmtl/vital3" # no trailing slash.
 	PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwappdev\/ccnmtl\/projects\/vital3"
 	USE_JGROUPS=0
 	;;
 
-    "test" )
-	IS_CUIT=1; 
-	USE_PROD_DATA=1
-	BASE_URL='http:\/\/wwwapptest.cc.columbia.edu'
-	PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwapptest\/ccnmtl\/projects\/vital3"
-	USE_JGROUPS=0
-	;;
+    # "test" )
+	#IS_CUIT=1; 
+	#USE_PROD_DATA=1
+	#BASE_URL='http:\/\/wwwapptest.cc.columbia.edu'
+	#PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwapptest\/ccnmtl\/projects\/vital3"
+	#USE_JGROUPS=0
+	#;;
 
     "prod" )
 	IS_CUIT=1;
@@ -133,7 +135,9 @@ esac
 
 
 if [ $IS_CUIT = 1 ]; then
-    CONTEXT_NAME="ccnmtl\/app\/vital3"
+    #NOTE: this points the context at Tomcat 5:
+    CONTEXT_NAME="ccnmtl\/vital3"
+    
     LOG_LEVEL_ROOT="WARN"
     LOG_LEVEL_VITAL="WARN"
     LOG_LEVEL_SPRING="WARN"
@@ -176,7 +180,7 @@ case "$DATABASE_TYPE" in
         DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
         DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
         DATABASE_USERNAME=${ORACLE_DB_USERNAME}
-        DATABASE_PASSWORD='oracle_database_password' 
+        DATABASE_PASSWORD='oracle_database_password'
 	;;
 
     "postgres"  )

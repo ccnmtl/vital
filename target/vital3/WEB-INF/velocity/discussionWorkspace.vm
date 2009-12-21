@@ -33,7 +33,7 @@
 	
 	
 	var mce_char_limit_settings = {
-	    max_chars: 4000
+	    max_chars: 3500
 	    ,field_name: 'comment_text'
 	    , form_name: 'enter_discussion_entry'
 	    , feedback_div : 'mce_char_limit_feedback_div'

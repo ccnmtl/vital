@@ -13,6 +13,7 @@
 	<script type="text/javascript" language="javascript" src="scripts/excerpt.js"></script>
 	<script type="text/javascript" language="javascript" src="scripts/xml_escape.js"></script>
 	<script type="text/javascript" language="javascript" src="scripts/assigntab.js"></script>
+	<script type="text/javascript" language="javascript" src="scripts/check_length.js"></script>
 
     #if ($commentsform && $commentsform == "true")
         ## special case: faculty is coming here from the "View Assignments page" and wants to enter feedback,
@@ -305,7 +306,9 @@ function unlock() {
         				#else
         					<h3>Your Feedback:</h3>
         				#end
-        				<form name="comment_form" method="post" action="response.smvc">
+        				
+        				<input readonly type="text" id="limit_count" size="5" value="100"> characters left
+                		<form name="comment_form" method="post" action="response.smvc" mce_editable="true">
         					#if($comment)
         						<input type="hidden" name="action" value="update" />
         						<input type="hidden" name="id" value="${comment.id}" />

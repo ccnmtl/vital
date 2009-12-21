@@ -133,8 +133,21 @@ $!{status.value}</th></tr>
 -->
 <div id="essaybox" class="essaytextarea">
 	<input name="note_text_format" value="text/html" type="hidden" />  
+	
+	<script>
+	    var mce_char_limit_settings = {
+	        max_chars:  3500 // standard for oracle clob.
+	       ,field_name: 'instructions'
+	       ,form_name: 'mainForm'
+	       ,feedback_div : 'mce_char_limit_feedback_div'
+	    };
+	</script>
+	
     <script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce/tiny_mce.js"> </script>
+	<script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_check_length.js"></script>
     <script type="text/javascript" charset="iso-8859-1" src="scripts/tiny_mce_init.js"></script>
+    
+    <div id = "mce_char_limit_feedback_div"></div>
 	<textarea tabindex="0" name="instructions" mce_editable="true" id="instructions">$!{status.value}</textarea>
 </div>
 </td></tr>

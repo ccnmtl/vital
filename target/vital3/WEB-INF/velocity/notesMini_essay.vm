@@ -52,8 +52,10 @@
                                         ${tagString}
                                     #end
                                     <br />
+                                    
                                     <b>Timecode: </b>
                                     <span>$!{note.clipBegin}-$!{note.clipEnd}</span>
+                                   
                                 </p>
                                 
                               </div>

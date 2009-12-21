@@ -1,4 +1,3 @@
-
 /*
 	var mce_char_limit_settings = {
 	    max_chars: 20

@@ -270,7 +270,7 @@ $!{assignment.instructions}
                         #foreach ($material in $question.sortedMaterials)
                         <tr valign="top">
                             <td class="col_thumbnail">
-                            <a class="thumbnail" 
+                            <a title="Edit notes for this asset." class="thumbnail" 
                             style="float:none; margin: auto; background-image:url(#if(${material.thumbUrl}) '$!{material.thumbUrl}'  
                                                                                    #else 'images/thumbnail.gif' 
                                                                                    #end)"

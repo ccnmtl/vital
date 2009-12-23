@@ -178,7 +178,7 @@ $!{assignment.instructions}
         				    </td>
         				    <td class="col_title col_title_gl">
         				        <h2>
-            				    <a title="Edit clips for this asset."
+            				    <a
           						href="javascript:openPopWin('${baseUrl}videoViewer.smvc?mode=viewonly&amp;id=${questionmaterial.id}','480','400','no','no','videoviewer${questionmaterial.id}')">$!{questionmaterial.title}</a>
           						</h2>
         				    </td>       				    

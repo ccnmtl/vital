@@ -680,7 +680,7 @@ public class ColumbiaUCM extends UserCourseManager {
     
     
     public String currentTermName () {
-        return "Fall 2009";
+        return "Spring 2010";
     }
     
     public Set currentAcademicYearTermNames() {
@@ -693,9 +693,9 @@ public class ColumbiaUCM extends UserCourseManager {
 
     public Set currentCalendarYearTermNames() {
         Set result = new HashSet();
-        result.add ("Spring 2009");
-        result.add ("Summer 2009");
-        result.add ("Fall 2009");
+        result.add ("Spring 2010");
+        result.add ("Summer 2010");
+        result.add ("Fall 2010");
         return result;
     }
     

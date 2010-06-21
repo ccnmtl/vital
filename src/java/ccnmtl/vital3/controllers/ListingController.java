@@ -164,7 +164,7 @@ public class ListingController extends Vital3CommandController {
             }
 
             // need to put hashmaps wrapping each material into arraylist:
-            // keys: "material" holds Material, "isAssoc" holds Boolean true if its currently associated.
+            // keys: "material" holds Material, "isAssoc" holds Boolean true if it's currently associated.
             ArrayList worksiteMaterials = worksite.getMaterialsSortedByTitle();
             Iterator matIter = worksiteMaterials.iterator();
             while (matIter.hasNext()) {
@@ -195,13 +195,16 @@ public class ListingController extends Vital3CommandController {
         } else if (mode.equals("user")) {
 
             if (!admin) throw new Vital3AuthViolationException(true);
-            List users = ucm.findAllUsers(false);
+            // this is absurd.
+            /*List users = ucm.findAllUsers(false);
 
             // sort the users in the order of their userIdString
             OmniComparator userComp = new OmniComparator(VitalUser.class, "getUserIdString");
             Collections.sort(users, userComp);
-
-            model.put("users", users);
+            */
+            model.put("users", new HashMap());
+            
+            
             viewName="userManagement";
 
         }

@@ -4,40 +4,87 @@
 #parse("header.vm")
 <div class="documentContentMain"><!-- Begin content area, class="documentContentMain" -->
 
-	<!-- For sorting the table -->
-	<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
-
-
+<script type="text/javascript" language="javascript" src="scripts/tablesort.js"></script>
+<script type="text/javascript" language="javascript" src="scripts/MochiKit/MochiKit.js"></script>
 <script language="javascript">
+    function disablePassword() {
+        document.forms["newUserForm"].password.disabled = true;
+        document.forms["newUserForm"].email.disabled = true;
+        document.getElementById('uni_username').innerHTML="UNI:";
+        document.getElementById('pswd_field').style.color="#999";
+        document.getElementById('email_field').style.color="#999";
+    }
+
+    function enablePassword() {
+        document.forms["newUserForm"].password.disabled = false;
+        document.forms["newUserForm"].email.disabled = false;
+        document.getElementById('uni_username').innerHTML="Username:";
+        document.getElementById('pswd_field').style.color="#000";
+        document.getElementById('email_field').style.color="#000";
+    }
 
 
-function disablePassword() {
-    document.forms["newUserForm"].password.disabled = true;
-    document.forms["newUserForm"].email.disabled = true;
-    document.getElementById('uni_username').innerHTML="UNI:";
-    document.getElementById('pswd_field').style.color="#999";
-    document.getElementById('email_field').style.color="#999";
-}
+     function getParticipants () {
+        var searchString = $('searchString').value
+        if (searchString.length < 3) return;
+        var url = "participantSearch.smvc?searchString=" + searchString;
+        var d = loadJSONDoc(url);
+        var selectString  = '';
+        var gotUsers = function (users) {
+            map (
+            function (a) {
+                display_name = a['firstName'] + ' ' + a['lastName']  + ' (' + a['userIdString'] + ')';
 
-function enablePassword() {
-    document.forms["newUserForm"].password.disabled = false;
-    document.forms["newUserForm"].email.disabled = false;
-    document.getElementById('uni_username').innerHTML="Username:";
-    document.getElementById('pswd_field').style.color="#000";
-    document.getElementById('email_field').style.color="#000";
-}
+                
+                selectString += '<option display_name="' + display_name + '" value ="' + a['id'] + '" >' + display_name + '</option>';
+            },
+            users);
+            $("userIdSelect").innerHTML = selectString;
+            
+            setGoUrl();
+        };
+        var userFetchFailed = function (err) {
+          alert("Fetch failed.");
+        };
+        d.addCallbacks(gotUsers, userFetchFailed);
+    }
+        
+    function setGoUrl() {
+        logDebug ("a");
+        the_index = $('userIdSelect').selectedIndex;
+        logDebug (the_index);
+        
+        the_option = $('userIdSelect').options[the_index]
+        
+        the_id = the_option.value;
+        logDebug (the_id);
+        
+        
+        the_name = getNodeAttribute(the_option, 'display_name')
+        logDebug (the_name);
+    
+        the_url = "basicAdmin.smvc?action=display&entity=user&id=" + the_id;
+        logDebug (the_url);
+        
+        $('edit_this_user_button').href = the_url;
+        
+        $('edit_this_user_button').innerHTML = "Edit " + the_name;
+    }
+    
+    function hidebutton() {
+	    document.getElementById('adduserbutton').style.visibility="hidden";
+    }
+    function showbutton() {
+	    document.getElementById('adduserbutton').style.visibility="visible";
+    }
+    function init_page() {
+        connect ('searchString', 'onkeyup', getParticipants);
+        disablePassword();
+    }
 
-addLoadEvent(disablePassword);
+    addLoadEvent(init_page);
 
-</script>
 
-<script type="text/javascript" language="javascript">
-function hidebutton() {
-	document.getElementById('adduserbutton').style.visibility="hidden";
-}
-function showbutton() {
-	document.getElementById('adduserbutton').style.visibility="visible";
-}
 </script>
 
 <h1>Global User Management</h1>
@@ -47,7 +94,11 @@ function showbutton() {
 	<p class="message">$!{message}</p>
 #end
 
-<input type="button" name="addButton" value="Add a New User" onClick="javascript:showElement($('addUserForm'));hidebutton()" class="regButton" id="adduserbutton"><br />
+ 
+<h1>Add a new user:</h1>
+ 
+ 
+<input type="button" name="addButton" value="New User" onClick="javascript:showElement($('addUserForm'));hidebutton()" class="regButton" id="adduserbutton"><br />
 <div id="addUserForm" style="display:none">
 <div id="admincontent" style="width: 600px">
 	<div id="admincontent-inner">
@@ -56,6 +107,7 @@ function showbutton() {
 			<div id="admincontent-top-body"></div>
 		</div>
 		</div>
+
 
 <form name="newUserForm" action="basicAdmin.smvc" method="POST">
 <table border="0" cellpadding="0" cellspacing="0" id="adminformtable" style="width: 100%;">
@@ -104,45 +156,24 @@ function showbutton() {
 <br />
 </div>
 
-#if($users)
-<form>
-<table border="0" cellspacing="0" cellpadding="0" id="tablelist" class="ml-list" style="width:710px;" onclick="sortColumn(event)">
-	<thead>
-		<tr>
-			<th class="navOut DefaultSort" style="width: 180px;">Last Name</th>
-			<th class="navOut" style="width: 180px;">First Name</th>
-			<th class="navOut" style="width: 110px;">Username / UNI</th>
-			<th class="navOut" style="width: 200px;">Global Access Level</th>
-			<th style="width: 40px;">&#160;</th>
-		</tr>
-	</thead>
-        
-	<tbody>
-        #foreach($user in $users)
-        <tr>
-            <td>$!{user.getLastName()} &#160;</td>
-            <td>$!{user.getFirstName()} &#160;</td>
-            <td>$!{user.userIdString} &#160;</td>
-            <td>
-            <script type="text/javascript" language="javascript">
-			var levelnum = $!{user.accessLevel};
-			if (levelnum == 100) {document.write('Administrator');}
-			else {document.write('Regular');}
-			</script>
-            &#160; </td>
-            <td><input type=button name="edit" value="Edit" id="$!{user.userIdString}" onclick="document.location.href='basicAdmin.smvc?action=display&entity=user&id=$user.id'" class="regButton" /></td>
-        </tr>
-        #end
-	</tbody>
-    </table>
-</form>
-#else
-    No user exists yet.
-#end
+<h1>Edit an existing user:</h1>
 
+<div>
+Find an existing user by typing a couple of letters of their name below:
+</div>
+<div>
+    <input id="searchString" type="text" value="" maxlength="8" size="8" name="searchString"/>
+</div>
+
+
+<div>
+    <select id = "userIdSelect" name="userId" onChange="javascript:setGoUrl()"></select>
+    <a  class="regButton" id = "edit_this_user_button" href="">Edit this user</a>
+</div>
 </div><!-- End content area, class="documentContentMain" -->
 
 <div id="tapemeasure"></div>
+
 
 #parse("footer.vm")
 

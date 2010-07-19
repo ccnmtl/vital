@@ -680,14 +680,14 @@ public class ColumbiaUCM extends UserCourseManager {
     
     
     public String currentTermName () {
-        return "Spring 2010";
+        return "Fall 2010";
     }
     
     public Set currentAcademicYearTermNames() {
         Set result = new HashSet();
-        result.add ("Fall 2009");
-        result.add ("Spring 2010");
-        result.add ("Summer 2010");
+        result.add ("Fall 2010");
+        result.add ("Spring 2011");
+        result.add ("Summer 2011");
         return result;
     }
 
@@ -702,10 +702,8 @@ public class ColumbiaUCM extends UserCourseManager {
     /*
     NOTE: useful queries for finding and adding terms:
     select ucm_term_id, start_date, end_date, name from ucm_terms order by start_date;
-    insert into ucm_terms (ucm_term_id, start_date, end_date, name  )values (14220, '30-AUG-09', '31-DEC-09', 'Fall \
-2009');
-    insert into ucm_terms (ucm_term_id, start_date, end_date, name  )values (14215, '11-MAY-09', '30-AUG-09', 'Summe\
-r 2009');
+    insert into ucm_terms (ucm_term_id, start_date, end_date, name  )values (14220, '30-AUG-09', '31-DEC-09', 'Fall 2009');
+    insert into ucm_terms (ucm_term_id, start_date, end_date, name  )values (14215, '11-MAY-09', '30-AUG-09', 'Summer 2009');
    COMMIT;
     */
 

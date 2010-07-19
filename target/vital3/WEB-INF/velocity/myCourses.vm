@@ -19,7 +19,7 @@
 <b>Change view:</b> 
 <select class="generic" name="select" onchange="if (options[selectedIndex].value) { document.location.href = options[selectedIndex].value;reset() }" size="1">
     <option value="myCourses.smvc?viewBy=term" #if($viewBy == "term") "selected" #end> View only this term</option>
-    <option value="myCourses.smvc?viewBy=academicyear" #if($viewBy == "academicyear") "selected" #end> View only this academic year (Fall 2009 - Summer 2010)</option>
+    <option value="myCourses.smvc?viewBy=academicyear" #if($viewBy == "academicyear") "selected" #end> View only this academic year (Fall 2010 - Summer 2011)</option>
     <option value="myCourses.smvc?viewBy=calendaryear" #if($viewBy == "calendaryear") "selected" #end> View only this calendar year</option>
     <option value="myCourses.smvc?viewBy=all" #if($viewBy == "all") "selected" #end> View all my courses</option>
 </select>

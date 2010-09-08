@@ -29,7 +29,40 @@ public class ParticipantSearchController extends Vital3CommandController  {
     protected Integer getMinAccessLevel(Vital3Command command) {
         return UserCourseManager.TA_ACCESS;
     }
+    
+    protected VitalWorksite getRequestedWorksite(Vital3Command commandObj) throws Exception {
+        
+        puke (commandObj == null, "Null command object passed." );
+        BasicAdminCommand command = (BasicAdminCommand) commandObj;
+        
+        puke (command == null, "No command." );
+
+        // This is the case where an admin user is looking for a user to edit from /listing.smvc?mode=user
+        if ( command.getUser() != null && UserCourseManager.ADMIN_ACCESS.intValue() == command.getUser().getAccessLevel().intValue()) {
+          return null;
+        }
+        
+      // this is the case where an instructor, ta, or professor wants to add a user to the roster page. In this case we need to check their affils properly:
+      
+      puke (command.getParticipantId() == null, "Unable to find participant ID at all." );
+      VitalParticipant participant = (VitalParticipant) vital3DAO.findById(VitalParticipant.class, command.getParticipantId());
+      puke (participant == null, "Unable to find participant by ID " + command.getParticipantId());
+      command.setParticipant(participant);
+      if (participant == null)  throw new RuntimeException("No participant found.");
+      ucm.decorateParticipant(participant);
+      VitalWorksite worksite = participant.getWorksite();
+      if (worksite == null)  throw new RuntimeException("No worksite found.");
+      ucm.decorateWorksite(worksite, false, false);
+      logger.debug ("Ending getRequestedWorksite in ParticipantSearchController");
+      return worksite;
+      
+      
+    }
+    
+    
+    
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Vital3Command commandObj, BindException errors) throws Exception {
+        logger.debug("I was here.");
         String searchString = "";
         try {
             searchString = request.getParameter("searchString");
@@ -55,4 +88,10 @@ public class ParticipantSearchController extends Vital3CommandController  {
         model.put ("body", responseString);
         return new ModelAndView("ajaxResponse", model);
     }
+    
+    
+    private void puke ( boolean cause, String message) throws RuntimeException {
+        if (cause) { logger.warn (message); throw new RuntimeException(message); }
+    }
+    
 }

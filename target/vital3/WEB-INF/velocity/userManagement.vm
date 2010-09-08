@@ -27,7 +27,12 @@
      function getParticipants () {
         var searchString = $('searchString').value
         if (searchString.length < 3) return;
-        var url = "participantSearch.smvc?searchString=" + searchString;
+        
+        /*
+        var url = "participantSearch.smvc?searchString=" + searchString + "&worksiteId=${worksite.id}&participantId=$!{participant.id}";
+        */
+        var url = "participantSearch.smvc?searchString=" + searchString + "&userId=${currentUser.id}"
+        
         var d = loadJSONDoc(url);
         var selectString  = '';
         var gotUsers = function (users) {

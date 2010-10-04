@@ -39,13 +39,26 @@ function addMaterialCitation(evt) {
 
     cite_text='&#160;<input type="button" class="materialCitation" onclick="openCitation(\''+linkName+'\')" name="'+linkName+'" value="'+linkTitle+'" />&#160;';
     insertTinyMCEcontent(cite_text,'note');
+    
 }
 
 function insertTinyMCEcontent(html_string, textarea_node_or_id) {
+    
     if (!tinyMCE.isSafari) {
-	tinyMCE.execCommand('mceInsertContent',false,html_string);
+      //egr2107 small fix:
+      //
+      
+      // this wasn't working on firefox 3.6.10, mac and windows.
+	    //tinyMCE.execCommand('mceInsertContent',false,html_string);
+      
+      // and this appears to fix it:
+      tinyMCE.execCommand('mceInsertRawHTML',false,html_string);
+    
     }
-    else { //SAFARI SUCKS!
+    else { 
+   
+    
+    //SAFARI SUCKS!
 	/* This is a work around for Safari not setting content on
 	   TEXTAREAs which have style display:none
 	*/
@@ -65,7 +78,9 @@ function insertTinyMCEcontent(html_string, textarea_node_or_id) {
 
 	//tinyMCE.updateContent(nid);  //SHOULD WORK BUT DOESN'T so we use setContent
 	tinyMCE.setContent(x.value);
+  
     }
+  
 }
 
 function confirmDelete() {

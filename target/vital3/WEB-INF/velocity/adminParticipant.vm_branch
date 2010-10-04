@@ -139,10 +139,13 @@ function toggleNewUserForm(menuItemValue) {
         createNewOption ='<option value="${basicAdminCommand.user.id}" selected="true">$!{basicAdminCommand.user.fullName} (${basicAdminCommand.user.userIdString})</option>';
     #end
     
+    /// NOTE: THIS IS DUPLICATE CODE. TODO: refactor it out.
+    // STARTING BY FIXING BUG HERE; then go to usermanagement.vm. (maybe).
     function getParticipants () {
         var searchString = $('searchString').value
         if (searchString.length < 3) return;
-        var url = "participantSearch.smvc?searchString=" + searchString;
+        
+        var url = "participantSearch.smvc?searchString=" + searchString + "&worksiteId=${worksite.id}&participantId=$!{participant.id}";
         var d = loadJSONDoc(url);
         var selectString  = createNewOption;
         var gotUsers = function (users) {

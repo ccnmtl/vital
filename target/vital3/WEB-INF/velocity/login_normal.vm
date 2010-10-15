@@ -54,17 +54,38 @@ if (navigator.plugins) {
 <div class="loginbox">
 <div class="boxtop"></div>
 <div>
-        <p class="message" style="width: 100%; margin: 0 0 15px 0;">Emergency Downtime</p>
-    
-<h2>Vital is temporarily unavailable until problems with the underlying database can be fixed.
-We apologize for the inconvenience.</h2>
+    #if ($message)
+    <p class="message" style="width: 100%; margin: 0 0 15px 0;">$!{message}&nbsp;</p>
+    #end
 
+<h2>Log in to VITAL...</h2>
+
+<h3 style="margin-top: 10px;">For Columbia Users:</h3>
+
+	<form method="post" action="https://wind.columbia.edu/login">
+		<input type="hidden" name="destination" value="${baseUrl}windTunnel.smvc">
+		<input type="hidden" name="service" value="cnmtl_full_np" >
+		<input type="submit" value="Log in with Columbia UNI" class="regButton" />
+	</form>
+
+<hr />
+
+<h3>For All Other Users:</h3>
+
+    <form action="loginProcessing.smvc" method="POST">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr><td>VITAL ID:</td><td><input type='text' class="logintxtbox" name='username' value="" ></td></tr>
+        <tr><td>Password:</td><td><input type='password' class="logintxtbox" name='password'></td></tr>
+        <input type="hidden" name="authMethod" value="vital">
+        <tr><td>&nbsp;</td><td align="right"><input type="submit" value="Log in" class="regButton" id="customLogin" /></td></tr>
+        <tr><td>&nbsp;</td><td align="right"><a href="forgotPassword.smvc">Forget your ID or password?</a></td></tr>
+      </table>
+    </form>
 
 </div>
 
 <div class="boxbottom"></div>
 </div>
-
 
 <h2>Welcome to Video Interactions for Teaching and Learning (VITAL)</h2>
 

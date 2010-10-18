@@ -18,6 +18,9 @@
     </bean>
     
     <bean id="specialActionsValidator" class="ccnmtl.vital3.commands.SpecialActionsValidator" parent="parentValidator" />
+    
+    <bean id="participantSearchValidator" class="ccnmtl.vital3.commands.ParticipantSearchValidator" parent="parentValidator" />
+    
     <bean id="discussionEntryValidator" class="ccnmtl.vital3.commands.DiscussionEntryValidator" parent="parentValidator" />
     
     <bean id="annotationValidator" class="ccnmtl.vital3.commands.AnnotationValidator" parent="parentValidator" />
@@ -38,9 +41,14 @@
  		     
  	<bean id="worksiteIdValidator" class="ccnmtl.vital3.commands.WorksiteIdValidator" parent="parentValidator" />
 
+
+
 	<bean id="userProfileController" class="ccnmtl.vital3.controllers.UserProfileController" parent="parentController"/>
 	
+	<!-- REMOVING THIS. Should not exist here. -->
+	<!--
 	<bean id="participantSearchController" class="ccnmtl.vital3.controllers.ParticipantSearchController" parent="parentController"/>
+  -->
 
 	<bean id="loadTestingController" class="ccnmtl.vital3.controllers.LoadTestingController" parent="parentController"/>
 
@@ -210,6 +218,20 @@
 		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
         <property name="validator"><ref bean="specialActionsValidator"/></property>
     </bean>
+    
+    <!--
+    <bean id="participantSearchController" class="ccnmtl.vital3.controllers.ParticipantSearchController" parent="parentController"/>
+    -->
+    
+    
+    <bean id="participantSearchController" class="ccnmtl.vital3.controllers.ParticipantSearchController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+        <property name="validator"><ref bean="participantSearchValidator"/></property>
+    </bean>
+    
+    
+    
 
     <bean id="discussionEntryController" class="ccnmtl.vital3.controllers.DiscussionEntryController" parent="parentController">
 		<property name="commandName" value="basicAdminCommand" />

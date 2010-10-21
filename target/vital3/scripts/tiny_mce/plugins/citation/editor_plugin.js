@@ -1,3 +1,6 @@
+//Eddie Rubeiz adding this Oct 20 2010:
+
+
 var TinyMCE_CitationPlugin = {
 	/**
 	 * Returns information about the plugin as a name/value array.
@@ -15,6 +18,16 @@ var TinyMCE_CitationPlugin = {
 			version : "1.0"
 		};
 	},
+
+
+  restore_onclick_after_paste : function  (citation) {
+    var linkName= citation.getAttribute("name");
+    var linkOnClick=citation.getAttribute("onclick");
+    if (linkOnClick == null && linkName != null) {
+	    citation.setAttribute("onclick", "openCitation('" + linkName + "');");
+	  }
+  },
+
 
 	/**
 	 * Gets executed when a TinyMCE editor instance is initialized.
@@ -135,11 +148,13 @@ var TinyMCE_CitationPlugin = {
 		var newCitation;
 		for (i=0; i<citations.length; i++) {
 		    var c=citations[i];
+		    //alert (c);
 		    switch (c.tagName) {
 		    case 'IMG':
+		
 			var linkName=c.getAttribute("name");
 			var linkTitle=c.getAttribute("title");
-			
+		  	
 			//removing extraneous 0's in the timecode
 			linkTitle=linkTitle.replace(/([ -])0:/g,"$1");
 			linkTitle=linkTitle.replace(/([ -])0/g,"$1");
@@ -162,6 +177,12 @@ var TinyMCE_CitationPlugin = {
 			triggerChange = true;
 			break;
 		    case 'INPUT':
+		    /*
+  		    This just restores the "onclick" attribute, which was
+  		    removed on "paste" in more recent versions of Firefox:
+		    */
+		    this.restore_onclick_after_paste (c);
+			
 			/*This is for cleaning up, or rather, DE-cleaning up the spaces 
 			  around the input element which protect it from weird deletion.
 			  Basically, tinyMCE cleans up spaces around the INPUT element,

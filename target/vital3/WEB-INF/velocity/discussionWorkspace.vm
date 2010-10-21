@@ -63,14 +63,20 @@
 	#end
 	]
 	
-	#set ( $number_of_names = $assignment.sortedResponses.size() )
+	#set ( $number_of_names = $assignment.responses.size() )
 	#set ( $names_index = 1 )
 	var names = {
-	#foreach ($a in $assignment.sortedResponses)
+	#foreach ($a in $assignment.responses)
+	 #if ($a.participant.user.fullName)
+	     #set ( $new_name = $a.participant.user.fullName)
+   #else
+   
+      #set  ($new_name = "User #${a.participant.id}" )
+   #end
 		#if ( $names_index < $number_of_names )
-	      '${a.participant.id}':'${a.participant.user.fullName}',
+	      '${a.participant.id}':'$!{new_name}',
 	    #else
-     	  '${a.participant.id}':'${a.participant.user.fullName}'
+     	  '${a.participant.id}':'$!{new_name}'
      	  ## don't add a comma to the last line - breaks IE.
      	#end
         #set ( $names_index = $names_index + 1 ) 

@@ -173,11 +173,11 @@ function hs_collapse_all(dontreset) {
 }
 
 function hs_init() {
-    log("initializing");
+    //log("initializing");
     hs_loadCookie();
-    log("adding callbacks to controls");
+    //log("adding callbacks to controls");
     forEach(getElementsByTagAndClassName("a","hs-control"),hs_addControlCallback);
-    log("hiding any divs that need to be initially hidden");
+    //log("hiding any divs that need to be initially hidden");
     forEach(getElementsByTagAndClassName("*","hs-init-hide"),hs_hide);
     if ('*all' in hs_ids) {
 	//this is done after the above so any hs-init-hides
@@ -188,7 +188,7 @@ function hs_init() {
 	    hs_collapse_all(/*dontreset=*/true);
 	}
     }
-    log("check for cookies setting the state for any...");
+    //log("check for cookies setting the state for any...");
     forEach(getElementsByTagAndClassName("a","hs-control"),hs_lookForSetting);
 
     if (window.location.href.split('#')[1]=='fb') {

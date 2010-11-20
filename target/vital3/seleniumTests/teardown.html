@@ -44,9 +44,10 @@
 </tr>
 
 <tr>
-	<td>selectAndWait</td>
-	<td>select</td>
-	<td>label=View all my courses</td>
+	<td>clickAndWait</td>
+	<td>link=My VITAL Courses</td>
+	<td></td>
+
 </tr>
 
 
@@ -65,23 +66,34 @@
 	<td>//input[@value='Delete this course']</td>
 	<td></td>
 </tr>
-
-
 <tr>
 	<td>verifyConfirmation</td>
 	<td>Really delete this course?</td>
 	<td></td>
 </tr>
-
-
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Global User Management</td>
 	<td></td>
 </tr>
 <tr>
+        <td>type</td>
+        <td>searchString</td>
+        <td>${studentUsername}</td>
+</tr>
+<tr>
+        <td>keyUp</td>
+        <td>searchString</td>
+        <td>\9</td>
+</tr>
+<tr>
+        <td>pause</td>
+        <td></td>
+        <td>2000</td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>id=${studentUsername}</td>
+	<td>id=edit_this_user_button</td>
 	<td></td>
 </tr>
 <tr>
@@ -90,8 +102,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>searchString</td>
+	<td>${instructorUsername}</td>
+</tr>
+<tr>
+        <td>keyUp</td>
+        <td>searchString</td>
+        <td>\9</td>
+</tr>
+<tr>
+        <td>pause</td>
+        <td></td>
+        <td>2000</td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>id=${instructorUsername}</td>
+	<td>id=edit_this_user_button</td>
 	<td></td>
 </tr>
 <tr>
@@ -99,26 +126,6 @@
 	<td>deleteUser</td>
 	<td></td>
 </tr>
-<!--<tr>
-	<td>clickAndWait</td>
-	<td>link=My VITAL Courses</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Manage Users</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>id=new_instructor</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>deleteUser</td>
-	<td></td>
-</tr>-->
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Log out</td>

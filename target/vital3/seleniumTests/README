@@ -1,0 +1,7 @@
+* Create a user with admin access.
+selenium_test / xyz
+
+* Create a Fall 2006 term
+insert into ucm_terms values(2, '2006-09-01', 'Fall 2006', '2006-12-15');
+
+* Create a term for the existing semester. Whatever that happens to be.

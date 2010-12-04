@@ -117,6 +117,31 @@ case "$TARGET" in
 	CONTEXT_NAME="vital3"
 	;;
 
+    #dev setup on Mac OS:
+    "sdreher_dev" )
+	IS_CUIT=0
+	USE_PROD_DATA=0
+	BASE_URL='http:\/\/localhost:8080'
+	PATH_TO_LOG_DIR="\/Users\/sdreher\/Documents\/workspace\/vital3"
+	CONTEXT_NAME="/vital3"
+	USE_JGROUPS=0
+	TOMCAT_HOME='\/usr\/local\/tomcat\/'
+	CONTEXT_NAME="vital3" # no trailing slash
+        DATABASE_TYPE="oracle"
+	;;
+
+    #dev setup on kodos
+    "sdreher_kodos"  )
+	IS_CUIT=0;
+        USE_PROD_DATA=0
+        USE_JGROUPS=0
+	BASE_URL='http:\/\/kodos.ccnmtl.columbia.edu:4080\/sdreher'
+        TOMCAT_HOME='\/usr\/local\/tomcat\/webapps\/'
+        DATABASE_TYPE='oracle'
+	PATH_TO_LOG_DIR="\/usr\/local\/share\/sandboxes\/sdreher\/vital3"
+        CONTEXT_NAME="vital3" # no trailing slash.                 
+	;;
+
     #Eddie's development environment
     "tiur_dev"  )
 	IS_CUIT=0;

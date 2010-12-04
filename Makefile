@@ -53,3 +53,9 @@ zarina:
 
 platypus:
 	scripts/autogen_properties.sh $@
+
+sdreher_dev:
+	scripts/autogen_properties.sh $@
+
+sdreher_kodos:
+	scripts/autogen_properties.sh $@

@@ -41,8 +41,6 @@
  		     
  	<bean id="worksiteIdValidator" class="ccnmtl.vital3.commands.WorksiteIdValidator" parent="parentValidator" />
 
-
-
 	<bean id="userProfileController" class="ccnmtl.vital3.controllers.UserProfileController" parent="parentController"/>
 	
 	<!-- REMOVING THIS. Should not exist here. -->
@@ -229,9 +227,6 @@
 		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
         <property name="validator"><ref bean="participantSearchValidator"/></property>
     </bean>
-    
-    
-    
 
     <bean id="discussionEntryController" class="ccnmtl.vital3.controllers.DiscussionEntryController" parent="parentController">
 		<property name="commandName" value="basicAdminCommand" />
@@ -251,6 +246,11 @@
     
     <bean id="windTunnelController" class="ccnmtl.vital3.controllers.WindTunnelController">
 	</bean>
+    
+    <bean id="captureResponsesController" class="ccnmtl.vital3.controllers.CaptureResponseStateController" parent="parentController">
+        <property name="commandName" value="vital3Command" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" />
+    </bean>
     
     
     <!-- Map URLs to Controller beans: -->
@@ -291,6 +291,7 @@
                 <prop key="/userProfile.smvc">userProfileController</prop>
                 <prop key="/participantSearch.smvc">participantSearchController</prop>
                 <prop key="/loadTesting.smvc">loadTestingController</prop>
+                <prop key="/captureResponses.smvc">captureResponsesController</prop>
             </props>
         </property>
         <!-- interceptors for these mappings -->
@@ -375,7 +376,8 @@
                 <value>Answer.hbm.xml</value>  
                 <value>Assignment.hbm.xml</value>  
                 <value>AssignmentMaterialAssoc.hbm.xml</value>  
-                <value>AssignmentResponse.hbm.xml</value>  
+                <value>AssignmentResponse.hbm.xml</value>
+                <value>AssignmentResponseHistory.hbm.xml</value>  
                 <value>Comment.hbm.xml</value>  
                 <value>CustomField.hbm.xml</value>  
                 <value>CustomFieldValue.hbm.xml</value>  

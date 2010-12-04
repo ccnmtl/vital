@@ -1,0 +1,11 @@
+#set($title = "Capture Response State")
+#parse("header.vm")
+
+<div class="documentContentMain">
+
+Changed Responses: ${created}<br />
+Unchanged Responses: ${unchanged}
+
+</div>
+
+#parse("footer.vm")

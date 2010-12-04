@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+    PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ccnmtl.vital3">
+
+    <class name="AssignmentResponseHistory" table="ASSIGNMENT_RESPONSE_HISTORY">
+        
+        <meta attribute="class-description">
+            A table to store backups of essay responses. 
+            Mirror image of AssignmentResponse except for -answers, -comments, +creation date.
+        </meta>
+        
+        <cache usage="nonstrict-read-write"/>
+        
+        <id name="id" type="long" column="ASSIGNMENT_RESPONSE_HISTORY_ID">
+            <generator class="native"/>
+        </id>
+
+        <property name="assignmentId" type="long" column="assignment_id">
+            <meta attribute="field-description">The Assignment this is in response to.</meta>
+        </property>
+
+        <property name="participantId" type="long" column="participant_id">
+            <meta attribute="field-description">The Assignment this is in response to.</meta>
+        </property>
+
+        <property name="dateSubmitted" type="timestamp" column="date_submitted">
+            <meta attribute="field-description">When this response was submitted.</meta>
+        </property>
+        
+        <property name="status" type="integer">
+            <meta attribute="field-description">Whether the response has been submitted.</meta>
+        </property>
+
+        <property name="text0" type="text">
+            <meta attribute="field-description">Text, part 0.</meta>
+        </property>   
+        
+        <property name="text1" type="text">
+            <meta attribute="field-description">Text, part 1.</meta>
+        </property>              
+        
+        <property name="text2" type="text">
+            <meta attribute="field-description">Text, part 2.</meta>
+        </property>              
+        
+        <property name="text3" type="text">
+            <meta attribute="field-description">Text, part 3.</meta>
+        </property>              
+        
+        <property name="text4" type="text">
+            <meta attribute="field-description">Text, part 4.</meta>
+        </property>              
+        
+        <property name="text5" type="text">
+            <meta attribute="field-description">Text, part 5.</meta>
+        </property>              
+        
+        <property name="text6" type="text">
+            <meta attribute="field-description">Text, part 6.</meta>
+        </property>              
+        
+        <property name="text7" type="text">
+            <meta attribute="field-description">Text, part 7.</meta>
+        </property>              
+        
+        <property name="text8" type="text">
+            <meta attribute="field-description">Text, part 8.</meta>
+        </property>              
+        
+        <property name="text9" type="text">
+            <meta attribute="field-description">Text, part 9.</meta>
+        </property>
+        
+        <property name="text10" type="text">
+            <meta attribute="field-description">Text, part 10.</meta>
+        </property>    
+        
+        <property name="text11" type="text">
+            <meta attribute="field-description">Text, part 11.</meta>
+        </property>    
+        
+        <property name="text12" type="text">
+            <meta attribute="field-description">Text, part 12.</meta>
+        </property>    
+        
+        <property name="text13" type="text">
+            <meta attribute="field-description">Text, part 13.</meta>
+        </property>    
+        
+        <property name="text14" type="text">
+            <meta attribute="field-description">Text, part 14.</meta>
+        </property>    
+        
+        <property name="text15" type="text">
+            <meta attribute="field-description">Text, part 15.</meta>
+        </property>    
+        
+       <property name="dateCreated" type="timestamp" column="created_date">
+            <meta attribute="field-description">When this response was submitted.</meta>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

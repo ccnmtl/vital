@@ -1,19 +1,13 @@
 package ccnmtl.vital3.test;
 
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.io.*;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletException;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -33,7 +27,6 @@ import ccnmtl.utils.test.AbstractTestCase;
 import ccnmtl.vital3.*;
 import ccnmtl.vital3.controllers.*;
 import ccnmtl.vital3.commands.*;
-import ccnmtl.vital3.dao.Vital3DAO;
 import ccnmtl.vital3.ucm.ColumbiaUCM;
 import ccnmtl.vital3.ucm.RawUCMTerm;
 import ccnmtl.vital3.ucm.RawUCMWorksite;
@@ -42,10 +35,8 @@ import ccnmtl.vital3.utils.TextFormatter;
 import ccnmtl.vital3.utils.Vital3Utils;
 
 import ccnmtl.jtasty.*;
-import ccnmtl.jtasty.dao.JTastyDAO;
 import ccnmtl.jtasty.test.*;
 import ccnmtl.jtasty.utils.*;
-import ccnmtl.utils.test.*;
 import ccnmtl.utils.*;
 
 public class Vital3GeneralTest extends AbstractTestCase {
@@ -69,6 +60,7 @@ public class Vital3GeneralTest extends AbstractTestCase {
     public Vital3GeneralTest (String testName){
         super(testName);
     }
+    
     /**
      * @return the suite of tests being tested
      */
@@ -89,7 +81,6 @@ public class Vital3GeneralTest extends AbstractTestCase {
         // 2) create and insert "child" objects (ones inside collections)
 
         // Each object type has its own id generator, starting at 1.
-
 
         // construct raw term:
         RawUCMTerm rt1 = new RawUCMTerm(textFormatter.parse("2006/5/10-00:00:00"), "Spring 2006", textFormatter.parse("2006/1/17-00:00:00"));
@@ -210,9 +201,8 @@ public class Vital3GeneralTest extends AbstractTestCase {
         
         
         ///logger.debug ("ass2's id is " + newAssignment.getId());
-
     }
-
+    
     public void testStuff() throws Exception {
 
         ///////////////////////////////////////////////////////////////////////
@@ -299,7 +289,6 @@ public class Vital3GeneralTest extends AbstractTestCase {
         loggedInUser = ucm.getCLIU(session, false);
         assertEquals (loggedInUser.getFirstName(), "Birgit");
         
-        
         // My Courses:
         vital3DAO.resetUCM();
         MyCoursesController myCourses = (MyCoursesController) ac.getBean("myCoursesController");
@@ -307,8 +296,6 @@ public class Vital3GeneralTest extends AbstractTestCase {
         mav = login.handleRequest(mockRequest, (HttpServletResponse) null);
         Map model = mav.getModel();
         Collection worksites = (Collection) model.get("worksites");
-        
-        
         
         ///////////////////////////////////////////////
         // ########## UTILS TESTS ###################
@@ -2199,6 +2186,112 @@ mockRequest.addParameter("updateComment3", "Comment 3.2");
         //System.out.println("aposResult: " + aposResult);
         assertEquals(aposResult, textFormatter.escapeForJavascript(aposTest));
 
+    }
+    
+    public void testCaptureResponseState() throws Exception {
+        
+        // Setup an essay assignment
+        VitalWorksite c2 = (VitalWorksite) vital3DAO.findById(VitalWorksite.class, new Long(2));
+        Unit unit1 = (Unit) vital3DAO.findById(Unit.class, new Long(1)); 
+        VitalParticipant vp1 = (VitalParticipant) vital3DAO.findById(VitalParticipant.class, new Long(1));
+        VitalParticipant vp2 = (VitalParticipant) vital3DAO.findById(VitalParticipant.class, new Long(2));
+
+        assertNotNull(c2);
+        assertNotNull(unit1);
+        assertNotNull(vp1);
+        assertNotNull(vp2);
+        
+        // Insert an Assignment (assignmentId = 1)
+        Assignment ass1 = new Assignment();
+        ass1.setUnit(unit1);
+        ass1.setInstructions("instructions");
+        ass1.setTitle("essay");
+        ass1.setOrdinalValue(new Integer(4));
+        ass1.setType("essay");
+        ass1.setResponses(new TreeSet());
+        vital3DAO.save(Assignment.class, ass1);
+        
+        // Insert some responses
+        AssignmentResponse resp1 = new AssignmentResponse();
+        resp1.setParticipant(vp1);
+        resp1.setAssignment(ass1);
+        resp1.setText0("Foo");
+        resp1.setStatus(new Integer(0));
+        vital3DAO.save(AssignmentResponse.class, resp1);
+        
+        // Insert an "existing" history row for this response
+        AssignmentResponseHistory hist1 = new AssignmentResponseHistory();
+        hist1.setParticipantId(vp1.getId());
+        hist1.setAssignmentId(ass1.getId());
+        hist1.setText0("Foo");
+        hist1.setStatus(new Integer(0));
+        hist1.setDateCreated(new Date());
+        vital3DAO.save(AssignmentResponseHistory.class, hist1);
+        
+        AssignmentResponse resp2 = new AssignmentResponse();
+        resp2.setParticipant(vp2);
+        resp2.setAssignment(ass1);
+        resp2.setText0("Bar");
+        resp2.setStatus(new Integer(0));
+        vital3DAO.save(AssignmentResponse.class, resp2);
+        
+        // Capture Responses
+        vital3DAO.resetUCM();
+        CaptureResponseStateController crsc = (CaptureResponseStateController) ac.getBean("captureResponsesController");
+        MockHttpServletRequest mockRequest = newMockRequest(null, "GET", null);
+        ModelAndView mav = crsc.handleRequest(mockRequest, (HttpServletResponse) null);
+        Map model = mav.getModel();
+        assertEquals("Created is 1", "1", model.get("created"));
+        assertEquals("Unchanged is 1", "1", model.get("unchanged"));
+        
+        // Verify the history row was created correctly
+        List lst = vital3DAO.findByTwoPropertyValues(AssignmentResponseHistory.class,
+                "assignmentId", ass1.getId(), "participantId", vp2.getId());
+        assertEquals("One history row for this participant/assignment", 1, lst.size());
+        
+        AssignmentResponseHistory hist2 = (AssignmentResponseHistory)lst.get(0);
+        assertEquals("Bar", hist2.getText0());
+        
+        // Update the response
+        resp2.setText0("Bar and Foo too");
+        vital3DAO.save(AssignmentResponse.class, resp2);
+        
+        // Capture Responses Again
+        vital3DAO.resetUCM();
+        crsc = (CaptureResponseStateController) ac.getBean("captureResponsesController");
+        mockRequest = newMockRequest(null, "GET", null);
+        mav = crsc.handleRequest(mockRequest, (HttpServletResponse) null);
+        model = mav.getModel();
+        assertEquals("Created is 1", "1", model.get("created"));
+        assertEquals("Unchanged is 1", "1", model.get("unchanged"));
+        
+        lst = vital3DAO.findByTwoPropertyValues(AssignmentResponseHistory.class,
+                "assignmentId", ass1.getId(), "participantId", vp2.getId());
+        assertEquals("Two history rows for this participant/assignment", 2, lst.size());
+        
+        hist2 = (AssignmentResponseHistory)lst.get(0);
+        assertEquals("Bar", hist2.getText0());
+        
+        hist2 = (AssignmentResponseHistory)lst.get(1);
+        assertEquals("Bar and Foo too", hist2.getText0());
+        
+        // "Submit" the response
+        resp2.setText0("Bar and Foo too. Plus SamIAm");
+        resp2.setStatus(new Integer(1));
+        vital3DAO.save(AssignmentResponse.class, resp2);
+        
+        // Capture Responses Again
+        vital3DAO.resetUCM();
+        crsc = (CaptureResponseStateController) ac.getBean("captureResponsesController");
+        mockRequest = newMockRequest(null, "GET", null);
+        mav = crsc.handleRequest(mockRequest, (HttpServletResponse) null);
+        model = mav.getModel();
+        assertEquals("Created is 0", "0", model.get("created"));
+        assertEquals("Unchanged is 1", "1", model.get("unchanged"));
+        
+        lst = vital3DAO.findByTwoPropertyValues(AssignmentResponseHistory.class,
+                "assignmentId", ass1.getId(), "participantId", vp2.getId());
+        assertEquals("Two history rows for this participant/assignment still", 2, lst.size());
     }
 
     

@@ -52,6 +52,7 @@ public class Vital3MockDAO implements Vital3DAO {
         mockDB.createTable(Assignment.class);
         mockDB.createTable(AssignmentMaterialAssoc.class);
         mockDB.createTable(AssignmentResponse.class);
+        mockDB.createTable(AssignmentResponseHistory.class);
         mockDB.createTable(Comment.class);
         mockDB.createTable(CustomField.class);
         mockDB.createTable(CustomFieldValue.class);

@@ -151,6 +151,12 @@
 		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
         <property name="validator"><ref bean="discussionEntryValidator"/></property>
     </bean>
+    
+    <bean id="captureResponsesController" class="ccnmtl.vital3.controllers.CaptureResponseStateController" parent="parentController">
+        <property name="commandName" value="vital3Command" />
+        <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" />
+    </bean>
+    
 
     <!-- The UserCourseManager implementation -->
 	<bean id="ucm" class="ccnmtl.vital3.ucm.ColumbiaUCM">

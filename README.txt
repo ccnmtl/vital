@@ -54,6 +54,15 @@ Unit Testing:
 
 Unit Testing covers a fair amount of the code. Mostly controllers. Classes have been written specifically for Unit Testing, noteably the MockDAO interface and MockAssetDAO class. MockDAO will provide some limited database-simulation ability so that no actual database connection is made and hibernate is not used. Templates are not covered under unit tests.
 
+To run a single test from the command line using Maven 1.0.2
+maven -Dtestcase=ccnmtl.vital3.test.Vital3GeneralTest test:single
+
+For easier to read output while debugging tests, add to project.properties
+#Junit Options
+maven.junit.format=plain
+maven.junit.usefile=false
+
+
 Building:
 
 If you have just checked out or downloaded Vital 3 for the first time, please see INSTALL.txt for instructions.

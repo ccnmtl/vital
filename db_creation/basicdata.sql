@@ -1,4 +1,4 @@
-insert into UCM_TERMS values (1, null, 'Fall 2007', null);
+insert into UCM_TERMS values (1, '30-AUG-07', 'Fall 2007', '31-DEC-07');
 insert into USERS values (1, 'admin', null, 100, 'changeme');
 insert into UCM_USERS values (1, 'admin', null, 'Admin', 'User');
 insert into WORKSITES values (1, '1000000', 'Sample Course');

@@ -20,55 +20,84 @@
     
 <script language="JavaScript" type="text/javascript">
     
+    /// Who fixes what?
+    var who_gets_what_bugs = {
+            'login':             'markp'
+        ,   'video':             'bohagan'
+        ,   'composition_space': 'markp' 
+        ,   'feedback':          'markp'   
+        ,   'course_mgmt':       'markp'
+        ,   'browser':           'eddie'
+        ,   'http_500':          'eddie'
+        ,   'other':             'markp'
+        ,
+    }
+    
+    function getSelectedItem(radio) {
+        chosen = null;
+        for (i = 0; i < radio.length ; i++) {
+            if (radio[i].checked) {
+                chosen = radio[i].value;
+            }
+        }
+        return chosen;
+    
+    }
     
     function validateRequired(theForm) {
-    
-        var errormsg = new Array();
-        errormsg[0] = " Your e-mail address";
-        errormsg[8] = " Details of problem";
-    
         var errorstring = "";
-        var field0 = theForm.email.value;
-        var field8 = theForm.details.value;
- 
-        if (field0 == "") errorstring += errormsg[0]+"\n";
-        if (field8 == "") errorstring += errormsg[8]+"\n";
-        
+        if (theForm.email.value == "") {
+            errorstring += " Your e-mail address \n";
+        }
+        if (theForm.details.value == "") {
+            errorstring += " Details of problem \n"; 
+        }
+        if (getSelectedItem(theForm.error_type) == undefined) {
+            errorstring += "Error type \n";
+        }
         if (errorstring != ""){
             alert("Please enter all required fields:\n"+errorstring);
-            if (field0 == "") {theForm.email.focus();}
-            else if  (field8 == "") {theForm.details.focus();}
-            
+            if (theForm.email.value == "") {theForm.email.focus(); }
+            else if  (theForm.details.value == "") {theForm.details.focus(); }
             return false;
         }
         return true;
     }
     
     function fillAutoFields() {
-    
         if (document.getElementById){
             var uaString = navigator.userAgent;
             if (uaString) document.errorForm.auto_UserAgent.value = uaString;
         }
-        //alert(document.errorForm.auto_UserAgent.value + " " + document.errorForm.screen_num.value + " " + document.errorForm.auto_CourseName.value);
-        
     }
     
     function submitErrorForm() {
-    
         var ef = document.errorForm;
         var pf = document.pmtForm;
-        if (ef == null || pf == null) alert("could not find error form!");
-        
         // Validate the required fields:
         if ( !validateRequired(ef) ) return false;
+        var role_string = "";
+        if (ef.role != undefined) {
+            role_string = ef.role.value;
+        }
+        
+        type_string = getSelectedItem(ef.error_type);
+        assigned_to_string = who_gets_what_bugs[type_string];
+        
+        pf.assigned_to = assigned_to_string;
         
         // Move the data from the error form fields into the pmt form fields:
+        pf.title.value = "Vital: " + role_string + " " + ef.email.value + " reports trouble with " + type_string;
+        
+        
         pf.name.value = ef.name.value;
-        pf.description.value = "Vital 3 Error Report:\n\n" + ef.details.value + "\n\nerror_time = (" + ef.error_time.value + ")\nprev_steps = (" + ef.prev_steps.value + ")\n";
+        pf.description.value = "Error Report:\n\n" + ef.details.value + "\n\nerror_time = (" + ef.error_time.value + ")\nprev_steps = (" + ef.prev_steps.value + ")\n";
         pf.debug_info.value = "User Agent = (" + ef.auto_UserAgent.value + ")\n";
         pf.email.value = ef.email.value;
         
+        if (ef.worksite_id != undefined) {
+            pf.url.value = "http://vital.ccnmtl.columbia.edu/ccnmtl/vital3/courseHome.smvc?worksiteId=" + ef.worksite_id.value
+        }
         pf.submit();
     }
     
@@ -108,24 +137,19 @@
 
 
 <form name="pmtForm" action="http://pmt.ccnmtl.columbia.edu/external_add_item.pl" method="post">
-
-    <input type="hidden" name="pid" value="318" />
-    <input type="hidden" name="mid" value="1477" />
-    <input type="hidden" name="owner" value="mpreston" />
-    <input type="hidden" name="assigned_to" value="mpreston" />
+    <input type="hidden" name="pid" value="256" />
+    <input type="hidden" name="mid" value="2810" />
+    <input type="hidden" name="owner" value="markp" />
+    <input type="hidden" name="assigned_to" value="markp" />
     <input type="hidden" name="type" value="bug" />
-    <input type="hidden" name="title" value="Error Report from Web User" />
+    <input type="hidden" name="title" value="Vital error Report from Web User" />
     <input type="hidden" name="redirect_url" value="${baseUrl}reportErrorConfirmation.html" />
     <input type="hidden" name="keyword" value="user-reported-error" />
-    <!--<input type="hidden" name="append_iid" value="on">-->
     <input type="hidden" name="url" value="" />
-
     <input type="hidden" name="description" value="" />
-
     <input type="hidden" name="debug_info" value="" />
     <input type="hidden" name="name" value="" />
     <input type="hidden" name="email" value="" />
-
 </form>
     
 
@@ -138,6 +162,7 @@
             <td align="left"><input class="errortxt" type="text" name="name" /></td>
         </tr>
         
+
         <tr valign="middle">
             <td align="right" nowrap="nowrap">Your E-mail:<br /><span class="required">(required)</span></td>
             <td align="left"><input class="errortxt" type="text" name="email" /></td>
@@ -149,18 +174,58 @@
         </tr>
         
         <tr valign="top">
-            <td align="right" width="110">Please tell us which course you are in and describe the steps you underwent <i>before</i> reaching the error:</td>
-            <td align="left"><textarea name="prev_steps" class="errortxtarea"></textarea></td>
+            <td align="right" width="110">Error type (What part of the application is giving you trouble?)</td>
+            <td align="left">
+<input name ="error_type" type ="radio" value="login"></input>Logging in<br/>
+<input name ="error_type" type ="radio" value="video"></input>Video or sound quality<br/>
+<input name ="error_type" type ="radio" value="composition_space"></input>Assignment composition<br/>
+<input name ="error_type" type ="radio" value="feedback"></input>Feedback form<br/>
+<input name ="error_type" type ="radio" value="course_mgmt"></input>Course management (roster list, for example)<br/>
+<input name ="error_type" type ="radio" value="browser"></input>Browser Issues (garbled layout, for example)<br/>
+<input name ="error_type" type ="radio" value="http_500"></input><i>"HTTP Status 500"</i> error<br/>
+<input name ="error_type" type ="radio" value="other" checked ></input>Other<br/>
+            </td>
         </tr>
-        
         <tr valign="top">
-            <td align="right" width="110">Describe, in detail, the problem you encountered with the application:<br /><span class="required">(required)</span></td>
+            <td align="right" width="110">Please provide more detail here:</td>
             <td align="left"><textarea name="details" class="errortxtarea"></textarea>
             <input type="hidden" name="......" value=".............................." />
             <input type="hidden" name="auto_UserAgent" value="" />
             </td>
         </tr>
+
+        <tr valign="top">
+            <td align="right" width="110">Please describe the steps you took <i>before</i> reaching the error:</td>
+            <td align="left"><textarea name="prev_steps" class="errortxtarea"></textarea></td>
+        </tr>
         
+        
+        
+        #if ($student_worksites)
+            <tr valign="top">
+                <td align="right" width="110">Please tell us which course you were working on:</td>
+                <td align="left">
+                <select name="worksite_id">
+                        <option>Not applicable</option>     
+                	#foreach ($worksite in $student_worksites)
+                        <option  
+                        value = "$!{worksite.id}"
+                        >$!{worksite.title} ( $!{worksite.term.name} )</option>
+                    #end
+                </select>
+            </td>
+        </tr>
+        <tr valign="top">
+            <td align="right" width="110">What is your role in this course:</td>
+            <td align="left">
+                <select name="role">
+                    <option value = "Student" >Student</option>
+                    <option value = "T A" >TA</option>
+                    <option value = "Instructor" >Instructor</option>
+                </select>
+            </td>
+        </tr>
+        #end
     </form>
     
 	<tr valign="middle">

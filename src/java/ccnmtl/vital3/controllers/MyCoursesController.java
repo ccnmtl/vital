@@ -62,19 +62,16 @@ public class MyCoursesController extends Vital3CommandController {
                 worksites = ucm.worksitesForTerms(ucm.currentCalendarYearTermNames());
                 ucm.decorateWorksites(worksites, false, false);
             }
-
-
             else {
                 logger.debug ("Admin: unfiltered...");
                 worksites = ucm.findAllWorksites(false, false);
             }
-            
             model.put("admin", "true");
         } else {
-            logger.debug ("Student view");
+            //logger.debug ("Student view");
             worksites = new ArrayList();
             Set participants = currentUser.getParticipants();
-            logger.debug("The user has " + participants.size() + " participants");
+            //logger.debug("The user has " + participants.size() + " participants");
             Iterator participantsIt =  participants.iterator();
             while (participantsIt.hasNext()) {
                 VitalParticipant participant = (VitalParticipant) participantsIt.next();
@@ -85,8 +82,6 @@ public class MyCoursesController extends Vital3CommandController {
             }        
             ucm.decorateWorksites(worksites, false, false);
         }
-        
-        
         /////////////
         List instructors = ucm.getInstructors(new HashSet(worksites));
         Map instructorNames = new HashMap();

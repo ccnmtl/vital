@@ -84,7 +84,7 @@
         type_string = getSelectedItem(ef.error_type);
         assigned_to_string = who_gets_what_bugs[type_string];
         
-        pf.assigned_to = assigned_to_string;
+        pf.assigned_to.value = assigned_to_string; 
         
         // Move the data from the error form fields into the pmt form fields:
         pf.title.value = "Vital: " + role_string + " " + ef.email.value + " reports trouble with " + type_string;

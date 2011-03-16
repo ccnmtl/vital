@@ -82,7 +82,7 @@
         pf.assigned_to.value = assigned_to_string; 
         
         // Move the data from the error form fields into the pmt form fields:
-        pf.title.value = "Vital: " + role_string + " " + ef.email.value + " reports trouble with " + type_string;
+        pf.title.value = role_string + " " + ef.email.value + " reports trouble with " + type_string;
         
         
         pf.name.value = ef.name.value;

@@ -116,7 +116,7 @@
  		<hr class="hiddenStructure" />
 	
 		<h1 class="portal-logo"><a href="javascript:window.close()">VITAL</a></h1>
-		<h1 class="print_only">VITAL: Video Interactions for Teaching and Learning</h1>
+		<h1 class="print_only">Video Interactions for Teaching and Learning</h1>
 		<hr class="print_only" />
 	
 	
@@ -173,7 +173,7 @@
             <td align="left">
                 <select name="role">
                     <option value = "Student" >Student</option>
-                    <option value = "T A" >TA</option>
+                    <option value = "TA" >TA</option>
                     <option value = "Instructor" >Instructor</option>
                 </select>
             </td>

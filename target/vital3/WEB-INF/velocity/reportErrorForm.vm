@@ -33,16 +33,11 @@
         ,
     }
     
-    function getSelectedItem(radio) {
-        chosen = null;
-        for (i = 0; i < radio.length ; i++) {
-            if (radio[i].checked) {
-                chosen = radio[i].value;
-            }
-        }
-        return chosen;
     
+    function getSelectedItem(selObj) {
+        return selObj.options[selObj.selectedIndex].value;
     }
+
     
     function validateRequired(theForm) {
         var errorstring = "";
@@ -91,7 +86,7 @@
         
         
         pf.name.value = ef.name.value;
-        pf.description.value = "Error Report:\n\n" + ef.details.value + "\n\nerror_time = (" + ef.error_time.value + ")\nprev_steps = (" + ef.prev_steps.value + ")\n";
+        pf.description.value = "Error Report:\n\n" + ef.details.value + "\n\nerror_time = (" + ef.error_time.value + ")";
         pf.debug_info.value = "User Agent = (" + ef.auto_UserAgent.value + ")\n";
         pf.email.value = ef.email.value;
         
@@ -164,7 +159,7 @@
         
 
         <tr valign="middle">
-            <td align="right" nowrap="nowrap">Your E-mail:<br /><span class="required">(required)</span></td>
+            <td align="right" nowrap="nowrap">Your UNI:<br /><span class="required">(required)</span></td>
             <td align="left"><input class="errortxt" type="text" name="email" /></td>
         </tr>
         
@@ -173,17 +168,35 @@
             <td align="left"><input class="errortxt" type="text" name="error_time" /></td>
         </tr>
         
+        <tr valign="middle">
+            <td align="right" width="110">Your role:</td>
+            <td align="left">
+                <select name="role">
+                    <option value = "Student" >Student</option>
+                    <option value = "T A" >TA</option>
+                    <option value = "Instructor" >Instructor</option>
+                </select>
+            </td>
+        </tr>
+        
         <tr valign="top">
             <td align="right" width="110">Error type (What part of the application is giving you trouble?)</td>
             <td align="left">
-<input name ="error_type" type ="radio" value="login"></input>Logging in<br/>
-<input name ="error_type" type ="radio" value="video"></input>Video or sound quality<br/>
-<input name ="error_type" type ="radio" value="composition_space"></input>Assignment composition<br/>
-<input name ="error_type" type ="radio" value="feedback"></input>Feedback form<br/>
-<input name ="error_type" type ="radio" value="course_mgmt"></input>Course management (roster list, for example)<br/>
-<input name ="error_type" type ="radio" value="browser"></input>Browser Issues (garbled layout, for example)<br/>
-<input name ="error_type" type ="radio" value="http_500"></input><i>"HTTP Status 500"</i> error<br/>
-<input name ="error_type" type ="radio" value="other" checked ></input>Other<br/>
+
+
+                <select name="error_type">
+                    <option value = "login" >Logging in</option>
+                    <option value = "video" >Video or sound quality</option>
+                    <option value = "composition_space" >Assignment composition</option>
+                    <option value = "feedback" >Feedback form</option>
+                    <option value = "course_mgmt" >Course management (roster list, for example)</option>
+                    <option value = "browser" >Browser Issues (garbled layout, for example)</option>
+                    <option value = "http_500" >"HTTP Status 500" error</option>
+                    <option value = "other" >Other</option>
+                </select>
+
+
+
             </td>
         </tr>
         <tr valign="top">
@@ -194,10 +207,6 @@
             </td>
         </tr>
 
-        <tr valign="top">
-            <td align="right" width="110">Please describe the steps you took <i>before</i> reaching the error:</td>
-            <td align="left"><textarea name="prev_steps" class="errortxtarea"></textarea></td>
-        </tr>
         
         
         
@@ -212,16 +221,6 @@
                         value = "$!{worksite.id}"
                         >$!{worksite.title} ( $!{worksite.term.name} )</option>
                     #end
-                </select>
-            </td>
-        </tr>
-        <tr valign="top">
-            <td align="right" width="110">What is your role in this course:</td>
-            <td align="left">
-                <select name="role">
-                    <option value = "Student" >Student</option>
-                    <option value = "T A" >TA</option>
-                    <option value = "Instructor" >Instructor</option>
                 </select>
             </td>
         </tr>

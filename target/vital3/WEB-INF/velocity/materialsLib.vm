@@ -70,12 +70,12 @@ function formgoto(mymenu) {
 
 
 #if ($admin)
-    <p><a href="basicAdmin.smvc?action=new&entity=material&worksiteId=${worksite.id}">Add new video for this course</a><br />
-    <a href="listing.smvc?mode=customField&id=${worksite.id}">Manage the video categories for this course</a></p>
+    <p>
+    <a href="basicAdmin.smvc?action=new&entity=material&worksiteId=${worksite.id}">Add new video for this course</a><br />
+    <a href="basicAdmin.smvc?action=upload&entity=material&worksiteId=${worksite.id}">Upload new video for this course</a><br />
+    <a href="listing.smvc?mode=customField&id=${worksite.id}">Manage the video categories for this course</a>
+    </p>
 #end
-
-
-
 
 <!-- 
 <table border="1">

@@ -5,6 +5,8 @@ import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
@@ -92,7 +94,6 @@ public class BasicAdminController extends Vital3CommandController {
                     if (targetObj instanceof VitalParticipant) ucm.decorateParticipant((VitalParticipant) targetObj);
                 }
                 if (targetObj != null) worksite = targetObj.getRelatedWorksite();
-                
             } else {
                 // action = insert or new... require knowing which param to look for in each entity case
                 if (entity.equals("unit") || entity.equals("customField") || entity.equals("material") || entity.equals("participant"))
@@ -170,7 +171,8 @@ public class BasicAdminController extends Vital3CommandController {
             // route "display" and "new" actions to the showForm method:
             logger.debug("calling showForm...");
             mav = showForm(request, response, errors);
-            
+        } else if (action.equals("upload")) {
+            mav = showUploadForm(request, response, command, errors);
         } else {
             
             logger.debug("No errors -> processing submit");
@@ -324,6 +326,52 @@ public class BasicAdminController extends Vital3CommandController {
         return new ModelAndView(targetTemplate, controlModel);
 
     }
+
+
+    /**
+
+     */
+    protected ModelAndView showUploadForm(HttpServletRequest request, HttpServletResponse response, Object commandObj, BindException errors) throws Exception {
+        
+        logger.debug("BasicAdminController.showUploadForm beginning...");
+        BasicAdminCommand command = (BasicAdminCommand) commandObj;
+        String userIdString = getUserContextInfo(request).getUser().getUserIdString();
+        
+        String nonce = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'vtl'").format(new java.util.Date());
+
+        // (one to tell Wardenclyffe where to redirect the user to after they have uploaded their video,
+        StringBuffer redirectBack = new StringBuffer("http://");
+        redirectBack.append(request.getServerName());
+        if (request.getServerPort() > 0) {
+            redirectBack.append(":");
+            redirectBack.append(request.getServerPort());
+        }
+        redirectBack.append("/vital3/materialsLib.smvc?worksiteId=");
+        redirectBack.append(command.getWorksiteId());
+
+        // and another to tell the Django app where to send the "upload finished" notification later).
+        StringBuffer notify = new StringBuffer("http://");
+        notify.append(request.getServerName());
+        if (request.getServerPort() > 0) {
+            notify.append(":");
+            notify.append(request.getServerPort());
+        }        
+        notify.append("/vital3/videoUpload.smvc");
+                
+        String url = _videoUploadClient.getHost() + 
+                     "/?set_course=" + command.getWorksiteId() +
+                     "&as=" + userIdString + 
+                     "&redirect_url=" + redirectBack + 
+                     "&notify_url=" + notify +
+                     "&nonce=" + nonce +
+                     "&hmac=" +_videoUploadClient.getHash(userIdString, redirectBack.toString(), notify.toString(), nonce);
+
+        logger.error("Redirect Back Url: " + redirectBack);
+        logger.error("Notify Url: " + notify);
+        logger.error("Url: " + url);
+
+        return Vital3Utils.redirectModelAndView(url);
+    }
     
     
     /**
@@ -469,7 +517,6 @@ public class BasicAdminController extends Vital3CommandController {
                         }
                         //command.setChildEntities(0, material.getCustomFieldValuesAsList());
                         entityList = material.getCustomFieldValuesAsList();
-                        
                     } else {
                         // update
                         
@@ -734,6 +781,16 @@ public class BasicAdminController extends Vital3CommandController {
         }
         return "error";
     }
-       
+
+
+    private VideoUploadClient _videoUploadClient; 
+    public void setVideoUploadClient(VideoUploadClient tc) {
+        this._videoUploadClient = tc;
+    }
+    public VideoUploadClient getUploadClient() {
+        return this._videoUploadClient;
+    }
+
+
 }
 

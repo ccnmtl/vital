@@ -23,7 +23,7 @@ import ccnmtl.vital3.utils.Vital3Utils;
  */
 public class BasicAdminValidator extends Vital3Validator {
     
-    public static final HashSet allowedActions = new HashSet(Arrays.asList(new String[]{"display","update","new","insert","delete"}));
+    public static final HashSet allowedActions = new HashSet(Arrays.asList(new String[]{"display","update","new","insert","delete","upload"}));
     public static final HashSet allowedEntities = new HashSet(Arrays.asList(new String[]{"assignment","customField","material","participant","question","unit","user","worksite"}));
                                                                                                               
     public boolean supports(Class clazz) {

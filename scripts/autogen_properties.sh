@@ -61,13 +61,13 @@ USE_JGROUPS=1
 USE_PROD_DATA=0
 
 # default log levels, that we use on development
-LOG_LEVEL_ROOT="INFO"
-LOG_LEVEL_VITAL="DEBUG"
-LOG_LEVEL_SPRING="DEBUG"
-LOG_LEVEL_VELOCITY="INFO"
-LOG_LEVEL_HIBERNATE="INFO"
-LOG_LEVEL_CACHE="INFO"
-LOG_LEVEL_JGROUPS="DEBUG"
+LOG_LEVEL_ROOT="WARN"
+LOG_LEVEL_VITAL="WARN"
+LOG_LEVEL_SPRING="WARN"
+LOG_LEVEL_VELOCITY="WARN"
+LOG_LEVEL_HIBERNATE="WARN"
+LOG_LEVEL_CACHE="WARN"
+LOG_LEVEL_JGROUPS="WARN"
 
 # default context name corresponds to the target name:
 CONTEXT_NAME="${TARGET}\/vital3"
@@ -78,6 +78,11 @@ PATH_TO_LOG_DIR="${KODOS_SANDBOXES}\/${TARGET}\/vital3"
 # default "initial hosts" attribute for jgroups on development:
 # NO SPACES, COMMA-SEPARATED
 JGROUPS_INITIAL_HOSTS="kodos.ccnmtl.columbia.edu[7800]"
+
+# Upload Video Host
+#VIDEO_UPLOAD_HOST="http://wardenclyffe.ccnmtl.columbia.edu"
+VIDEO_UPLOAD_HOST="http://foo.ccnmtl.columbia.edu"
+VIDEO_UPLOAD_KEY="hungryanders_wears_a_porkpie"
 
 case "$TARGET" in 
     "dev" )     
@@ -122,7 +127,7 @@ case "$TARGET" in
 	IS_CUIT=0
 	USE_PROD_DATA=0
 	BASE_URL='http:\/\/localhost:8080'
-	PATH_TO_LOG_DIR="\/Users\/sdreher\/Documents\/workspace\/vital3"
+	PATH_TO_LOG_DIR="\/Users\/sdreher\/workspace\/vital3"
 	CONTEXT_NAME="/vital3"
 	USE_JGROUPS=0
 	TOMCAT_HOME='\/usr\/local\/tomcat\/'
@@ -164,7 +169,7 @@ if [ $IS_CUIT = 1 ]; then
     CONTEXT_NAME="ccnmtl\/vital3"
     
     LOG_LEVEL_ROOT="WARN"
-    LOG_LEVEL_VITAL="WARN"
+    LOG_LEVEL_VITAL="DEBUG"
     LOG_LEVEL_SPRING="WARN"
     LOG_LEVEL_VELOCITY="WARN"
     LOG_LEVEL_HIBERNATE="WARN"
@@ -204,8 +209,8 @@ case "$DATABASE_TYPE" in
         DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.Oracle9Dialect'
         DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
         DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
-        DATABASE_USERNAME=${ORACLE_DB_USERNAME}
-        DATABASE_PASSWORD='oracle_database_password'
+        DATABASE_USERNAME='oracle_username'
+        DATABASE_PASSWORD='oracle_passwd'
 	;;
 
     "postgres"  )
@@ -243,6 +248,9 @@ perl -p -e \
      s#<DATABASE_PASSWORD>#${DATABASE_PASSWORD}#g;
 
      s#<DBCP_MAXIDLE>#${DBCP_MAXIDLE}#g;
+
+     s#<VIDEO_UPLOAD_HOST>#${VIDEO_UPLOAD_HOST}#g;
+     s#<VIDEO_UPLOAD_KEY>#${VIDEO_UPLOAD_KEY}#g;
 
      " \
      ${CONF_DIR}/spring.properties.in >  ${CONF_DIR}/spring.properties

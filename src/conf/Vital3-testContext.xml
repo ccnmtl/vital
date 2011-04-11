@@ -18,7 +18,13 @@
         <constructor-arg index="0" type="java.lang.String" value="" />
         <constructor-arg index="1" type="java.lang.String" value="vital3_test" />
     </bean>
-    
+
+
+    <!-- Video Uploader configuration -->
+    <bean id="videoUploadClient" class="ccnmtl.utils.VideoUploadClient">
+        <constructor-arg index="0" type="java.lang.String" value="${video.upload.host}" />
+        <constructor-arg index="1" type="java.lang.String" value="${video.upload.key}" />
+    </bean>
 
     <!-- ALL BEANS BELOW CORRESPOND TO ONES IN THE VITAL3-SERVLET.XML FILE -->
 
@@ -92,6 +98,7 @@
         <property name="commandName" value="basicAdminCommand" />
         <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
         <property name="validator"><ref bean="basicAdminValidator"/></property>
+        <property name="videoUploadClient"><ref bean="videoUploadClient"/></property>
     </bean>
     
     <bean id="courseHomeController" class="ccnmtl.vital3.controllers.CourseHomeController" parent="parentController">
@@ -139,6 +146,11 @@
 		<property name="commandName" value="basicAdminCommand" />
 		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
     </bean>	
+
+    <!--bean id="uploadVideoController" class="ccnmtl.vital3.controllers.UploadVideoController" parent="parentController">
+		<property name="commandName" value="basicAdminCommand" />
+		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
+    </bean-->
 	
 	<bean id="specialActionsController" class="ccnmtl.vital3.controllers.SpecialActionsController" parent="parentController">
 		<property name="commandName" value="basicAdminCommand" />
@@ -155,6 +167,12 @@
     <bean id="captureResponsesController" class="ccnmtl.vital3.controllers.CaptureResponseStateController" parent="parentController">
         <property name="commandName" value="vital3Command" />
         <property name="commandClass" value="ccnmtl.vital3.commands.Vital3Command" />
+    </bean>
+
+    <bean id="videoUploadController" class="ccnmtl.vital3.controllers.VideoUploadController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+        <property name="videoUploadClient"><ref bean="videoUploadClient"/></property>
     </bean>
     
 

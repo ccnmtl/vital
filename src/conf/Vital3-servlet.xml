@@ -71,6 +71,11 @@
         <property name="tastyBean"><ref bean="tastyBean"/></property>
     </bean>
 
+    <!-- Video Uploader configuration -->
+    <bean id="videoUploadClient" class="ccnmtl.utils.VideoUploadClient">
+        <constructor-arg index="0" type="java.lang.String" value="${video.upload.host}" />
+        <constructor-arg index="1" type="java.lang.String" value="${video.upload.key}" />
+    </bean>
 
     <!-- MVC Controllers -->
     
@@ -99,6 +104,7 @@
         <property name="commandName" value="basicAdminCommand" />
         <property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
         <property name="validator"><ref bean="basicAdminValidator"/></property>
+        <property name="videoUploadClient"><ref bean="videoUploadClient"/></property>
     </bean>
     
     <bean id="cacheFlushController" class="ccnmtl.vital3.controllers.CacheFlushController" parent="parentController">
@@ -131,8 +137,13 @@
         <!-- In case of trouble, users are requested to send email to this address: -->
         <property name="problemEmailAddress" value="ccnmtl-vital@ccnmtl.columbia.edu"/>
     </bean>
-    
-    
+
+    <bean id="videoUploadController" class="ccnmtl.vital3.controllers.VideoUploadController">
+        <property name="userCourseManager"><ref bean="ucm"/></property>
+        <property name="vital3DAO"><ref bean="vital3DAO"/></property>
+        <property name="videoUploadClient"><ref bean="videoUploadClient"/></property>
+    </bean>
+        
     <!--
 	<bean id="foundAssetsController" class="ccnmtl.vital3.controllers.FoundAssetsController">
 		<property name="indexing"><ref bean="indexing"/></property>
@@ -205,12 +216,12 @@
         <property name="validator"><ref bean="worksiteIdValidator"/></property>
         -->
 	</bean>
-    
+
     <bean id="reviewAllResponsesController" class="ccnmtl.vital3.controllers.ReviewAllResponsesController" parent="parentController">
 		<property name="commandName" value="basicAdminCommand" />
 		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
-	</bean>
-	
+    </bean>
+
     <bean id="specialActionsController" class="ccnmtl.vital3.controllers.SpecialActionsController" parent="parentController">
 		<property name="commandName" value="basicAdminCommand" />
 		<property name="commandClass" value="ccnmtl.vital3.commands.BasicAdminCommand" />
@@ -292,6 +303,7 @@
                 <prop key="/participantSearch.smvc">participantSearchController</prop>
                 <prop key="/loadTesting.smvc">loadTestingController</prop>
                 <prop key="/captureResponses.smvc">captureResponsesController</prop>
+                <prop key="/videoUpload.smvc">videoUploadController</prop>
             </props>
         </property>
         <!-- interceptors for these mappings -->

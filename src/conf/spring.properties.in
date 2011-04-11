@@ -24,3 +24,7 @@ database.driverclassname=<DATABASE_DRIVER_CLASS_NAME>
 database.url=<DATABASE_URL>
 database.username=<DATABASE_USERNAME>
 database.password=<DATABASE_PASSWORD>
+
+# upload video url & key
+video.upload.host=<VIDEO_UPLOAD_HOST>
+video.upload.key=<VIDEO_UPLOAD_KEY>

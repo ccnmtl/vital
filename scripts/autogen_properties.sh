@@ -86,7 +86,7 @@ VIDEO_UPLOAD_KEY="hungryanders_wears_a_porkpie"
 case "$TARGET" in 
     "dev" )     
 	IS_CUIT=1; 
-	USE_PROD_DATA=1
+	USE_PROD_DATA=0
 	BASE_URL='http:\/\/wwwappdev.cc.columbia.edu'
 	#CONTEXT_NAME="/ccnmtl/vital3" # no trailing slash.
 	PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwappdev\/ccnmtl\/projects\/vital3"

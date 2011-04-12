@@ -80,7 +80,7 @@ PATH_TO_LOG_DIR="${KODOS_SANDBOXES}\/${TARGET}\/vital3"
 JGROUPS_INITIAL_HOSTS="kodos.ccnmtl.columbia.edu[7800]"
 
 # Upload Video Host
-VIDEO_UPLOAD_HOST="http://foo.ccnmtl.columbia.edu"
+VIDEO_UPLOAD_HOST="http://behemoth.ccnmtl.columbia.edu:8000/vitaldrop"
 VIDEO_UPLOAD_KEY="hungryanders_wears_a_porkpie"
 
 case "$TARGET" in 
@@ -91,7 +91,6 @@ case "$TARGET" in
 	#CONTEXT_NAME="/ccnmtl/vital3" # no trailing slash.
 	PATH_TO_LOG_DIR="\/www\/apps\/tomcat4\/wwwappdev\/ccnmtl\/projects\/vital3"
 	USE_JGROUPS=0
-	VIDEO_UPLOAD_HOST="http://behemoth.ccnmtl.columbia.edu:8000"
 	;;
 
     # "test" )
@@ -108,7 +107,7 @@ case "$TARGET" in
 	BASE_URL='http:\/\/vital.ccnmtl.columbia.edu'
 	PATH_TO_LOG_DIR="\/var\/log\/tcat\/ccnmtl\/vital3"
 	JGROUPS_INITIAL_HOSTS="lingonberry.cc.columbia.edu[7800],huckleberry.cc.columbia.edu[7800]"
-	VIDEO_UPLOAD_HOST="http://wardenclyffe.ccnmtl.columbia.edu"
+	VIDEO_UPLOAD_HOST="http://wardenclyffe.ccnmtl.columbia.edu/vitaldrop"
 	;;
 
     #test setup on Mac OS:

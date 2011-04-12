@@ -210,8 +210,8 @@ case "$DATABASE_TYPE" in
         DATABASE_HIBERNATE_DIALECT='org.hibernate.dialect.Oracle9Dialect'
         DATABASE_DRIVER_CLASS_NAME='oracle.jdbc.OracleDriver'
         DATABASE_URL='jdbc:oracle:thin:\@chili\.cc\.columbia\.edu:1521:acisora1'
-        DATABASE_USERNAME='oracle_username'
-        DATABASE_PASSWORD='oracle_passwd'
+        DATABASE_USERNAME=${ORACLE_DB_USERNAME}
+        DATABASE_PASSWORD='oracle_database_password'
 	;;
 
     "postgres"  )

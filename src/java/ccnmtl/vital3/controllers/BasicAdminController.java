@@ -172,6 +172,7 @@ public class BasicAdminController extends Vital3CommandController {
             logger.debug("calling showForm...");
             mav = showForm(request, response, errors);
         } else if (action.equals("upload")) {
+            command.setAction("upload");
             mav = showUploadForm(request, response, command, errors);
         } else {
             
@@ -327,9 +328,13 @@ public class BasicAdminController extends Vital3CommandController {
 
     }
 
-
-    /**
-
+    /*
+     * Redirect users to a 3rd-party video upload utility
+     * Authentication scheme: 
+     * - Generate random salt (nonce) in the form with Vital specific app string -- "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'vtl'" 
+     * - Concatenate uni, redirectBack url, notifyUrl & nonce 
+     * - Create Sha1 hash using secret key & the concatenated string
+     * - Redirect to wardenclyffe/?uni=$UNI;salt=$SALT;hash=$HASH;redirect_url=$REDIRECT_URL;notify_url=$NOTIFY_URL
      */
     protected ModelAndView showUploadForm(HttpServletRequest request, HttpServletResponse response, Object commandObj, BindException errors) throws Exception {
         
@@ -340,16 +345,17 @@ public class BasicAdminController extends Vital3CommandController {
         String nonce = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'vtl'").format(new java.util.Date());
 
         // (one to tell Wardenclyffe where to redirect the user to after they have uploaded their video,
-        StringBuffer redirectBack = new StringBuffer("http://");
-        redirectBack.append(request.getServerName());
+        StringBuffer back = new StringBuffer("http://");
+        back.append(request.getServerName());
         if (request.getServerPort() > 0) {
-            redirectBack.append(":");
-            redirectBack.append(request.getServerPort());
+            back.append(":");
+            back.append(request.getServerPort());
         }
-        redirectBack.append("/vital3/materialsLib.smvc?worksiteId=");
-        redirectBack.append(command.getWorksiteId());
+        back.append("/vital3/materialsLib.smvc?worksiteId=");
+        back.append(command.getWorksiteId());
 
-        // and another to tell the Django app where to send the "upload finished" notification later).
+        // and another to tell Wardenclyffe where to send the "upload finished" notification later).
+        // 
         StringBuffer notify = new StringBuffer("http://");
         notify.append(request.getServerName());
         if (request.getServerPort() > 0) {
@@ -361,14 +367,10 @@ public class BasicAdminController extends Vital3CommandController {
         String url = _videoUploadClient.getHost() + 
                      "/?set_course=" + command.getWorksiteId() +
                      "&as=" + userIdString + 
-                     "&redirect_url=" + redirectBack + 
+                     "&redirect_url=" + back + 
                      "&notify_url=" + notify +
                      "&nonce=" + nonce +
-                     "&hmac=" +_videoUploadClient.getHash(userIdString, redirectBack.toString(), notify.toString(), nonce);
-
-        logger.error("Redirect Back Url: " + redirectBack);
-        logger.error("Notify Url: " + notify);
-        logger.error("Url: " + url);
+                     "&hmac=" +_videoUploadClient.getHash(userIdString, back.toString(), notify.toString(), nonce);
 
         return Vital3Utils.redirectModelAndView(url);
     }

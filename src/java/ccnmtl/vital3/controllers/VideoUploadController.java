@@ -1,36 +1,20 @@
 package ccnmtl.vital3.controllers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
-import ccnmtl.utils.HormelClient;
 import ccnmtl.utils.VideoUploadClient;
 import ccnmtl.vital3.Material;
-import ccnmtl.vital3.VitalUser;
 import ccnmtl.vital3.VitalWorksite;
 import ccnmtl.vital3.dao.Vital3DAO;
-import ccnmtl.vital3.ucm.RawUCMUser;
 import ccnmtl.vital3.ucm.UserCourseManager;
-
-
-import java.io.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-// import javax.activation.*;
-
 
 public class VideoUploadController extends WebApplicationObjectSupport implements Controller {
     
@@ -39,31 +23,48 @@ public class VideoUploadController extends WebApplicationObjectSupport implement
     protected UserCourseManager ucm;
     protected Vital3DAO vital3DAO;
 
-    private VideoUploadClient _videoUploadClient;     
+    private VideoUploadClient _videoUploadClient;  
+    
+    private boolean nullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
     
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String result;
         
-        ApplicationContext context = getApplicationContext();
-
-        String name = request.getParameter("name");
-        String url = request.getParameter("url");
-        String thumbUrl = request.getParameter("thumbUrl");
-        Long worksiteId = new Long(request.getParameter("course"));
-        String nonce = request.getParameter("nonce");
-
-        // @todo -- authenticate
-        // key, name, url, thumbUrl, nonce concatenated together
-        // rehash & compare
-
-        VitalWorksite worksite = (VitalWorksite) vital3DAO.findById(VitalWorksite.class, worksiteId);
-        if (worksite != null) {
-            ucm.decorateWorksite(worksite, false, false);
+        if (!request.getMethod().equals("POST")) {
+            result="{\"success\": \"false\", \"message\":\"Please POST your request\"}";
+        } else {
+            
+            String title = request.getParameter("title");
+            String url = request.getParameter("url");
+            String thumb = request.getParameter("thumb");
+            String course = request.getParameter("set_course");
+            String uni = request.getParameter("as"); // Unsure this will be used?
+            // String nonce = request.getParameter("nonce");
+            
+            if (nullOrEmpty(title)) {
+                result="{\"success\": \"false\", \"message\":\"Video title is missing\"}";
+            } else if (nullOrEmpty(url)) {
+                result="{\"success\": \"false\", \"message\":\"Video url is missing\"}";
+            } else if (nullOrEmpty(course)) {
+                result="{\"success\": \"false\", \"message\":\"Course identifier is missing\"}";
+            } else {
+                
+                // @todo -- authenticate
+                
+                Long worksiteId = new Long(course);
+                VitalWorksite worksite = (VitalWorksite) vital3DAO.findById(VitalWorksite.class, worksiteId);
+                if (worksite != null) {
+                    ucm.decorateWorksite(worksite, false, false);
+                }
+        
+                Material video = Material.newVideo(worksite, Material.UNLISTED_ACCESS.intValue(), null, thumb, title, url);
+                vital3DAO.save(Material.class, video);
+        
+                result="{\"success\": \"true\"}";
+            }
         }
-
-        Material video = Material.newVideo(worksite, Material.UNLISTED_ACCESS.intValue(), null, thumbUrl, name, url);
-        vital3DAO.save(Material.class, video);
-
-        String result="{\"success\": \"true\"}";
 
         response.setContentType("application/json");
         response.setContentLength(result.length());
@@ -91,8 +92,4 @@ public class VideoUploadController extends WebApplicationObjectSupport implement
     public VideoUploadClient getUploadClient() {
         return this._videoUploadClient;
     }
-
-    
-       
-    
 }

@@ -26,7 +26,7 @@ public class VideoUploadController extends WebApplicationObjectSupport implement
     private VideoUploadClient _videoUploadClient;  
     
     private boolean nullOrEmpty(String s) {
-        return s == null || s.isEmpty();
+        return s == null || s.length() < 1;
     }
     
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {

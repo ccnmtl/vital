@@ -1,43 +1,88 @@
 package ccnmtl.vital3.test;
 
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.FieldError;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.json.*;
-
+import ccnmtl.jtasty.Item;
+import ccnmtl.jtasty.ItemTag;
+import ccnmtl.jtasty.Service;
+import ccnmtl.jtasty.Tag;
+import ccnmtl.jtasty.TastyBean;
+import ccnmtl.jtasty.User;
+import ccnmtl.jtasty.UserItem;
+import ccnmtl.jtasty.UserItemTag;
+import ccnmtl.jtasty.UserTag;
+import ccnmtl.jtasty.test.JTastyMockDAO;
+import ccnmtl.jtasty.utils.Dimension;
+import ccnmtl.utils.TastyClient;
+import ccnmtl.utils.VideoUploadClient;
 import ccnmtl.utils.test.AbstractTestCase;
-import ccnmtl.vital3.*;
-import ccnmtl.vital3.controllers.*;
-import ccnmtl.vital3.commands.*;
+import ccnmtl.vital3.Annotation;
+import ccnmtl.vital3.Answer;
+import ccnmtl.vital3.Assignment;
+import ccnmtl.vital3.AssignmentMaterialAssoc;
+import ccnmtl.vital3.AssignmentResponse;
+import ccnmtl.vital3.AssignmentResponseHistory;
+import ccnmtl.vital3.Comment;
+import ccnmtl.vital3.CustomField;
+import ccnmtl.vital3.CustomFieldValue;
+import ccnmtl.vital3.Material;
+import ccnmtl.vital3.Question;
+import ccnmtl.vital3.Unit;
+import ccnmtl.vital3.VitalParticipant;
+import ccnmtl.vital3.VitalUser;
+import ccnmtl.vital3.VitalWorksite;
+import ccnmtl.vital3.commands.BasicAdminCommand;
+import ccnmtl.vital3.controllers.AnnotationController;
+import ccnmtl.vital3.controllers.AssocController;
+import ccnmtl.vital3.controllers.BasicAdminController;
+import ccnmtl.vital3.controllers.CaptureResponseStateController;
+import ccnmtl.vital3.controllers.CourseHomeController;
+import ccnmtl.vital3.controllers.DiscussionEntryController;
+import ccnmtl.vital3.controllers.ListingController;
+import ccnmtl.vital3.controllers.LoginProcessingController;
+import ccnmtl.vital3.controllers.MaterialsLibController;
+import ccnmtl.vital3.controllers.MyCoursesController;
+import ccnmtl.vital3.controllers.ResponseController;
+import ccnmtl.vital3.controllers.ReviewAllResponsesController;
+import ccnmtl.vital3.controllers.ReviewResponsesController;
+import ccnmtl.vital3.controllers.SpecialActionsController;
 import ccnmtl.vital3.ucm.ColumbiaUCM;
 import ccnmtl.vital3.ucm.RawUCMTerm;
 import ccnmtl.vital3.ucm.RawUCMWorksite;
 import ccnmtl.vital3.ucm.UserCourseManager;
 import ccnmtl.vital3.utils.TextFormatter;
 import ccnmtl.vital3.utils.Vital3Utils;
-
-import ccnmtl.jtasty.*;
-import ccnmtl.jtasty.test.*;
-import ccnmtl.jtasty.utils.*;
-import ccnmtl.utils.*;
 
 public class Vital3GeneralTest extends AbstractTestCase {
 
@@ -98,6 +143,7 @@ public class Vital3GeneralTest extends AbstractTestCase {
         VitalUser u1 = new VitalUser("em2140", "vital", UserCourseManager.PUBLIC_ACCESS, "em2140@columbia.edu", "password", "Eric", "Mattes");
         VitalUser u2 = new VitalUser("bg2000", "vital", UserCourseManager.PUBLIC_ACCESS, "bill@microsoft.com", "money", "Bill", "Gates");
         VitalUser u3 = new  VitalUser("bn579", "wind", UserCourseManager.ADMIN_ACCESS, "birgit@panix.com", null, "Birgit", "Nilsson");
+
         // insert using UCM:
         ucm.insertUsers(Arrays.asList(new VitalUser[] {u1,u2,u3}));
 
@@ -2293,7 +2339,85 @@ mockRequest.addParameter("updateComment3", "Comment 3.2");
                 "assignmentId", ass1.getId(), "participantId", vp2.getId());
         assertEquals("Two history rows for this participant/assignment still", 2, lst.size());
     }
+    
+    public void testVideoUploadHash() {
+    	// Check that the hash is returning what we expect.
+        VideoUploadClient vuc = new VideoUploadClient("http://foo.ccnmtl.columbia.edu", "secret_key");
+        String nonce = "2010-04-10T03:03:03.123456vtl";
+        String hash = vuc.getHash("abc123", "http://bar.ccnmtl.columbia.edu/back", "http://bar.ccnmtl.columbia.edu/notify", nonce);
+        
+        assertEquals("1f53e8cb3ea4a0cfaec4512553667d38e0b48024", hash);
+    }
+    
+    public void testVideoUploadRedirect() throws Exception {
+        LoginProcessingController login;
+        MockHttpSession session;
+        MockHttpServletRequest mockRequest;
+        RedirectView rv;
+        ModelAndView mav;
+        VitalUser loggedInUser;
+        MockHttpServletResponse mockResponse;
+        BasicAdminController basicAdmin = (BasicAdminController) ac.getBean("basicAdminController");
+        ResponseController responseController = (ResponseController) ac.getBean("responseController");
+        
+        VitalWorksite c1 = (VitalWorksite) vital3DAO.findById(VitalWorksite.class, new Long(1));
+        
+        // Admin login
+        vital3DAO.resetUCM();
+        login = (LoginProcessingController) ac.getBean("loginProcessingController");
 
+        session = new MockHttpSession();
+        mockResponse = new MockHttpServletResponse();
+        mockRequest = newMockRequest(session, "GET", null);
+        mockRequest.addParameter("authMethod","wind");
+        session.setAttribute(Vital3Utils.usernameSessionAttributeName, "bn579");
+        mav = login.handleRequest(mockRequest, (HttpServletResponse) null);
+        rv = (RedirectView) mav.getView();
+        assertEquals("/myCourses.smvc?viewBy=term", rv.getUrl());
+        
+        vital3DAO.resetUCM();
+        // request a 'new' material form:
+        mockRequest = newMockRequestAEI(session, "GET","upload","material",null);
+        mockRequest.addParameter("worksiteId","1");
+        mav = basicAdmin.handleRequest(mockRequest, mockResponse);
+        Map model = mav.getModel();
+        
+        rv = (RedirectView) mav.getView();
+        assertTrue(rv.getUrl().contains("&redirect_url="));
+        assertTrue(rv.getUrl().contains("&notify_url="));
+        assertTrue(rv.getUrl().contains("&nonce="));
+        assertTrue(rv.getUrl().contains("&as=bn579"));
+        assertTrue(rv.getUrl().contains("&hmac="));        
+        
+
+        // Non-Admin user cannot access this functionality
+        vital3DAO.resetUCM();
+        login = (LoginProcessingController) ac.getBean("loginProcessingController");
+        session = new MockHttpSession();
+        mockRequest = newMockRequest(session, "POST", null);
+        mockRequest.addParameter("authMethod","vital");
+        mockRequest.addParameter("username","bg2000");
+        mockRequest.addParameter("password","money");
+        mav = login.handleRequest(mockRequest, (HttpServletResponse) null);
+        rv = (RedirectView) mav.getView();
+        assertEquals("courseHome.smvc?worksiteId=1", rv.getUrl());
+        loggedInUser = ucm.getCLIU(session, false);
+        assertEquals (loggedInUser.getFirstName(), "Bill");
+        
+        vital3DAO.resetUCM();
+        // request a 'new' material form:
+        mockRequest = newMockRequestAEI(session, "GET","upload","material",null);
+        mockRequest.addParameter("worksiteId","1");
+        mav = basicAdmin.handleRequest(mockRequest, mockResponse);
+        model = mav.getModel();
+        
+        rv = (RedirectView) mav.getView();
+        assertEquals("error.smvc?message=You+are+not+authorized+to+access+this+area", rv.getUrl());
+    }
+    
+    public void testVideoUploadNotify() throws Exception {
+        
+    }
     
     private Set getUsers( Dimension d, TastyBean tb) {
         return tb.getKids (d.getClass(), d, User.class);
@@ -2306,8 +2430,6 @@ mockRequest.addParameter("updateComment3", "Comment 3.2");
     private Set getTags( Dimension d, TastyBean tb) {
         return tb.getKids (d.getClass(), d, Tag.class);
     }
-    
-
 
     // Only use this for models resulting from a GET request or a failed POST. Redirect views will not contain error key.
     // Also, so far this only works for basicAdminCommand or ResponseCommand

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import ccnmtl.utils.VideoUploadClient;
 import ccnmtl.vital3.Material;
+import ccnmtl.vital3.VitalUser;
 import ccnmtl.vital3.VitalWorksite;
 import ccnmtl.vital3.dao.Vital3DAO;
 import ccnmtl.vital3.ucm.UserCourseManager;
@@ -40,7 +41,7 @@ public class VideoUploadController extends WebApplicationObjectSupport implement
             String url = request.getParameter("url");
             String thumb = request.getParameter("thumb");
             String course = request.getParameter("set_course");
-            String uni = request.getParameter("as"); // Unsure this will be used?
+            String userIdentifier = request.getParameter("as"); // Unsure this will be used?
             // String nonce = request.getParameter("nonce");
             
             if (nullOrEmpty(title)) {
@@ -53,6 +54,7 @@ public class VideoUploadController extends WebApplicationObjectSupport implement
                 
                 // @todo -- authenticate
                 
+                // @todo -- error messaging for invalid course
                 Long worksiteId = new Long(course);
                 VitalWorksite worksite = (VitalWorksite) vital3DAO.findById(VitalWorksite.class, worksiteId);
                 if (worksite != null) {
@@ -61,6 +63,8 @@ public class VideoUploadController extends WebApplicationObjectSupport implement
         
                 Material video = Material.newVideo(worksite, Material.UNLISTED_ACCESS.intValue(), null, thumb, title, url);
                 vital3DAO.save(Material.class, video);
+               
+                // @todo -- send the user an email?
         
                 result="{\"success\": \"true\"}";
             }

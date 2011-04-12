@@ -1,39 +1,44 @@
 package ccnmtl.vital3.controllers;
 
-import java.awt.Point;
-import java.util.*;
-import javax.servlet.ServletException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.MessageSourceAccessor;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
-import ccnmtl.vital3.*;
-import ccnmtl.vital3.commands.*;
-import ccnmtl.vital3.ucm.*;
-import ccnmtl.utils.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import ccnmtl.vital3.utils.TextFormatter;
+import ccnmtl.utils.OmniComparator;
+import ccnmtl.utils.VideoUploadClient;
+import ccnmtl.vital3.Assignment;
+import ccnmtl.vital3.CustomField;
+import ccnmtl.vital3.CustomFieldValue;
+import ccnmtl.vital3.Material;
+import ccnmtl.vital3.Question;
+import ccnmtl.vital3.Unit;
+import ccnmtl.vital3.VitalParticipant;
+import ccnmtl.vital3.VitalUser;
+import ccnmtl.vital3.VitalWorksite;
+import ccnmtl.vital3.commands.BasicAdminCommand;
+import ccnmtl.vital3.commands.Vital3Command;
+import ccnmtl.vital3.ucm.RawUCMTerm;
+import ccnmtl.vital3.ucm.UserContextInfo;
+import ccnmtl.vital3.ucm.UserCourseManager;
 import ccnmtl.vital3.utils.Persistable;
-import ccnmtl.vital3.utils.Vital3AuthViolationException;
-import ccnmtl.vital3.utils.Vital3MessageCodesResolver;
+import ccnmtl.vital3.utils.TextFormatter;
 import ccnmtl.vital3.utils.Vital3Utils;
-
-import ccnmtl.vital3.dao.Vital3DAO;
 
 /**
  * Performs display, update, insert, and delete commands.
@@ -337,13 +342,12 @@ public class BasicAdminController extends Vital3CommandController {
      * - Redirect to wardenclyffe/?uni=$UNI;salt=$SALT;hash=$HASH;redirect_url=$REDIRECT_URL;notify_url=$NOTIFY_URL
      */
     protected ModelAndView showUploadForm(HttpServletRequest request, HttpServletResponse response, Object commandObj, BindException errors) throws Exception {
-        
         logger.debug("BasicAdminController.showUploadForm beginning...");
         BasicAdminCommand command = (BasicAdminCommand) commandObj;
         String userIdString = getUserContextInfo(request).getUser().getUserIdString();
         
         String nonce = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'vtl'").format(new java.util.Date());
-
+        
         // (one to tell Wardenclyffe where to redirect the user to after they have uploaded their video,
         StringBuffer back = new StringBuffer("http://");
         back.append(request.getServerName());
@@ -351,7 +355,8 @@ public class BasicAdminController extends Vital3CommandController {
             back.append(":");
             back.append(request.getServerPort());
         }
-        back.append("/vital3/materialsLib.smvc?worksiteId=");
+        back.append(request.getContextPath());
+        back.append("/materialsLib.smvc?worksiteId=");
         back.append(command.getWorksiteId());
 
         // and another to tell Wardenclyffe where to send the "upload finished" notification later).
@@ -362,7 +367,11 @@ public class BasicAdminController extends Vital3CommandController {
             notify.append(":");
             notify.append(request.getServerPort());
         }        
-        notify.append("/vital3/videoUpload.smvc");
+        notify.append(request.getContextPath());
+        notify.append("/videoUpload.smvc");
+        
+        logger.debug("back: " + back);
+        logger.debug("notify: " + notify);
                 
         String url = _videoUploadClient.getHost() + 
                      "/?set_course=" + command.getWorksiteId() +
